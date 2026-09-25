@@ -14,7 +14,7 @@ import { register } from '@/routes';
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';
 /* @chisel-passkeys */
-import PasskeyVerify from '@/components/PasskeyVerify.vue';
+// import PasskeyVerify from '@/components/PasskeyVerify.vue';
 /* @end-chisel-passkeys */
 
 defineOptions({
@@ -41,7 +41,7 @@ defineProps<{
     </div>
 
     <!-- @chisel-passkeys -->
-    <PasskeyVerify />
+    <!-- <PasskeyVerify /> -->
     <!-- @end-chisel-passkeys -->
 
     <Form
