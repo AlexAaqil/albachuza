@@ -1,0 +1,7 @@
+@import './forms';
+@import './tables';
+
+a,
+button {
+    @apply cursor-pointer;
+}

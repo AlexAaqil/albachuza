@@ -170,3 +170,5 @@
         @apply bg-background text-foreground;
     }
 }
+
+@import './globals';

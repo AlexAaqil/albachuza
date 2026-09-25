@@ -1,0 +1,104 @@
+.form {
+    @apply p-6 mt-4 rounded-xl border border-border lg:w-[80vw] lg:mx-auto;
+
+    .form_header {
+        @apply mb-4 py-4 border-b border-border flex items-center gap-2;
+
+        a {
+            @apply cursor-pointer font-bold;
+
+            svg {
+                @apply w-5 h-5;
+            }
+        }
+
+        h2 {
+            @apply font-medium;
+        }
+    }
+
+    form {
+        .form-section {
+            @apply border rounded-lg p-6 mb-6;
+
+            .section-title {
+                @apply font-medium text-lg mb-2;
+            }
+        }
+
+        .submit-buttons {
+            @apply flex justify-start space-x-3 pt-4;
+        }
+
+        .inputs-group-wrapper,
+        .inputs-group-wrapper-3,
+        .inputs-group-wrapper-4 {
+            @apply md:grid md:gap-6 md:items-start;
+        }
+
+        .inputs-group-wrapper {
+            @apply md:grid-cols-2;
+        }
+
+        .inputs-group-wrapper-3 {
+            @apply md:grid-cols-3;
+        }
+
+        .inputs-group-wrapper-4 {
+            @apply md:grid-cols-4;
+        }
+    }
+}
+
+form,
+.form {
+    label {
+        @apply my-2;
+    }
+
+    label.required {
+        @apply after:content-['*'] after:ml-[0.2px] after:text-red-500 after:font-bold;
+    }
+
+    input,
+    textarea,
+    select {
+        @apply w-full border border-gray-400 rounded-sm py-1 px-2;
+
+        &:disabled {
+            @apply bg-gray-100 cursor-not-allowed opacity-60;
+        }
+
+        &:focus {
+            @apply outline-none ring-2 ring-foreground opacity-80;
+        }
+    }
+
+    input[type="checkbox"] {
+        @apply w-auto;
+    }
+
+    .inputs-group {
+        @apply mb-4;
+    }
+}
+
+.images-grid {
+    @apply grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4;
+
+    .image {
+        @apply relative aspect-square rounded-lg overflow-hidden border-2 border-gray-200 bg-gray-50;
+
+        .remove-image {
+            @apply absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors;
+        }
+    }
+
+    .upload-trigger {
+        @apply aspect-square rounded-lg border-2 border-dashed border-gray-300 flex flex-col items-center justify-center text-center cursor-pointer hover:border-gray-400 transition-colors bg-gray-50 dark:bg-gray-800;
+
+        .upload-trigger span {
+            @apply text-sm text-gray-500 mt-2;
+        }
+    }
+}

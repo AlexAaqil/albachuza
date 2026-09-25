@@ -140,6 +140,7 @@ class ComposerStaticInit28644794df27ea35b4ba3d9e834307a8
         'M' =>
         array (
             'Monolog\\' => 8,
+            'Modules\\' => 8,
             'Mockery\\' => 8,
         ),
         'L' =>
@@ -473,6 +474,10 @@ class ComposerStaticInit28644794df27ea35b4ba3d9e834307a8
         'Monolog\\' =>
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
+        ),
+        'Modules\\' =>
+        array (
+            0 => __DIR__ . '/../..' . '/modules',
         ),
         'Mockery\\' =>
         array (
@@ -4596,6 +4601,16 @@ class ComposerStaticInit28644794df27ea35b4ba3d9e834307a8
         'Mockery\\Undefined' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/Undefined.php',
         'Mockery\\VerificationDirector' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/VerificationDirector.php',
         'Mockery\\VerificationExpectation' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/VerificationExpectation.php',
+        'Modules\\User\\Database\\Seeders\\UserSeeder' => __DIR__ . '/../..' . '/modules/User/Database/Seeders/UserSeeder.php',
+        'Modules\\User\\Enums\\UserRoles' => __DIR__ . '/../..' . '/modules/User/Enums/UserRoles.php',
+        'Modules\\User\\Enums\\UserStatuses' => __DIR__ . '/../..' . '/modules/User/Enums/UserStatuses.php',
+        'Modules\\User\\Http\\Controllers\\UserController' => __DIR__ . '/../..' . '/modules/User/Http/Controllers/UserController.php',
+        'Modules\\User\\Http\\Requests\\UserRequest' => __DIR__ . '/../..' . '/modules/User/Http/Requests/UserRequest.php',
+        'Modules\\User\\Http\\Resources\\UserResource' => __DIR__ . '/../..' . '/modules/User/Http/Resources/UserResource.php',
+        'Modules\\User\\Models\\User' => __DIR__ . '/../..' . '/modules/User/Models/User.php',
+        'Modules\\User\\Policies\\UserPolicy' => __DIR__ . '/../..' . '/modules/User/Policies/UserPolicy.php',
+        'Modules\\User\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/modules/User/Providers/RouteServiceProvider.php',
+        'Modules\\User\\Providers\\UserServiceProvider' => __DIR__ . '/../..' . '/modules/User/Providers/UserServiceProvider.php',
         'Monolog\\Attribute\\AsMonologProcessor' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/Attribute/AsMonologProcessor.php',
         'Monolog\\Attribute\\WithMonologChannel' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/Attribute/WithMonologChannel.php',
         'Monolog\\DateTimeImmutable' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/DateTimeImmutable.php',

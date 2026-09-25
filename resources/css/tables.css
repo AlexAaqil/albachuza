@@ -1,0 +1,92 @@
+.table-wrapper {
+    @apply overflow-hidden rounded-lg border;
+
+    thead {
+        tr {
+            @apply bg-foreground;
+
+            th {
+                @apply text-background;
+            }
+
+            .id {
+                @apply w-12.5;
+            }
+
+            .actions {
+                @apply text-center;
+            }
+        }
+    }
+
+    tbody {
+        tr {
+            @apply hover:bg-gray-50 dark:hover:bg-gray-800/50;
+
+            .id {
+                @apply font-medium;
+            }
+
+            .pill {
+                @apply rounded-full px-2 py-1 text-xs font-semibold;
+            }
+
+            img {
+                @apply w-15 h-15 rounded-lg object-cover;
+            }
+
+            .actions {
+                @apply text-center;
+
+                .actions-wrapper,
+                .action-buttons {
+                    @apply flex items-center justify-center gap-2;
+
+                    .action {
+                        @apply text-blue-600 hover:underline dark:text-blue-400;
+                    }
+
+                    svg {
+                        @apply w-4 h-4;
+                    }
+
+                    .divider {
+                        @apply text-gray-300 dark:text-gray-700;
+                    }
+
+                    .delete {
+                        @apply text-red-600 dark:text-red-400;
+                    }
+
+                    .btn-sm {
+                        @apply px-3 py-1 text-sm rounded-md transition;
+                    }
+
+                    .btn-primary {
+                        @apply bg-blue-600 text-white hover:bg-blue-700;
+                    }
+
+                    .btn-danger {
+                        @apply bg-red-600 text-white hover:bg-red-700;
+                    }
+
+                    .btn-outline {
+                        @apply border border-border text-foreground hover:bg-foreground hover:text-background;
+                    }
+                }
+            }
+        }
+
+        .blank-table-row {
+            @apply py-8 text-center text-gray-500;
+        }
+    }
+}
+
+.table-results-summary {
+    @apply mt-4 py-4 flex flex-col items-center justify-center gap-2 text-sm text-gray-600 dark:text-gray-400 sm:flex-row sm:gap-4;
+
+    .filtered-results {
+        @apply text-blue-600 dark:text-blue-400;
+    }
+}
