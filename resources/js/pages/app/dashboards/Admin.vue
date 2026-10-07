@@ -37,6 +37,7 @@ interface Props {
 
         total_products: number;
         total_product_categories: number;
+        total_product_brands: number;
 
         total_orders: number;
         orders_need_attention: number;
@@ -194,7 +195,7 @@ const pieChartOptions = {
                 <DashboardStat :stat="stats.total_products" label="Products">
                     <template #extras>
                         <span class="text-muted-foreground text-sm">
-                            {{ stats.total_product_categories }} Categories
+                            {{ stats.total_product_categories }} Categories & {{ stats.total_product_brands }} Brands
                         </span>
                     </template>
                 </DashboardStat>
