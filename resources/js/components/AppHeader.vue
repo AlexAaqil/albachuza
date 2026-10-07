@@ -209,7 +209,7 @@ const rightNavItems: NavItem[] = [
                     </Sheet>
                 </div>
 
-                <Link :href="dashboard()" class="flex items-center gap-x-2">
+                <Link href="/" class="flex items-center gap-x-2">
                     <AppLogo />
                 </Link>
 
