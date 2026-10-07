@@ -2,7 +2,7 @@
 
 Products
 
-❌ Image processing should crop images to a fixed h and w.
+✅ Image processing should crop images to a fixed h and w (800 x 800).
 ❌ Product SKU should be generated automatically.
 ❌ Add an input for size in the create and edit pages for products.
 ✅ Products out of stock should not be visible on the create order page.
@@ -10,10 +10,10 @@ Products
 
 Brands
 
-❌ Can upload an image for the brand
-❌ Image processing should crop images to a fixed h and w.
+✅ Can upload an image for the brand
+✅ Image processing should crop images to a fixed h and w.
 
 Categories
 
-❌ Can upload an image for the category
-❌ Image processing should crop images to a fixed h and w.
+✅ Can upload an image for the category
+✅ Image processing should crop images to a fixed h and w.
