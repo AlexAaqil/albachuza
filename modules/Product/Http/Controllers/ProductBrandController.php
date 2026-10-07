@@ -9,6 +9,9 @@ use Inertia\Inertia;
 use Exception;
 use Modules\Product\Models\ProductBrand;
 use Modules\Product\Http\Requests\ProductBrandRequest;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Image;
 
 class ProductBrandController extends Controller
 {
@@ -39,18 +42,26 @@ class ProductBrandController extends Controller
 
     public function store(ProductBrandRequest $request)
     {
+        $validated_data = $request->validated();
+
+        $image = $validated_data['image'] ?? null;
+        unset($validated_data['image']);
+
         try {
             DB::beginTransaction();
 
-            ProductBrand::create([
-                'name' => $request->name,
-            ]);
+            $brand = ProductBrand::create($validated_data);
+
+            if ($image && $image instanceof \Illuminate\Http\UploadedFile) {
+                $filename = $this->uploadImage($image, $brand);
+                $brand->update(['image' => $filename]);
+            }
 
             DB::commit();
 
             Inertia::flash('toast', [
                 'type' => "success",
-                'message' => "Product Brand created successfully"
+                'message' => "Brand created successfully"
             ]);
 
             return to_route('product-brands.index');
@@ -69,24 +80,47 @@ class ProductBrandController extends Controller
     public function edit(ProductBrand $product_brand)
     {
         return inertia('app/products/brands/Edit', [
-            'product_category' => $product_brand
+            'product_brand' => $product_brand
         ]);
     }
 
-    public function update(ProductBrand $product_brand, ProductBrandRequest $request)
+    public function update(ProductBrandRequest $request, ProductBrand $product_brand)
     {
+        $validated_data = $request->validated();
+
+        $image = $validated_data['image'] ?? null;
+        unset($validated_data['image']);
+
         try {
             DB::beginTransaction();
 
-            $product_brand->update([
-                'name' => $request->name,
-            ]);
+            $product_brand->update($validated_data);
+
+            if ($request->boolean('remove_image') && ! $request->hasFile('image')) {
+                if ($product_brand->image) {
+                    Storage::disk('public')->delete("brands/{$product_brand->image}");
+                    $product_brand->update(['image' => null]);
+                }
+            }
+
+            if ($request->hasFile('image')) {
+                // Delete old logo if exists
+                if ($product_brand->image) {
+                    $oldPath = "brands/{$product_brand->image}";
+                    if (Storage::disk('public')->exists($oldPath)) {
+                        Storage::disk('public')->delete($oldPath);
+                    }
+                }
+
+                $image_path = $this->uploadImage($request->file('image'), $product_brand);
+                $product_brand->update(['image' => $image_path]);
+            }
 
             DB::commit();
 
             Inertia::flash('toast', [
                 'type' => "success",
-                'message' => "Brand: {$request->name} updated successfully"
+                'message' => "Brand updated successfully"
             ]);
 
             return to_route('product-brands.index');
@@ -121,5 +155,20 @@ class ProductBrandController extends Controller
 
             return back()->withInput();
         }
+    }
+
+    private function uploadImage($file, ProductBrand $brand): string
+    {
+        $slug = Str::slug($brand->name);
+        $timestamp = now()->format('Ymd');
+        $random = 'albachuza_'.Str::random(6);
+        $filename = "{$slug}_{$timestamp}_{$random}.png";
+
+        Image::fromUpload($file)
+            ->contain(200, 200, '#ffffff')
+            ->toPng(90)
+            ->storeAs('brands', $filename, 'public');
+
+        return $filename;
     }
 }

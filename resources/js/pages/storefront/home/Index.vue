@@ -5,7 +5,7 @@ import ProductGrid from '@/pages/storefront/components/ProductGrid.vue';
 interface Brand {
 	id: number;
 	name: string;
-	thumbnail_url: string;
+	image_url: string;
 }
 
 interface Props {
@@ -42,8 +42,9 @@ defineProps<Props>();
 				<div class="brands-wrapper flex flex-wrap gap-16 justify-center">
 					<div class="brand flex flex-col justify-center items-center gap-2" v-for="brand in brands.data" v-bind:key="brand.id">
 						<div class="image w-20 h-20 rounded-lg border border-border">
-							<img :src="brand.thumbnail_url" :alt="brand.name" width="60" height="60" class="grayscale">
+							<img :src="brand.image_url" :alt="brand.name" width="60" height="60" class="grayscale">
 						</div>
+						<span class="font-medium text-body-label-text text-muted-foreground">{{ brand.name }}</span>
 						<!-- <p class="font-medium flex-1">{{ category.name }}</p> -->
 					</div>
 				</div>

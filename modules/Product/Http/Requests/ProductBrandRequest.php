@@ -29,7 +29,9 @@ class ProductBrandRequest extends FormRequest
                 'string',
                 'max:100',
                 Rule::unique('product_brands', 'name')->ignore($this->route('product_brand')?->id),
-            ]
+            ],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,gif,svg,webp', 'max:2048'],
+            'is_active' => ['boolean'],
         ];
     }
 
@@ -38,6 +40,9 @@ class ProductBrandRequest extends FormRequest
         return [
             'name.required' => 'Brand name must be filled',
             'name.unique' => 'A brand with this name already exists.',
+            'image.image' => 'The file must be an image.',
+            'image.mimes' => 'The image must be a JPG, JPEG, PNG, GIF, SVG, or WEBP file.',
+            'image.max' => 'The image size must not exceed 2MB.',
         ];
     }
 }
