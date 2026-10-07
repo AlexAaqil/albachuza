@@ -162,11 +162,11 @@ class ProductBrandController extends Controller
         $slug = Str::slug($brand->name);
         $timestamp = now()->format('Ymd');
         $random = 'albachuza_'.Str::random(6);
-        $filename = "{$slug}_{$timestamp}_{$random}.png";
+        $filename = "{$slug}_{$timestamp}_{$random}.webp";
 
         Image::fromUpload($file)
-            ->contain(200, 200, '#ffffff')
-            ->toPng(90)
+            ->contain(200, 200)
+            ->toWebp()
             ->storeAs('brands', $filename, 'public');
 
         return $filename;
