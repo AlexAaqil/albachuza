@@ -3,9 +3,9 @@
 namespace Modules\Support\Concerns;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Modules\User\Models\User;
 
 trait HasCreatorAuditTrail
@@ -18,37 +18,37 @@ trait HasCreatorAuditTrail
         static::creating(function (Model $model): void {
             $model->setCreatorAndUpdater();
         });
-        
+
         static::updating(function (Model $model): void {
             $model->setUpdater();
         });
     }
-    
+
     /**
      * Set the creator and updater for the model.
      */
     protected function setCreatorAndUpdater(): void
     {
         $userId = $this->getCurrentUserId();
-        
+
         if ($userId) {
             $this->created_by = $userId;
             $this->updated_by = $userId;
         }
     }
-    
+
     /**
      * Set the updater for the model.
      */
     protected function setUpdater(): void
     {
         $userId = $this->getCurrentUserId();
-        
+
         if ($userId) {
             $this->updated_by = $userId;
         }
     }
-    
+
     /**
      * Get the current user ID from various sources.
      */
@@ -60,11 +60,11 @@ trait HasCreatorAuditTrail
             // or return null to skip setting
             return null;
         }
-        
+
         // For web requests, use the authenticated user
         return Auth::check() ? Auth::id() : null;
     }
-    
+
     /**
      * Get the user who created this record
      */
@@ -72,7 +72,7 @@ trait HasCreatorAuditTrail
     {
         return $this->belongsTo(User::class, 'created_by');
     }
-    
+
     /**
      * Get the user who last updated this record
      */

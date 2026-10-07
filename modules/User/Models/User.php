@@ -4,25 +4,27 @@ namespace Modules\User\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Fortify\TwoFactorAuthenticatable;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Fortify\TwoFactorAuthenticatable;
+use Modules\Order\Models\Order;
+use Modules\Product\Models\InventoryMovement;
 use Modules\Support\Concerns\HasUuid;
 use Modules\User\Enums\UserRoles;
 use Modules\User\Enums\UserStatuses;
-use Modules\Order\Models\Order;
-use Modules\Product\Models\InventoryMovement;
+use Propaganistas\LaravelPhone\Casts\E164PhoneNumberCast;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, TwoFactorAuthenticatable;
+
     use HasUuid;
-    
+
     protected $guarded = [];
 
     protected $hidden = [
@@ -45,7 +47,8 @@ class User extends Authenticatable
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
             'role' => UserRoles::class,
-            'status' => UserStatuses::class
+            'status' => UserStatuses::class,
+            'phone' => E164PhoneNumberCast::class,
         ];
     }
 
@@ -87,6 +90,7 @@ class User extends Authenticatable
                 return $this->role->value === $role->value;
             }
         }
+
         return false;
     }
 
@@ -123,10 +127,10 @@ class User extends Authenticatable
 
     public function getImageUrlAttribute(): ?string
     {
-        if ($this->image && Storage::disk('public')->exists('users/' . $this->image)) {
-            return asset('storage/users/' . $this->image);
+        if ($this->image && Storage::disk('public')->exists('users/'.$this->image)) {
+            return asset('storage/users/'.$this->image);
         }
-        
+
         return asset('assets/images/default-image.png');
     }
 
@@ -154,13 +158,13 @@ class User extends Authenticatable
     public function scopeOrderByRolePriority(Builder $query): Builder
     {
         return $query->orderByRaw(
-            "CASE
+            'CASE
                 WHEN role = ? THEN 1
                 WHEN role = ? THEN 2
                 WHEN role = ? THEN 3
                 WHEN role = ? THEN 4
                 ELSE 5
-            END ASC",
+            END ASC',
             [
                 UserRoles::SUPER_ADMIN->value,
                 UserRoles::ADMIN->value,
@@ -172,7 +176,7 @@ class User extends Authenticatable
 
     public function scopeSearch(Builder $query, string $term): Builder
     {
-        return $query->where(function($query) use ($term) {
+        return $query->where(function ($query) use ($term) {
             $query->where('name', 'LIKE', "%{$term}%")
                 ->orWhere('email', 'LIKE', "%{$term}%");
         });

@@ -14,28 +14,34 @@ const { formatPrice } = usePriceFormatter();
 
 const displayValue = computed(() => {
     switch (props.format) {
-        case 'currency': return formatPrice(props.stat);
-        case 'percent':  return `${props.stat.toFixed(1)}%`;
-        default:         return props.stat.toLocaleString();
+        case 'currency':
+            return formatPrice(props.stat);
+        case 'percent':
+            return `${props.stat.toFixed(1)}%`;
+        default:
+            return props.stat.toLocaleString();
     }
 });
 
 const variantClasses = {
     default: '',
-    danger:  'text-red-600',
+    danger: 'text-red-600',
     success: 'text-green-600',
 };
 </script>
 
 <template>
-    <div class="stat border border-border p-4 rounded-lg space-y-0.5">
-        <p class="text-[24px] font-bold" :class="variantClasses[variant ?? 'default']">
+    <div class="stat border-border space-y-0.5 rounded-lg border p-4">
+        <p
+            class="text-[24px] font-bold"
+            :class="variantClasses[variant ?? 'default']"
+        >
             {{ displayValue }}
         </p>
         <p>{{ label }}</p>
         <div class="extras">
             <slot name="extras">
-                <span class="text-sm text-muted-foreground">No extra info</span>
+                <span class="text-muted-foreground text-sm">No extra info</span>
             </slot>
         </div>
     </div>

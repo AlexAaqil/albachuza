@@ -2,14 +2,32 @@
 import { computed } from 'vue';
 import { Head, usePage } from '@inertiajs/vue3';
 import DashboardStat from './components/DashboardStat.vue';
-import { Chart as ChartJS, Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, ArcElement, PointElement } from 'chart.js';
+import {
+    Chart as ChartJS,
+    Title,
+    Tooltip,
+    Legend,
+    LineElement,
+    CategoryScale,
+    LinearScale,
+    ArcElement,
+    PointElement,
+} from 'chart.js';
 import { Line, Pie } from 'vue-chartjs';
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
 
-
-ChartJS.register(Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, ArcElement, PointElement);
+ChartJS.register(
+    Title,
+    Tooltip,
+    Legend,
+    LineElement,
+    CategoryScale,
+    LinearScale,
+    ArcElement,
+    PointElement,
+);
 
 interface Props {
     stats: {
@@ -39,13 +57,26 @@ interface Props {
         total_gross_profit: number;
         gross_profit_margin: number;
         aov: number;
-    }
-};
+    };
+}
 
 const props = defineProps<Props>();
 
 const lineChartData = computed(() => ({
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    labels: [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+    ],
     datasets: [
         {
             label: 'Sales (Ksh)',
@@ -54,29 +85,30 @@ const lineChartData = computed(() => ({
             backgroundColor: 'rgba(59, 130, 246, 0.1)', // fill color (light blue)
             borderWidth: 3,
             fill: true,
-        }
-    ]
+        },
+    ],
 }));
 
 const lineChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-        legend: { 
-            display: false
+        legend: {
+            display: false,
         },
         tooltip: {
             callbacks: {
-                label: (context: any) => `Ksh ${context.parsed.y.toLocaleString()}`
-            }
-        }
+                label: (context: any) =>
+                    `Ksh ${context.parsed.y.toLocaleString()}`,
+            },
+        },
     },
     scales: {
         y: {
             beginAtZero: true,
-            ticks: { callback: (value: any) => `${value.toLocaleString()}` }
-        }
-    }
+            ticks: { callback: (value: any) => `${value.toLocaleString()}` },
+        },
+    },
 };
 
 const pieChartData = computed(() => ({
@@ -84,28 +116,31 @@ const pieChartData = computed(() => ({
     datasets: [
         {
             data: [
-                props.stats.payment_breakdown.mpesa, 
-                props.stats.payment_breakdown.cash
+                props.stats.payment_breakdown.mpesa,
+                props.stats.payment_breakdown.cash,
             ],
             backgroundColor: ['#10b981', '#f59e0b'], // green-500, amber-500
-            borderWidth: 1
-        }
-    ]
+            borderWidth: 1,
+        },
+    ],
 }));
 
 const pieChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-        legend: { 
-            position: 'right' as const, 
+        legend: {
+            position: 'right' as const,
         },
         tooltip: {
             callbacks: {
                 label: (context: any) => {
                     const value = context.parsed;
                     const dataset = context.dataset;
-                    const total = dataset.data.reduce((a: number, b: number) => a + b, 0);
+                    const total = dataset.data.reduce(
+                        (a: number, b: number) => a + b,
+                        0,
+                    );
 
                     if (total === 0) {
                         return `${context.label}: Ksh 0 (0%)`;
@@ -114,10 +149,10 @@ const pieChartOptions = {
                     const percentage = ((value / total) * 100).toFixed(1);
 
                     return `Ksh ${value.toLocaleString()} (${percentage}%)`;
-                }
-            }
-        }
-    }
+                },
+            },
+        },
+    },
 };
 </script>
 
@@ -128,25 +163,29 @@ const pieChartOptions = {
         <section class="header">
             <div class="flex items-center gap-4">
                 <p>Hi {{ user.name }}</p>
-                <span class="text-xs text-blue-900 bg-blue-100 py-1 px-2 rounded-sm">{{ user.role_label }}</span>
+                <span
+                    class="rounded-sm bg-blue-100 px-2 py-1 text-xs text-blue-900"
+                    >{{ user.role_label }}</span
+                >
             </div>
         </section>
 
         <section class="stats-wrapper">
             <h2 class="mb-4 font-medium">Platform Statistics</h2>
-            
+
             <div class="stats grid gap-8 lg:grid-cols-6">
                 <DashboardStat :stat="stats.total_users" label="Users">
                     <template #extras>
-                        <span class="text-sm text-muted-foreground">
-                            {{ stats.total_admins }} Admins & {{ stats.total_cashiers }} Cashiers
+                        <span class="text-muted-foreground text-sm">
+                            {{ stats.total_admins }} Admins &
+                            {{ stats.total_cashiers }} Cashiers
                         </span>
                     </template>
                 </DashboardStat>
 
                 <DashboardStat :stat="stats.total_orders" label="Orders">
                     <template #extras>
-                        <span class="text-sm text-muted-foreground">
+                        <span class="text-muted-foreground text-sm">
                             {{ stats.orders_need_attention }} need attention
                         </span>
                     </template>
@@ -154,7 +193,7 @@ const pieChartOptions = {
 
                 <DashboardStat :stat="stats.total_products" label="Products">
                     <template #extras>
-                        <span class="text-sm text-muted-foreground">
+                        <span class="text-muted-foreground text-sm">
                             {{ stats.total_product_categories }} Categories
                         </span>
                     </template>
@@ -166,41 +205,60 @@ const pieChartOptions = {
             <h2 class="mb-4 font-medium">Fiscal Overview</h2>
 
             <div class="stats grid gap-8 lg:grid-cols-5">
-                <DashboardStat :stat="stats.total_revenue" label="Total Revenue">
+                <DashboardStat
+                    :stat="stats.total_revenue"
+                    label="Total Revenue"
+                >
                     <template #extras>
-                        <span class="text-sm text-muted-foreground">
+                        <span class="text-muted-foreground text-sm">
                             All sales at full price
                         </span>
                     </template>
                 </DashboardStat>
 
-                <DashboardStat :stat="stats.total_cogs" label="Total COGS" variant="danger">
+                <DashboardStat
+                    :stat="stats.total_cogs"
+                    label="Total COGS"
+                    variant="danger"
+                >
                     <template #extras>
-                        <span class="text-sm text-muted-foreground">
+                        <span class="text-muted-foreground text-sm">
                             Total Cost of Goods
                         </span>
                     </template>
                 </DashboardStat>
 
-                <DashboardStat :stat="stats.total_gross_profit" label="Gross Profit" variant="success">
+                <DashboardStat
+                    :stat="stats.total_gross_profit"
+                    label="Gross Profit"
+                    variant="success"
+                >
                     <template #extras>
-                        <span class="text-sm text-muted-foreground">
+                        <span class="text-muted-foreground text-sm">
                             All sales minus cost of goods
                         </span>
                     </template>
                 </DashboardStat>
 
-                <DashboardStat :stat="stats.gross_profit_margin" format="percent" label="Gross Profit Margin">
+                <DashboardStat
+                    :stat="stats.gross_profit_margin"
+                    format="percent"
+                    label="Gross Profit Margin"
+                >
                     <template #extras>
-                        <span class="text-sm text-muted-foreground">
+                        <span class="text-muted-foreground text-sm">
                             Percentage of revenue kept after COGS
                         </span>
                     </template>
                 </DashboardStat>
 
-                <DashboardStat :stat="stats.aov" format="currency" label="AOV / ATV">
+                <DashboardStat
+                    :stat="stats.aov"
+                    format="currency"
+                    label="AOV / ATV"
+                >
                     <template #extras>
-                        <span class="text-sm text-muted-foreground">
+                        <span class="text-muted-foreground text-sm">
                             Average Order Value
                         </span>
                     </template>
@@ -208,20 +266,34 @@ const pieChartOptions = {
             </div>
         </section>
 
-        <section class="charts-wrapper grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <section class="charts-wrapper grid grid-cols-1 gap-6 lg:grid-cols-3">
             <!-- Line Chart (Spans 2 columns) -->
-            <div class="chart-card bg-background p-4 rounded-lg border border-border lg:col-span-2 h-80">
-                <h3 class="text-sm font-medium mb-2">Sales Performance in Ksh. ({{ new Date().getFullYear() }})</h3>
+            <div
+                class="chart-card bg-background border-border h-80 rounded-lg border p-4 lg:col-span-2"
+            >
+                <h3 class="mb-2 text-sm font-medium">
+                    Sales Performance in Ksh. ({{ new Date().getFullYear() }})
+                </h3>
                 <div class="h-65">
-                    <Line :data="lineChartData" :options="lineChartOptions" style="height: 100%!important; width: 100%!important;" />
+                    <Line
+                        :data="lineChartData"
+                        :options="lineChartOptions"
+                        style="height: 100% !important; width: 100% !important"
+                    />
                 </div>
             </div>
 
             <!-- Pie Chart (Spans 1 column) -->
-            <div class="chart-card bg-background p-4 rounded-lg border border-border h-80">
-                <h3 class="text-sm font-medium mb-2">Payment Methods</h3>
+            <div
+                class="chart-card bg-background border-border h-80 rounded-lg border p-4"
+            >
+                <h3 class="mb-2 text-sm font-medium">Payment Methods</h3>
                 <div class="h-65">
-                    <Pie :data="pieChartData" :options="pieChartOptions" style="height: 100%!important; width:100%!important" />
+                    <Pie
+                        :data="pieChartData"
+                        :options="pieChartOptions"
+                        style="height: 100% !important; width: 100% !important"
+                    />
                 </div>
             </div>
         </section>

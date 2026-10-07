@@ -29,7 +29,9 @@ const logout = () => {
 </script>
 
 <template>
-    <header class="guest_navbar py-4 px-4 lg:px-16 sticky top-0 z-50 bg-accent text-accent-foreground backdrop-blur-sm transition-all duration-300">
+    <header
+        class="guest_navbar bg-accent text-accent-foreground sticky top-0 z-50 px-4 py-4 backdrop-blur-sm transition-all duration-300 lg:px-16"
+    >
         <nav class="flex items-center justify-between">
             <!-- Branding - UNCHANGED -->
             <div class="branding">
@@ -39,107 +41,131 @@ const logout = () => {
             </div>
 
             <!-- Desktop Navigation - Hidden on mobile, shown on lg -->
-            <div class="links hidden lg:flex items-center gap-8">
+            <div class="links hidden items-center gap-8 lg:flex">
                 <Link href="/dashboard" v-if="user">Dashboard</Link>
                 <Link href="/catalogue">Catalogue</Link>
                 <Link href="/contact">Contact</Link>
             </div>
 
             <!-- Desktop Extras - Hidden on mobile, shown on lg -->
-            <div class="extras hidden lg:flex items-center justify-center gap-4">
-                <button @click="updateAppearance(appearance === 'light' ? 'dark' : 'light')" class="toggle-theme" title="Toggle theme">
-                    <Sun v-if="appearance === 'light'" class="icon sun-icon w-5 h-5" />
-                    <Moon v-else class="icon moon-icon w-5 h-5" />
+            <div
+                class="extras hidden items-center justify-center gap-4 lg:flex"
+            >
+                <button
+                    @click="
+                        updateAppearance(
+                            appearance === 'light' ? 'dark' : 'light',
+                        )
+                    "
+                    class="toggle-theme"
+                    title="Toggle theme"
+                >
+                    <Sun
+                        v-if="appearance === 'light'"
+                        class="icon sun-icon h-5 w-5"
+                    />
+                    <Moon v-else class="icon moon-icon h-5 w-5" />
                 </button>
 
                 <div v-if="user" class="flex items-center gap-2">
-                    <button 
-                        @click="logout" 
-                        class="flex items-center gap-2 px-3 py-1.5 bg-red-600 text-white font-bold tracking-wide rounded-sm hover:bg-red-700 transition-colors"
+                    <button
+                        @click="logout"
+                        class="flex items-center gap-2 rounded-sm bg-red-600 px-3 py-1.5 font-bold tracking-wide text-white transition-colors hover:bg-red-700"
                     >
-                        <LogOut class="w-4 h-4" />
+                        <LogOut class="h-4 w-4" />
                         Logout
                     </button>
                 </div>
 
                 <div v-else class="auth_pages_links flex items-center gap-2">
-                    <Link href="/login" class="px-3 py-1.5 bg-accent-foreground text-accent font-bold tracking-wide rounded-sm hover:opacity-90">Login</Link>
+                    <Link
+                        href="/login"
+                        class="bg-accent-foreground text-accent rounded-sm px-3 py-1.5 font-bold tracking-wide hover:opacity-90"
+                        >Login</Link
+                    >
                 </div>
             </div>
 
             <!-- Mobile hamburger menu button -->
-            <div class="flex lg:hidden items-center gap-3">
+            <div class="flex items-center gap-3 lg:hidden">
                 <!-- Theme toggle on mobile -->
-                <button 
-                    @click="updateAppearance(appearance === 'light' ? 'dark' : 'light')" 
-                    class="toggle-theme p-1" 
+                <button
+                    @click="
+                        updateAppearance(
+                            appearance === 'light' ? 'dark' : 'light',
+                        )
+                    "
+                    class="toggle-theme p-1"
                     title="Toggle theme"
                 >
-                    <Sun v-if="appearance === 'light'" class="icon sun-icon w-5 h-5" />
-                    <Moon v-else class="icon moon-icon w-5 h-5" />
+                    <Sun
+                        v-if="appearance === 'light'"
+                        class="icon sun-icon h-5 w-5"
+                    />
+                    <Moon v-else class="icon moon-icon h-5 w-5" />
                 </button>
 
                 <!-- Hamburger button -->
-                <button 
-                    @click="toggleMobileMenu" 
-                    class="p-1 hover:opacity-70 transition-opacity"
+                <button
+                    @click="toggleMobileMenu"
+                    class="p-1 transition-opacity hover:opacity-70"
                     aria-label="Toggle menu"
                 >
-                    <Menu v-if="!isMobileMenuOpen" class="w-6 h-6" />
-                    <X v-else class="w-6 h-6" />
+                    <Menu v-if="!isMobileMenuOpen" class="h-6 w-6" />
+                    <X v-else class="h-6 w-6" />
                 </button>
             </div>
         </nav>
 
         <!-- Mobile Menu Dropdown -->
-        <div 
-            v-if="isMobileMenuOpen" 
-            class="lg:hidden mt-4 pt-4 border-t border-accent-foreground/10"
+        <div
+            v-if="isMobileMenuOpen"
+            class="border-accent-foreground/10 mt-4 border-t pt-4 lg:hidden"
         >
             <div class="flex flex-col space-y-3">
                 <!-- Navigation Links -->
-                <Link 
-                    href="/dashboard" 
-                    v-if="user" 
-                    class="px-2 py-2 hover:bg-accent-foreground/5 rounded-md transition-colors"
+                <Link
+                    href="/dashboard"
+                    v-if="user"
+                    class="hover:bg-accent-foreground/5 rounded-md px-2 py-2 transition-colors"
                     @click="closeMobileMenu"
                 >
                     Dashboard
                 </Link>
-                <Link 
-                    href="/catalogue" 
-                    class="px-2 py-2 hover:bg-accent-foreground/5 rounded-md transition-colors"
+                <Link
+                    href="/catalogue"
+                    class="hover:bg-accent-foreground/5 rounded-md px-2 py-2 transition-colors"
                     @click="closeMobileMenu"
                 >
                     Catalogue
                 </Link>
-                <Link 
-                    href="/contact" 
-                    class="px-2 py-2 hover:bg-accent-foreground/5 rounded-md transition-colors"
+                <Link
+                    href="/contact"
+                    class="hover:bg-accent-foreground/5 rounded-md px-2 py-2 transition-colors"
                     @click="closeMobileMenu"
                 >
                     Contact
                 </Link>
 
                 <!-- Divider -->
-                <div class="border-t border-accent-foreground/10 my-1"></div>
+                <div class="border-accent-foreground/10 my-1 border-t"></div>
 
                 <div v-if="!user" class="flex flex-col space-y-2">
-                    <Link 
-                        href="/login" 
-                        class="px-4 py-2 bg-accent-foreground text-accent font-bold tracking-wide rounded-sm hover:opacity-90 text-center"
+                    <Link
+                        href="/login"
+                        class="bg-accent-foreground text-accent rounded-sm px-4 py-2 text-center font-bold tracking-wide hover:opacity-90"
                         @click="closeMobileMenu"
                     >
                         Login
                     </Link>
                 </div>
-                
+
                 <div v-else class="flex flex-col space-y-2">
-                    <button 
+                    <button
                         @click="logout"
-                        class="px-4 py-2 bg-red-600 text-white font-bold tracking-wide rounded-sm hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
+                        class="flex items-center justify-center gap-2 rounded-sm bg-red-600 px-4 py-2 font-bold tracking-wide text-white transition-colors hover:bg-red-700"
                     >
-                        <LogOut class="w-4 h-4" />
+                        <LogOut class="h-4 w-4" />
                         Logout
                     </button>
                 </div>

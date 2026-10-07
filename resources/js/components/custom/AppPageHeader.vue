@@ -38,17 +38,20 @@ watch(search, (value) => {
     debouncedSearch(value);
 });
 
-watch(() => props.modelValue, (value) => {
-    search.value = value;
-});
+watch(
+    () => props.modelValue,
+    (value) => {
+        search.value = value;
+    },
+);
 </script>
 
 <template>
-    <div class="AppPageHeader grid lg:grid-cols-3 gap-4 md:gap-6 mb-4">
+    <div class="AppPageHeader mb-4 grid gap-4 md:gap-6 lg:grid-cols-3">
         <div class="info">
             <h1 class="font-semibold">{{ resourceName }}</h1>
         </div>
-        
+
         <div class="search lg:flex lg:justify-center">
             <Input
                 v-model="search"

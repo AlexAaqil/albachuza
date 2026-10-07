@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 // use Illuminate\Support\Facades\DB;
 use Modules\User\Enums\UserRoles;
 use Modules\User\Models\User;
+
 // use Modules\Product\Models\Product;
 // use Modules\Product\Models\ProductCategory;
 // use Modules\Order\Enums\OrderStatusEnum;
@@ -43,7 +44,7 @@ class DashboardController extends Controller
                     'total_gross_profit' => (float) 0,
                     'gross_profit_margin' => (float) 0,
                     'aov' => (float) 0,
-                ]
+                ],
             ]);
         }
 
@@ -61,7 +62,7 @@ class DashboardController extends Controller
                     'total_orders' => 0,
                     'orders_need_attention' => 0,
 
-                    'monthly_sales' =>0,
+                    'monthly_sales' => 0,
                     'payment_breakdown' => [
                         'mpesa' => (float) 0,
                         'cash' => (float) 0,
@@ -71,7 +72,7 @@ class DashboardController extends Controller
                     'total_gross_profit' => (float) 0,
                     'gross_profit_margin' => (float) 0,
                     'aov' => (float) 0,
-                ]
+                ],
             ]);
         }
 
@@ -80,13 +81,13 @@ class DashboardController extends Controller
                 'user' => $user,
                 'stats' => [
                     'today' => [
-                        'orders_count'    => (int) 0,
-                        'sales_total'     => (float) 0,
-                        'cash_collected'  => (float) 0,
+                        'orders_count' => (int) 0,
+                        'sales_total' => (float) 0,
+                        'cash_collected' => (float) 0,
                         'mpesa_collected' => (float) 0,
                     ],
                     'needs_attention' => [
-                        'pending_payment'  => (int) 0,
+                        'pending_payment' => (int) 0,
                         'ready_for_pickup' => (int) 0,
                     ],
                     'low_stock' => 0,
@@ -111,9 +112,10 @@ class DashboardController extends Controller
 
             return inertia('app/dashboards/Customer', [
                 'user' => $user,
-                'stats' => $stats
+                'stats' => $stats,
             ]);
         }
+
         return inertia('app/dashboards/Dashboard');
     }
 }

@@ -3,21 +3,20 @@
 namespace Modules\User\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-use Exception;
 use Modules\User\Enums\UserRoles;
 use Modules\User\Enums\UserStatuses;
-use Modules\User\Models\User;
 use Modules\User\Http\Requests\UserRequest;
 use Modules\User\Http\Resources\UserResource;
+use Modules\User\Models\User;
 
 class UserController extends Controller
 {
-
     private function getRoleCounts(): array
     {
         $counts = DB::table('users')
@@ -68,7 +67,7 @@ class UserController extends Controller
         return inertia('app/users/Index', [
             'users' => UserResource::collection($users),
             'role_counts' => $role_counts,
-            'filters' => $request->only(['search', 'role'])
+            'filters' => $request->only(['search', 'role']),
         ]);
     }
 
@@ -78,7 +77,7 @@ class UserController extends Controller
 
         return inertia('app/users/Create', [
             'role_options' => UserRoles::optionsFor(Auth::user()->role),
-            'status_options' => UserStatuses::options()
+            'status_options' => UserStatuses::options(),
         ]);
     }
 
@@ -86,22 +85,25 @@ class UserController extends Controller
     {
         $this->authorize('create', User::class);
 
+        $validated = $request->validated();
+
         try {
             DB::beginTransaction();
 
             User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'role' => $request->role,
-                'status' => $request->status,
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+                'role' => $validated['role'],
+                'status' => $validated['status'],
+                'phone' => $validated['phone'],
             ]);
 
             DB::commit();
 
             Inertia::flash('toast', [
-                'type' => "success",
-                'message' => "User created successfully"
+                'type' => 'success',
+                'message' => 'User created successfully',
             ]);
 
             return to_route('users.index');
@@ -110,7 +112,7 @@ class UserController extends Controller
 
             Inertia::flash('toast', [
                 'type' => 'error',
-                'message' => "Failed to update user: {$e->getMessage()}"
+                'message' => "Failed to update user: {$e->getMessage()}",
             ]);
 
             return back()->withInput();
@@ -123,7 +125,7 @@ class UserController extends Controller
 
         return inertia('app/users/Edit', [
             'user' => new UserResource($user),
-            'role_options'   => UserRoles::optionsFor(Auth::user()->role),
+            'role_options' => UserRoles::optionsFor(Auth::user()->role),
             'status_options' => UserStatuses::options(),
         ]);
     }
@@ -132,14 +134,17 @@ class UserController extends Controller
     {
         $this->authorize('update', $user);
 
+        $validated = $request->validated();
+
         try {
             DB::beginTransaction();
 
             $user->update([
-                'name' => $request->name,
-                'email' => $request->email,
-                'role' => $request->role,
-                'status' => $request->status,
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'role' => $validated['role'],
+                'status' => $validated['status'],
+                'phone' => $validated['phone'],
             ]);
 
             if ($request->password) {
@@ -151,8 +156,8 @@ class UserController extends Controller
             DB::commit();
 
             Inertia::flash('toast', [
-                'type' => "success",
-                'message' => "User updated successfully"
+                'type' => 'success',
+                'message' => 'User updated successfully',
             ]);
 
             return to_route('users.index');
@@ -160,8 +165,8 @@ class UserController extends Controller
             DB::rollBack();
 
             Inertia::flash('toast', [
-                'type' => "error",
-                'message' => "Failed to update user: {$e->getMessage()}"
+                'type' => 'error',
+                'message' => "Failed to update user: {$e->getMessage()}",
             ]);
 
             return back()->withInput();
@@ -176,24 +181,24 @@ class UserController extends Controller
             if (Auth::id() === $user->id) {
                 return back()->with([
                     'message' => 'You cannot delete your own account.',
-                    'type' => 'error'
+                    'type' => 'error',
                 ]);
             }
 
             $user->delete();
 
             Inertia::flash('toast', [
-                'type' => "success",
-                'message' => "User deleted successfully"
+                'type' => 'success',
+                'message' => 'User deleted successfully',
             ]);
 
             return to_route('users.index');
         } catch (Exception $e) {
             Inertia::flash('toast', [
                 'type' => 'error',
-                'message' => "Failed to delete user: {$e->getMessage()}"
+                'message' => "Failed to delete user: {$e->getMessage()}",
             ]);
-            
+
             return back();
         }
     }

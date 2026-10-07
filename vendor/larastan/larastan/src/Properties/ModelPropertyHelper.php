@@ -20,6 +20,7 @@ use PHPStan\Type\TypeCombinator;
 use ReflectionException;
 
 use function array_key_exists;
+use function array_keys;
 use function array_map;
 use function count;
 use function in_array;
@@ -31,8 +32,14 @@ class ModelPropertyHelper
     /** @var array<string, SchemaTable> */
     private array $tables = [];
 
+    private bool $migrationsLoaded = false;
+
     /** @var array<string, bool> */
     private array $accessorCache = [];
+
+    private ObjectType|null $attributeType = null;
+
+    private GenericObjectType|null $genericAttributeType = null;
 
     public function __construct(
         private TypeStringResolver $stringResolver,
@@ -89,6 +96,22 @@ class ModelPropertyHelper
         }
 
         return array_key_exists($propertyName, $this->tables[$tableName]->columns);
+    }
+
+    /** @return list<string> */
+    public function getDatabasePropertyNames(ClassReflection $classReflection): array
+    {
+        if (! $this->migrationsLoaded()) {
+            $this->loadMigrations();
+        }
+
+        try {
+            $model = ModelHelper::newInstanceWithoutConstructor($classReflection);
+        } catch (ReflectionException) {
+            return [];
+        }
+
+        return array_keys($this->tables[$model->getTable()]->columns ?? []);
     }
 
     public function getDatabaseProperty(ClassReflection $classReflection, string $propertyName): ModelProperty
@@ -192,15 +215,19 @@ class ModelPropertyHelper
 
         $returnType = $methodReflection->getVariants()[0]->getReturnType();
 
+        $this->attributeType ??= new ObjectType(Attribute::class);
+
         if (! $strictGenerics) {
-            return (new ObjectType(Attribute::class))->isSuperTypeOf($returnType)->yes();
+            return $this->attributeType->isSuperTypeOf($returnType)->yes();
         }
 
         if ($returnType->getObjectClassReflections() === [] || ! $returnType->getObjectClassReflections()[0]->isGeneric()) {
             return false;
         }
 
-        return (new GenericObjectType(Attribute::class, [new MixedType(), new MixedType()]))->isSuperTypeOf($returnType)->yes();
+        $this->genericAttributeType ??= new GenericObjectType(Attribute::class, [new MixedType(), new MixedType()]);
+
+        return $this->genericAttributeType->isSuperTypeOf($returnType)->yes();
     }
 
     public function getAccessor(ClassReflection $classReflection, string $propertyName): ModelProperty
@@ -213,7 +240,9 @@ class ModelPropertyHelper
             if (! $methodReflection->isPublic() && ! $methodReflection->isPrivate()) {
                 $returnType = $methodReflection->getVariants()[0]->getReturnType();
 
-                if ((new ObjectType(Attribute::class))->isSuperTypeOf($returnType)->yes()) {
+                $this->attributeType ??= new ObjectType(Attribute::class);
+
+                if ($this->attributeType->isSuperTypeOf($returnType)->yes()) {
                     return new ModelProperty(
                         $classReflection,
                         $returnType->getTemplateType(Attribute::class, 'TGet'),
@@ -234,11 +263,13 @@ class ModelPropertyHelper
 
     private function migrationsLoaded(): bool
     {
-        return count($this->tables) > 0;
+        return $this->migrationsLoaded;
     }
 
     private function loadMigrations(): void
     {
+        $this->migrationsLoaded = true;
+
         $migrationFiles = $this->migrationHelper->getMigrationFiles();
         $schemaFiles    = $this->squashedMigrationHelper->getSchemaFiles();
 

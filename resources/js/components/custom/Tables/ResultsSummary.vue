@@ -29,17 +29,22 @@ const displayRange = computed(() => {
 });
 
 const itemLabel = computed(() => {
-    return displayRange.value.total === 1 ? props.itemName : props.itemNamePlural;
+    return displayRange.value.total === 1
+        ? props.itemName
+        : props.itemNamePlural;
 });
 </script>
 
 <template>
     <div class="table-results-summary">
         <p>
-            Showing {{ displayRange.start }} to {{ displayRange.end }}
-            of {{ displayRange.total }} {{ itemLabel }}
+            Showing {{ displayRange.start }} to {{ displayRange.end }} of
+            {{ displayRange.total }} {{ itemLabel }}
         </p>
-        <p v-if="showFilterIndicator && hasActiveFilters" class="filtered-results">
+        <p
+            v-if="showFilterIndicator && hasActiveFilters"
+            class="filtered-results"
+        >
             Filtered results
         </p>
     </div>

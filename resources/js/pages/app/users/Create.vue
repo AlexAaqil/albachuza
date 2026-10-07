@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed} from 'vue';
+import { computed } from 'vue';
 import { Form, Head, Link } from '@inertiajs/vue3';
 import FormHeader from '@/components/custom/FormHeader.vue';
 import InputError from '@/components/InputError.vue';
@@ -7,7 +7,14 @@ import PasswordInput from '@/components/PasswordInput.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
 import userRoutes from '@/routes/users';
 
@@ -18,18 +25,18 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const roleOptions = computed(() => 
+const roleOptions = computed(() =>
     Object.entries(props.role_options).map(([value, label]) => ({
         value: Number(value),
         label,
-    }))
+    })),
 );
 
 const statusOptions = computed(() =>
     Object.entries(props.status_options).map(([value, label]) => ({
         value: Number(value),
         label,
-    }))
+    })),
 );
 </script>
 
@@ -39,7 +46,11 @@ const statusOptions = computed(() =>
     <div class="form create-user">
         <FormHeader :backUrl="userRoutes.index().url" title="Create New user" />
 
-        <Form :action="userRoutes.store.url()" method="post" v-slot="{ errors, processing }">
+        <Form
+            :action="userRoutes.store.url()"
+            method="post"
+            v-slot="{ errors, processing }"
+        >
             <div class="section-title">Basic Information</div>
 
             <div class="inputs-group-wrapper">
@@ -82,7 +93,9 @@ const statusOptions = computed(() =>
                 </div>
 
                 <div class="inputs-group">
-                    <Label for="password_confirmation" class="required">Confirm password</Label>
+                    <Label for="password_confirmation" class="required"
+                        >Confirm password</Label
+                    >
                     <PasswordInput
                         id="password_confirmation"
                         autocomplete="new-password"
@@ -102,9 +115,9 @@ const statusOptions = computed(() =>
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
-                                <SelectItem 
-                                    v-for="option in roleOptions" 
-                                    :key="option.value" 
+                                <SelectItem
+                                    v-for="option in roleOptions"
+                                    :key="option.value"
                                     :value="option.value"
                                 >
                                     {{ option.label }}
@@ -123,9 +136,9 @@ const statusOptions = computed(() =>
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
-                                <SelectItem 
-                                    v-for="option in statusOptions" 
-                                    :key="option.value" 
+                                <SelectItem
+                                    v-for="option in statusOptions"
+                                    :key="option.value"
                                     :value="option.value"
                                 >
                                     {{ option.label }}

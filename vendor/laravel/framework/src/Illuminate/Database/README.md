@@ -34,16 +34,18 @@ $capsule->setAsGlobal();
 $capsule->bootEloquent();
 ```
 
-> `composer require "illuminate/events"` required when you need to use observers with Eloquent.
+> `composer require "illuminate/events"` is required when you need to use observers with Eloquent.
 
-Once the Capsule instance has been registered. You may use it like so:
+Once the Capsule instance has been registered, you may use it like so:
 
 **Using The Query Builder**
 
 ```PHP
 $users = Capsule::table('users')->where('votes', '>', 100)->get();
 ```
+
 Other core methods may be accessed directly from the Capsule in the same manner as from the DB facade:
+
 ```PHP
 $results = Capsule::select('select * from users where id = ?', [1]);
 ```

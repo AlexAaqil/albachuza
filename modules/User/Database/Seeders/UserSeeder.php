@@ -2,11 +2,9 @@
 
 namespace Modules\User\Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Modules\User\Models\User;
-
 
 class UserSeeder extends Seeder
 {
@@ -45,10 +43,10 @@ class UserSeeder extends Seeder
                 'role' => 3,
                 'email_verified_at' => now(),
                 'password' => $password,
-            ]
+            ],
         ];
 
-        foreach($users as $user) {
+        foreach ($users as $user) {
             User::create($user);
         }
     }

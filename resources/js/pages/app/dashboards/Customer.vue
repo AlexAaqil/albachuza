@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import { Head, usePage, Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
 import { usePriceFormatter } from '@/composables/usePriceFormatter';
 
 const page = usePage();
@@ -17,7 +24,7 @@ interface Order {
     payment_status: number | null;
     payment_status_label: string;
     created_at: string;
-};
+}
 
 interface Stats {
     total_orders: number;
@@ -66,7 +73,11 @@ const orderStatsText = computed(() => {
 
 // Optional: Get active orders (pending, processing, shipped)
 const activeOrdersCount = computed(() => {
-    return props.stats.pending_orders + props.stats.processing_orders + props.stats.shipped_orders;
+    return (
+        props.stats.pending_orders +
+        props.stats.processing_orders +
+        props.stats.shipped_orders
+    );
 });
 
 const activeOrdersText = computed(() => {
@@ -88,7 +99,7 @@ const activeOrdersText = computed(() => {
     <div class="app-container Dashboard CustomerDashboard">
         <div class="Hero">
             <h1>Welcome back {{ user.name }}</h1>
-            <p class="text-gray-600 mt-2">Track your orders and activity</p>
+            <p class="mt-2 text-gray-600">Track your orders and activity</p>
         </div>
 
         <div class="stats-wrapper">
@@ -107,13 +118,18 @@ const activeOrdersText = computed(() => {
             <div class="stat">
                 <div class="label">Active Orders</div>
                 <div class="number">{{ activeOrdersCount }}</div>
-                <div class="extras" v-if="activeOrdersText">{{ activeOrdersText }}</div>
+                <div class="extras" v-if="activeOrdersText">
+                    {{ activeOrdersText }}
+                </div>
                 <div class="extras" v-else>No active orders</div>
             </div>
         </div>
 
-        <div v-if="stats.recent_orders && stats.recent_orders.data.length > 0" class="recent-orders mt-8">
-            <h2 class="text-xl font-semibold mb-1">Recent Orders</h2>
+        <div
+            v-if="stats.recent_orders && stats.recent_orders.data.length > 0"
+            class="recent-orders mt-8"
+        >
+            <h2 class="mb-1 text-xl font-semibold">Recent Orders</h2>
             <div class="table-wrapper recent-orders mt-8">
                 <Table>
                     <TableHeader>
@@ -129,20 +145,36 @@ const activeOrdersText = computed(() => {
                     </TableHeader>
 
                     <TableBody>
-                        <TableRow v-for="(order, index) in stats.recent_orders.data" :key="order.id">
-                            <TableCell class="id">{{ (stats.recent_orders.meta.current_page - 1) * stats.recent_orders.meta.per_page + index + 1 }}</TableCell>
+                        <TableRow
+                            v-for="(order, index) in stats.recent_orders.data"
+                            :key="order.id"
+                        >
+                            <TableCell class="id">{{
+                                (stats.recent_orders.meta.current_page - 1) *
+                                    stats.recent_orders.meta.per_page +
+                                index +
+                                1
+                            }}</TableCell>
                             <TableCell>{{ order.order_number }}</TableCell>
                             <TableCell>{{ order.total_amount }}</TableCell>
-                            <TableCell :class="{
-                                    'font-semibold text-green-600' : order.payment_status_label === 'Paid',
-                                    'font-semibold text-red-600' : order.payment_status_label === 'Cancelled',
+                            <TableCell
+                                :class="{
+                                    'font-semibold text-green-600':
+                                        order.payment_status_label === 'Paid',
+                                    'font-semibold text-red-600':
+                                        order.payment_status_label ===
+                                        'Cancelled',
                                 }"
                             >
                                 {{ order.payment_status_label }}
                             </TableCell>
-                            <TableCell :class="{
-                                    'font-semibold text-green-600' : order.order_status_label === 'Delivered',
-                                    'font-semibold text-yellow-500' : order.order_status_label === 'Shipped',
+                            <TableCell
+                                :class="{
+                                    'font-semibold text-green-600':
+                                        order.order_status_label ===
+                                        'Delivered',
+                                    'font-semibold text-yellow-500':
+                                        order.order_status_label === 'Shipped',
                                 }"
                             >
                                 {{ order.order_status_label }}
@@ -150,7 +182,10 @@ const activeOrdersText = computed(() => {
                             <TableCell>{{ order.created_at }}</TableCell>
                             <TableCell class="actions">
                                 <div class="actions-wrapper">
-                                    <Link href="route('orders.show', order.id)" class="view-link">
+                                    <Link
+                                        href="route('orders.show', order.id)"
+                                        class="view-link"
+                                    >
                                         View →
                                     </Link>
                                 </div>
@@ -168,7 +203,10 @@ const activeOrdersText = computed(() => {
         </div>
 
         <div v-if="stats.total_orders > 20" class="view-all mt-4">
-            <Link href="route('orders.index')" class="text-blue-600 hover:underline text-center">
+            <Link
+                href="route('orders.index')"
+                class="text-center text-blue-600 hover:underline"
+            >
                 View all {{ stats.total_orders }} orders →
             </Link>
         </div>

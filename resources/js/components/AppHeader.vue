@@ -1,6 +1,15 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, Menu, Search, Users, Barcode, Clipboard } from '@lucide/vue';
+import {
+    BookOpen,
+    Folder,
+    LayoutGrid,
+    Menu,
+    Search,
+    Users,
+    Barcode,
+    Clipboard,
+} from '@lucide/vue';
 import { computed } from 'vue';
 import AppLogo from '@/components/AppLogo.vue';
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
@@ -50,7 +59,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const activeItemStyles =
-'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100';
+    'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100';
 
 const page = usePage();
 const auth = computed(() => page.props.auth);
@@ -67,7 +76,7 @@ const mainNavItems = computed(() => {
             title: 'Dashboard',
             href: dashboard(),
             icon: LayoutGrid,
-        }
+        },
     ];
 
     if (isSuperAdmin.value || isAdmin.value || isCashier.value) {
@@ -81,7 +90,7 @@ const mainNavItems = computed(() => {
                 title: 'Products',
                 href: userRoutes.index(), // TODO: correct this route
                 icon: Barcode,
-            }
+            },
         );
     }
 
@@ -90,14 +99,14 @@ const mainNavItems = computed(() => {
             {
                 title: 'Users',
                 href: userRoutes.index(),
-                icon: Users
+                icon: Users,
             },
             // {
             //     title: 'Branches',
             //     href: branchRoutes.index(),
             //     icon: GitBranch
             // },
-        )
+        );
     }
 
     if (isCashier.value) {

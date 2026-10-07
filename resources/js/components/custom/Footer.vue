@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { usePage } from '@inertiajs/vue3';
-import {PhoneCall, Mail} from "@lucide/vue";
+import { PhoneCall, Mail } from '@lucide/vue';
 import { computed } from 'vue';
 
 interface Category {
@@ -12,17 +12,31 @@ interface Category {
 const currentYear = computed(() => new Date().getFullYear());
 
 const page = usePage();
-const categories = page.props.footer_product_categories as Category[] || [];
+const categories = (page.props.footer_product_categories as Category[]) || [];
 </script>
 
 <template>
-    <footer class="text-accent-foreground pt-4" style="background: url('/assets/images/general/footer.webp') var(--accent) left top;">
-        <div class="container-fluid px-4 lg:px-16 py-4 grid lg:grid-cols-4 gap-8">
+    <footer
+        class="text-accent-foreground pt-4"
+        style="
+            background: url('/assets/images/general/footer.webp') var(--accent)
+                left top;
+        "
+    >
+        <div
+            class="container-fluid grid gap-8 px-4 py-4 lg:grid-cols-4 lg:px-16"
+        >
             <div class="branding space-y-2">
                 <p class="font-bold">Renfa Concrete LTD</p>
-                <p>Plastic, ABS and steel moulds for pavers, balusters, ventilation blocks, cladding and cast-concrete garden pieces - plus the mixers, vibrators and oxide pigments to run a full production line. All held in stock in Nairobi, ready to move.</p>
+                <p>
+                    Plastic, ABS and steel moulds for pavers, balusters,
+                    ventilation blocks, cladding and cast-concrete garden pieces
+                    - plus the mixers, vibrators and oxide pigments to run a
+                    full production line. All held in stock in Nairobi, ready to
+                    move.
+                </p>
 
-                <div class="address space-y-2 mt-4">
+                <div class="address mt-4 space-y-2">
                     <p>Maasai Road Highrise</p>
                     <p>Maasai Road, off Mombasa Road</p>
                 </div>
@@ -40,34 +54,46 @@ const categories = page.props.footer_product_categories as Category[] || [];
             <div class="categories space-y-2">
                 <p class="font-bold">Categories</p>
                 <div class="links grid gap-2" v-if="categories.length > 0">
-                    <a v-for="category in categories" :key="category.id" :href="`/categories/${category.slug}`">{{ category.name }}</a>
+                    <a
+                        v-for="category in categories"
+                        :key="category.id"
+                        :href="`/categories/${category.slug}`"
+                        >{{ category.name }}</a
+                    >
                 </div>
 
                 <div class="empty-links" v-else>
-                    <p>There's  no available categories!</p>
+                    <p>There's no available categories!</p>
                 </div>
             </div>
 
             <div class="contact space-y-2">
                 <p class="font-bold">Contact Us</p>
                 <p class="flex items-center gap-2">
-                    <PhoneCall class="w-4 h-4"/>
-                    <span>+254 708 887 179</span></p>
+                    <PhoneCall class="h-4 w-4" />
+                    <span>+254 708 887 179</span>
+                </p>
                 <p class="flex items-center gap-2">
-                    <PhoneCall class="w-4 h-4"/>
-                    <span>+254 115 706 106</span></p>
+                    <PhoneCall class="h-4 w-4" />
+                    <span>+254 115 706 106</span>
+                </p>
                 <p class="flex items-center gap-2">
-                    <PhoneCall class="w-4 h-4"/>
-                    <span>+254 799 921 366</span></p>
+                    <PhoneCall class="h-4 w-4" />
+                    <span>+254 799 921 366</span>
+                </p>
                 <p class="flex items-center gap-2">
-                    <Mail class="w-4 h-4"/>
+                    <Mail class="h-4 w-4" />
                     <span>info@renfaconcreteltd.com</span>
                 </p>
             </div>
         </div>
 
-        <div class="copyrights grid gap-1 lg:flex lg:justify-between border-t border-border pt-4 px-4 lg:px-16 py-4">
-            <p class="text">&copy; {{  currentYear  }}. Renfa. All rights reserved.</p>
+        <div
+            class="copyrights border-border grid gap-1 border-t px-4 py-4 pt-4 lg:flex lg:justify-between lg:px-16"
+        >
+            <p class="text">
+                &copy; {{ currentYear }}. Renfa. All rights reserved.
+            </p>
 
             <div class="documents space-x-2">
                 <a href="#">Privacy Policy</a>

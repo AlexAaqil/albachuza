@@ -33,9 +33,10 @@ interface Props {
 const props = defineProps<Props>();
 
 // Convenience: is anything needing attention?
-const hasAttentionItems = computed(() =>
-    props.stats.needs_attention.pending_payment > 0 ||
-    props.stats.needs_attention.ready_for_pickup > 0
+const hasAttentionItems = computed(
+    () =>
+        props.stats.needs_attention.pending_payment > 0 ||
+        props.stats.needs_attention.ready_for_pickup > 0,
 );
 </script>
 
@@ -47,7 +48,9 @@ const hasAttentionItems = computed(() =>
         <section class="header">
             <div class="flex items-center gap-4">
                 <p>Hi {{ user.name }}</p>
-                <span class="text-xs text-blue-900 bg-blue-100 py-1 px-2 rounded-sm">
+                <span
+                    class="rounded-sm bg-blue-100 px-2 py-1 text-xs text-blue-900"
+                >
                     {{ user.role_label }}
                 </span>
             </div>
@@ -91,36 +94,50 @@ const hasAttentionItems = computed(() =>
             <div class="grid gap-4 sm:grid-cols-2">
                 <Link
                     v-if="stats.needs_attention.pending_payment > 0"
-                    :href="orderRoutes.index({ query: { status: 'pending' } }).url"
-                    class="flex items-center justify-between rounded-lg border-l-4 border-orange-400 bg-orange-50 dark:bg-orange-950/30 p-4 hover:bg-orange-100 dark:hover:bg-orange-900/40 transition"
+                    :href="
+                        orderRoutes.index({ query: { status: 'pending' } }).url
+                    "
+                    class="flex items-center justify-between rounded-lg border-l-4 border-orange-400 bg-orange-50 p-4 transition hover:bg-orange-100 dark:bg-orange-950/30 dark:hover:bg-orange-900/40"
                 >
                     <div>
-                        <p class="text-sm font-medium text-orange-900 dark:text-orange-200">
+                        <p
+                            class="text-sm font-medium text-orange-900 dark:text-orange-200"
+                        >
                             Orders Pending Payment
                         </p>
                         <p class="text-xs text-orange-700 dark:text-orange-300">
                             Follow up with customers
                         </p>
                     </div>
-                    <span class="text-2xl font-bold text-orange-600 dark:text-orange-400">
+                    <span
+                        class="text-2xl font-bold text-orange-600 dark:text-orange-400"
+                    >
                         {{ stats.needs_attention.pending_payment }}
                     </span>
                 </Link>
 
                 <Link
                     v-if="stats.needs_attention.ready_for_pickup > 0"
-                    :href="orderRoutes.index({ query: { status: 'ready_for_pickup' } }).url"
-                    class="flex items-center justify-between rounded-lg border-l-4 border-purple-400 bg-purple-50 dark:bg-purple-950/30 p-4 hover:bg-purple-100 dark:hover:bg-purple-900/40 transition"
+                    :href="
+                        orderRoutes.index({
+                            query: { status: 'ready_for_pickup' },
+                        }).url
+                    "
+                    class="flex items-center justify-between rounded-lg border-l-4 border-purple-400 bg-purple-50 p-4 transition hover:bg-purple-100 dark:bg-purple-950/30 dark:hover:bg-purple-900/40"
                 >
                     <div>
-                        <p class="text-sm font-medium text-purple-900 dark:text-purple-200">
+                        <p
+                            class="text-sm font-medium text-purple-900 dark:text-purple-200"
+                        >
                             Ready for Pickup
                         </p>
                         <p class="text-xs text-purple-700 dark:text-purple-300">
                             Hand off to customers
                         </p>
                     </div>
-                    <span class="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                    <span
+                        class="text-2xl font-bold text-purple-600 dark:text-purple-400"
+                    >
                         {{ stats.needs_attention.ready_for_pickup }}
                     </span>
                 </Link>
@@ -134,14 +151,14 @@ const hasAttentionItems = computed(() =>
             <div class="flex flex-wrap gap-3">
                 <Link
                     :href="orderRoutes.create().url"
-                    class="inline-flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition"
+                    class="inline-flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
                 >
                     + New Order (POS)
                 </Link>
 
                 <Link
                     :href="orderRoutes.index().url"
-                    class="inline-flex items-center gap-2 rounded-md border border-gray-300 dark:border-gray-600 px-4 py-2 text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                    class="inline-flex items-center gap-2 rounded-md border border-gray-300 px-4 py-2 text-sm font-medium transition hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-800"
                 >
                     View My Orders
                 </Link>
@@ -150,34 +167,44 @@ const hasAttentionItems = computed(() =>
 
         <!-- Low Stock -->
         <section v-if="stats.low_stock.length > 0" class="low-stock-wrapper">
-            <h2 class="mb-4 font-medium flex items-center gap-2">
+            <h2 class="mb-4 flex items-center gap-2 font-medium">
                 <span>Low Stock</span>
-                <span class="text-xs bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300 px-2 py-0.5 rounded-full">
+                <span
+                    class="rounded-full bg-red-100 px-2 py-0.5 text-xs text-red-800 dark:bg-red-900/40 dark:text-red-300"
+                >
                     {{ stats.low_stock.length }}
                 </span>
             </h2>
 
-            <div class="rounded-lg border bg-card">
+            <div class="bg-card rounded-lg border">
                 <ul class="divide-y">
                     <li
                         v-for="product in stats.low_stock"
                         :key="product.id"
                         class="flex items-center justify-between px-4 py-3 text-sm"
                     >
-                        <span class="font-medium truncate">{{ product.name }}</span>
+                        <span class="truncate font-medium">{{
+                            product.name
+                        }}</span>
                         <span
                             class="ml-3 shrink-0 rounded-full px-2 py-0.5 text-xs font-medium"
-                            :class="product.current_stock === 0
-                                ? 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300'
-                                : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300'"
+                            :class="
+                                product.current_stock === 0
+                                    ? 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300'
+                                    : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300'
+                            "
                         >
-                            {{ product.current_stock === 0 ? 'Out of stock' : `${product.current_stock} left` }}
+                            {{
+                                product.current_stock === 0
+                                    ? 'Out of stock'
+                                    : `${product.current_stock} left`
+                            }}
                         </span>
                     </li>
                 </ul>
             </div>
 
-            <p class="text-xs text-muted-foreground mt-2">
+            <p class="text-muted-foreground mt-2 text-xs">
                 Let an admin know so they can restock.
             </p>
         </section>
@@ -185,7 +212,7 @@ const hasAttentionItems = computed(() =>
         <!-- All good -->
         <section
             v-else
-            class="rounded-lg border border-dashed p-8 text-center text-sm text-muted-foreground"
+            class="text-muted-foreground rounded-lg border border-dashed p-8 text-center text-sm"
         >
             ✓ No low stock items. Everything looks good.
         </section>

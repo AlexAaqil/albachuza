@@ -2,8 +2,8 @@
 
 namespace Modules\Support\Concerns;
 
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 /**
  * @mixin Model
@@ -33,7 +33,7 @@ trait HasSlug
         $count = 1;
 
         while ($this->slugExists($slug)) {
-            $slug = $originalSlug . '-' . $count++;
+            $slug = $originalSlug.'-'.$count++;
         }
 
         return $slug;
@@ -45,11 +45,11 @@ trait HasSlug
     protected function slugExists($slug)
     {
         $query = static::where('slug', $slug);
-        
+
         if ($this->exists) {
             $query->where('id', '!=', $this->id);
         }
-        
+
         return $query->exists();
     }
 
@@ -63,15 +63,15 @@ trait HasSlug
         $count = 1;
 
         $query = static::where('slug', $slug);
-        
+
         if ($excludeId) {
             $query->where('id', '!=', $excludeId);
         }
-        
+
         while ($query->exists()) {
-            $slug = $originalSlug . '-' . $count++;
+            $slug = $originalSlug.'-'.$count++;
             $query = static::where('slug', $slug);
-            
+
             if ($excludeId) {
                 $query->where('id', '!=', $excludeId);
             }

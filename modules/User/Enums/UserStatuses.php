@@ -10,18 +10,18 @@ enum UserStatuses: int
 
     public function label(): string
     {
-        return match($this) {
+        return match ($this) {
             self::INACTIVE => 'Inactive',
             self::ACTIVE => 'Active',
             self::SUSPENDED => 'Suspended'
         };
     }
 
-    public static function labels():array
+    public static function labels(): array
     {
         $labels = [];
 
-        foreach(self::cases() as $status) {
+        foreach (self::cases() as $status) {
             $labels[$status->value] = $status->label();
         }
 

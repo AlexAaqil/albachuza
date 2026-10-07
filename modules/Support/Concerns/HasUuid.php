@@ -9,7 +9,6 @@ trait HasUuid
     /**
      * Boot the trait
      */
-
     protected static function bootHasUuid()
     {
         static::creating(function ($model) {

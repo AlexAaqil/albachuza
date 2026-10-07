@@ -11,7 +11,7 @@ enum UserRoles: int
 
     public function label(): string
     {
-        return match($this) {
+        return match ($this) {
             self::SUPER_ADMIN => 'Super Admin',
             self::ADMIN => 'Admin',
             self::CASHIER => 'Cashier',
@@ -19,11 +19,11 @@ enum UserRoles: int
         };
     }
 
-    public static function labels():array
+    public static function labels(): array
     {
         $labels = [];
 
-        foreach(self::cases() as $role) {
+        foreach (self::cases() as $role) {
             $labels[$role->value] = $role->label();
         }
 
@@ -49,8 +49,8 @@ enum UserRoles: int
     {
         return match ($role) {
             self::SUPER_ADMIN => self::options(),
-            self::ADMIN       => self::adminOptions(),
-            default           => [],
+            self::ADMIN => self::adminOptions(),
+            default => [],
         };
     }
 
@@ -61,6 +61,7 @@ enum UserRoles: int
                 return $role;
             }
         }
+
         return null;
     }
 }

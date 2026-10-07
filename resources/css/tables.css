@@ -32,7 +32,7 @@
             }
 
             img {
-                @apply w-15 h-15 rounded-lg object-cover;
+                @apply h-15 w-15 rounded-lg object-cover;
             }
 
             .actions {
@@ -47,7 +47,7 @@
                     }
 
                     svg {
-                        @apply w-4 h-4;
+                        @apply h-4 w-4;
                     }
 
                     .divider {
@@ -59,7 +59,7 @@
                     }
 
                     .btn-sm {
-                        @apply px-3 py-1 text-sm rounded-md transition;
+                        @apply rounded-md px-3 py-1 text-sm transition;
                     }
 
                     .btn-primary {
@@ -71,7 +71,7 @@
                     }
 
                     .btn-outline {
-                        @apply border border-border text-foreground hover:bg-foreground hover:text-background;
+                        @apply border-border text-foreground hover:bg-foreground hover:text-background border;
                     }
                 }
             }
@@ -84,7 +84,7 @@
 }
 
 .table-results-summary {
-    @apply mt-4 py-4 flex flex-col items-center justify-center gap-2 text-sm text-gray-600 dark:text-gray-400 sm:flex-row sm:gap-4;
+    @apply mt-4 flex flex-col items-center justify-center gap-2 py-4 text-sm text-gray-600 sm:flex-row sm:gap-4 dark:text-gray-400;
 
     .filtered-results {
         @apply text-blue-600 dark:text-blue-400;

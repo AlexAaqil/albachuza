@@ -233,6 +233,10 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
 
         $userPassword = $user->getAuthPassword();
 
+        if (! is_string($userPassword)) {
+            return;
+        }
+
         $recallerHash = $recaller->hash();
 
         return (hash_equals($this->hashPasswordForCookie($userPassword), $recallerHash)
@@ -355,7 +359,7 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
             return;
         }
 
-        return $this->failedBasicResponse();
+        $this->failedBasicResponse();
     }
 
     /**
@@ -372,7 +376,7 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
         $credentials = $this->basicCredentials($this->getRequest(), $field);
 
         if (! $this->once(array_merge($credentials, $extraConditions))) {
-            return $this->failedBasicResponse();
+            $this->failedBasicResponse();
         }
     }
 
@@ -410,7 +414,7 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
     /**
      * Get the response for basic authentication.
      *
-     * @return void
+     * @return never
      *
      * @throws \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException
      */
@@ -568,6 +572,12 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
     {
         $this->updateSession($user->getAuthIdentifier());
 
+        if ($passwordHash = $user->getAuthPassword()) {
+            $this->session->put(
+                'password_hash_'.$this->name, $this->hashPasswordForCookie($passwordHash)
+            );
+        }
+
         // If the user should be permanently "remembered" by the application we will
         // queue a permanent cookie that contains the encrypted copy of the user
         // identifier. We will then decrypt this later to retrieve the users.
@@ -640,14 +650,14 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
     /**
      * Create a HMAC of the password hash for storage in cookies.
      *
-     * @param  string  $passwordHash
+     * @param  string|null  $passwordHash
      * @return string
      */
     public function hashPasswordForCookie($passwordHash)
     {
         return hash_hmac(
             'sha256',
-            $passwordHash,
+            $passwordHash ?? '',
             $this->hashKey ?? 'base-key-for-password-hash-mac'
         );
     }
@@ -743,7 +753,7 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
      * The application must be using the AuthenticateSession middleware.
      *
      * @param  string  $password
-     * @return \Illuminate\Contracts\Auth\Authenticatable|null
+     * @return void
      *
      * @throws \Illuminate\Auth\AuthenticationException
      */
@@ -753,7 +763,7 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
             return;
         }
 
-        $result = $this->rehashUserPasswordForDeviceLogout($password);
+        $this->rehashUserPasswordForDeviceLogout($password);
 
         if ($this->recaller() ||
             $this->getCookieJar()->hasQueued($this->getRecallerName())) {
@@ -761,15 +771,13 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
         }
 
         $this->fireOtherDeviceLogoutEvent($this->user());
-
-        return $result;
     }
 
     /**
      * Rehash the current user's password for logging out other devices via AuthenticateSession.
      *
      * @param  string  $password
-     * @return \Illuminate\Contracts\Auth\Authenticatable|null
+     * @return void
      *
      * @throws \InvalidArgumentException
      */

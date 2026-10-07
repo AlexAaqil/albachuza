@@ -1,14 +1,14 @@
 .form {
-    @apply p-6 mt-4 rounded-xl border border-border lg:w-[80vw] lg:mx-auto;
+    @apply border-border mt-4 rounded-xl border p-6 lg:mx-auto lg:w-[80vw];
 
     .form_header {
-        @apply mb-4 py-4 border-b border-border flex items-center gap-2;
+        @apply border-border mb-4 flex items-center gap-2 border-b py-4;
 
         a {
             @apply cursor-pointer font-bold;
 
             svg {
-                @apply w-5 h-5;
+                @apply h-5 w-5;
             }
         }
 
@@ -19,10 +19,10 @@
 
     form {
         .form-section {
-            @apply border rounded-lg p-6 mb-6;
+            @apply mb-6 rounded-lg border p-6;
 
             .section-title {
-                @apply font-medium text-lg mb-2;
+                @apply mb-2 text-lg font-medium;
             }
         }
 
@@ -33,7 +33,7 @@
         .inputs-group-wrapper,
         .inputs-group-wrapper-3,
         .inputs-group-wrapper-4 {
-            @apply md:grid md:gap-6 md:items-start;
+            @apply md:grid md:items-start md:gap-6;
         }
 
         .inputs-group-wrapper {
@@ -57,24 +57,24 @@ form,
     }
 
     label.required {
-        @apply after:content-['*'] after:ml-[0.2px] after:text-red-500 after:font-bold;
+        @apply after:ml-[0.2px] after:font-bold after:text-red-500 after:content-['*'];
     }
 
     input,
     textarea,
     select {
-        @apply w-full border border-gray-400 rounded-sm py-1 px-2;
+        @apply w-full rounded-sm border border-gray-400 px-2 py-1;
 
         &:disabled {
-            @apply bg-gray-100 cursor-not-allowed opacity-60;
+            @apply cursor-not-allowed bg-gray-100 opacity-60;
         }
 
         &:focus {
-            @apply outline-none ring-2 ring-foreground opacity-80;
+            @apply ring-foreground opacity-80 ring-2 outline-none;
         }
     }
 
-    input[type="checkbox"] {
+    input[type='checkbox'] {
         @apply w-auto;
     }
 
@@ -84,21 +84,21 @@ form,
 }
 
 .images-grid {
-    @apply grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4;
+    @apply grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6;
 
     .image {
-        @apply relative aspect-square rounded-lg overflow-hidden border-2 border-gray-200 bg-gray-50;
+        @apply relative aspect-square overflow-hidden rounded-lg border-2 border-gray-200 bg-gray-50;
 
         .remove-image {
-            @apply absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors;
+            @apply absolute top-1 right-1 rounded-full bg-red-500 p-1 text-white transition-colors hover:bg-red-600;
         }
     }
 
     .upload-trigger {
-        @apply aspect-square rounded-lg border-2 border-dashed border-gray-300 flex flex-col items-center justify-center text-center cursor-pointer hover:border-gray-400 transition-colors bg-gray-50 dark:bg-gray-800;
+        @apply flex aspect-square cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 text-center transition-colors hover:border-gray-400 dark:bg-gray-800;
 
         .upload-trigger span {
-            @apply text-sm text-gray-500 mt-2;
+            @apply mt-2 text-sm text-gray-500;
         }
     }
 }
