@@ -155,6 +155,12 @@ const truncateDescription = (text: string, maxLength: number = 60): string => {
 
     return text.substring(0, maxLength) + '...';
 };
+
+// A product is out of stock only if it tracks inventory AND has none left.
+// Untracked products are always "in stock".
+const isOutOfStock = (product: Product): boolean => {
+    return product.track_inventory && Number(product.current_stock) <= 0;
+};
 </script>
 
 <template>
@@ -186,6 +192,7 @@ const truncateDescription = (text: string, maxLength: number = 60): string => {
             v-for="(product, index) in products.data"
             :key="product.id"
             class="border border-border rounded-lg p-4 bg-card shadow-sm"
+            :class="{ 'bg-red-50 border-red-400': isOutOfStock(product) }"
         >
             <div class="flex items-start justify-between mb-3">
                 <div>
@@ -220,7 +227,15 @@ const truncateDescription = (text: string, maxLength: number = 60): string => {
                 </div>
                 <div class="flex justify-between">
                     <span class="text-muted-foreground">Stock Count:</span>
-                    <span class="font-medium text-right">{{ product.current_stock }}</span>
+                    <span class="font-medium text-right">
+                        {{ product.current_stock }}
+                        <span
+                            v-if="isOutOfStock(product)"
+                            class="ml-1 inline-flex items-center rounded-full bg-red-100 px-1.5 py-0.5 text-[10px] font-semibold text-red-700"
+                        >
+                            Out of Stock
+                        </span>
+                    </span>
                 </div>
                 <div class="flex justify-between">
                     <span class="text-muted-foreground">Price:</span>
@@ -297,13 +312,27 @@ const truncateDescription = (text: string, maxLength: number = 60): string => {
                     v-for="(product, index) in products.data" 
                     :key="product.id"
                     :class="{
-                        'duplicate-product-row bg-red-50 hover:bg-red-100': isDuplicate(product.id)
+                        'duplicate-product-row bg-red-50 hover:bg-red-100': isDuplicate(product.id),
+                        'bg-red-50 border-l-4 border-red-500 hover:bg-red-100' : !isDuplicate(product.id) && isOutOfStock(product),
                     }"
                 >
-                    <TableCell class="id">{{ (products.meta.current_page - 1) * products.meta.per_page + index + 1 }}</TableCell>
-                    <TableCell class="w-20"><img :src="product.thumbnail_url" :alt="product.slug"></TableCell>
+                    <TableCell class="id">
+                        {{ (products.meta.current_page - 1) * products.meta.per_page + index + 1 }}
+                    </TableCell>
+                    <TableCell class="w-20">
+                        <img :src="product.thumbnail_url" :alt="product.slug">
+                    </TableCell>
                     <TableCell class="max-w-30 overflow-hidden text-ellipsis cursor-help" :title="product.name">
                         {{ product.name }}
+
+                        <!-- Out of stock indicator -->
+                        <span
+                            v-if="isOutOfStock(product)"
+                            class="ml-2 inline-flex items-center rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-semibold text-red-700"
+                        >
+                            Out of stock
+                        </span>
+
                         <!-- Duplicate indicator -->
                         <span v-if="isDuplicate(product.id)" class="ml-2 text-xs text-red-600 font-bold">
                             ⚠️ Duplicate
@@ -312,7 +341,7 @@ const truncateDescription = (text: string, maxLength: number = 60): string => {
                     <TableCell>{{ product.sku ?? '-' }}</TableCell>
                     <TableCell>{{ product.barcode ?? '-' }}</TableCell>
                     <TableCell>{{ formatPrice(product.price) }}</TableCell>
-                    <TableCell>{{ product.current_stock }}</TableCell>
+                    <TableCell :class="{'font-bold text-red-600' : isOutOfStock(product)}">{{ product.current_stock }}</TableCell>
                     <TableCell>{{ product.category_name }}</TableCell>
                     <TableCell class="tags min-w-50 w-45">
                         <div class="tags-wrapper flex flex-wrap gap-4">
@@ -404,19 +433,6 @@ const truncateDescription = (text: string, maxLength: number = 60): string => {
 </template>
 
 <style scoped>
-.description-col {
-    max-width: 200px;
-    min-width: 120px;
-    width: 200px;
-}
-
-/* Truncate description text */
-.description-col.truncate {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
 /* Duplicate product row styling */
 .duplicate-product-row {
     background-color: rgb(254, 242, 242) !important; /* red-50 */
@@ -460,15 +476,6 @@ const truncateDescription = (text: string, maxLength: number = 60): string => {
     to {
         opacity: 1;
         transform: translateY(0);
-    }
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .description-col {
-        max-width: 100px;
-        min-width: 80px;
-        width: 100px;
     }
 }
 </style>
