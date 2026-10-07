@@ -45,7 +45,7 @@ import { useCurrentUrl } from '@/composables/useCurrentUrl';
 import { getInitials } from '@/composables/useInitials';
 import { toUrl } from '@/lib/utils';
 import { dashboard } from '@/routes';
-// import orderRoutes from '@/routes/orders';
+import orderRoutes from '@/routes/orders';
 import productRoutes from '@/routes/products';
 import userRoutes from '@/routes/users';
 import type { BreadcrumbItem, NavItem } from '@/types';
@@ -83,12 +83,12 @@ const mainNavItems = computed(() => {
         items.push(
             {
                 title: 'Orders',
-                href: userRoutes.index(), // TODO: correct this route
+                href: orderRoutes.index(),
                 icon: Clipboard,
             },
             {
                 title: 'Products',
-                href: productRoutes.index(), // TODO: correct this route
+                href: productRoutes.index(),
                 icon: Barcode,
             },
         );
