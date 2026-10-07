@@ -89,7 +89,7 @@ onUnmounted(() => {
                     id="description"
                     name="description"
                     rows="4"
-                    placeholder="Describe the product_brand..."
+                    placeholder="Describe the brand..."
                     :default-value="product_brand.description ?? ''"
                 />
                 <InputError :message="errors.description" />

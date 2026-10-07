@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { Head, Link, useForm, Form } from '@inertiajs/vue3';
+import { ref, onUnmounted } from 'vue';
+import { Form, Head, Link } from '@inertiajs/vue3';
 import { ImagePlus, X } from '@lucide/vue';
 import InputError from '@/components/InputError.vue';
 import { Textarea } from '@/components/ui/textarea';
@@ -11,170 +11,148 @@ import { Spinner } from '@/components/ui/spinner';
 import FormHeader from '@/components/custom/FormHeader.vue';
 import productCategoryRoutes from '@/routes/product-categories';
 
-const props = defineProps<{
-    product_category: {
-        id: number;
-        uuid: string;
-        name: string;
-        slug: string;
-        description: string | null;
-        image: string | null;
-        thumbnail_url: string | null;
-        is_active: boolean;
-    };
-}>();
+interface Category {
+    uuid: string;
+    name: string;
+    slug: string;
+    description: string | null;
+    image: string | null;
+    image_url: string | null;   // if your model/resource exposes it
+}
 
-const imagePreview = ref<string | null>(props.product_category.thumbnail_url);
+const props = defineProps<{ product_category: Category }>();
 
-// 1. Initialize Inertia's useForm hook
-const form = useForm({
-    _method: 'PUT', // Method spoofing for file uploads
-    name: props.product_category.name,
-    description: props.product_category.description ?? '',
-    is_active: props.product_category.is_active,
-    image: null as File | null,
-});
+// Preview: either the existing image URL or an object URL for a newly-picked file
+const imagePreview = ref<string | null>(props.product_category.image_url ?? null);
 
 const handleImageChange = (e: Event) => {
     const target = e.target as HTMLInputElement;
     const file = target.files?.[0];
-    if (file) {
-        form.image = file; // 2. Assign file object directly to form state
-        imagePreview.value = URL.createObjectURL(file);
+    if (!file) return;
+
+    // Revoke any previous object URL
+    if (imagePreview.value?.startsWith('blob:')) {
+        URL.revokeObjectURL(imagePreview.value);
     }
+
+    imagePreview.value = URL.createObjectURL(file);
 };
 
-const removeLogo = () => {
-    form.image = null;
+const removeImage = () => {
+    if (imagePreview.value?.startsWith('blob:')) {
+        URL.revokeObjectURL(imagePreview.value);
+    }
+    // Setting to null hides the preview; the file input itself must be cleared separately
     imagePreview.value = null;
 };
 
-// 3. Submit Handler
-const handleSubmit = () => {
-    // Crucial: Use .post() with _method: 'PUT' inside payload for Laravel file uploads!
-    form.post(productCategoryRoutes.update(props.product_category.uuid).url, {
-        forceFormData: true,
-        preserveScroll: true,
-    });
-};
+onUnmounted(() => {
+    if (imagePreview.value?.startsWith('blob:')) {
+        URL.revokeObjectURL(imagePreview.value);
+    }
+});
 </script>
 
 <template>
-    <Head title="Edit Product Category" />
+    <Head :title="`Edit ${product_category.name}`" />
 
-    <div class="form max-w-4xl mx-auto p-6">
-        <FormHeader :backUrl="productCategoryRoutes.index().url" title="Edit Category" />
+    <div class="form">
+        <FormHeader
+            :backUrl="productCategoryRoutes.index().url"
+            :title="`Edit ${product_category.name}`"
+        />
 
-        <Form 
-            :action="productCategoryRoutes.update(props.product_category.uuid).url" 
-            method="post" 
+        <Form
+            :action="productCategoryRoutes.update(product_category.uuid).url"
+            method="put"
             v-slot="{ errors, processing }"
-            @submit="handleSubmit"
         >
-            <input type="hidden" name="_method" value="PUT" />
-
-            <div class="space-y-6">
-                <div class="rounded-lg shadow-sm p-6">
-                    <h3 class="text-lg font-semibold mb-4">Category Information</h3>
-                    
-                    <div class="space-y-4">
-                        <div class="inputs-group">
-                            <Label for="name" class="required">Category Name</Label>
-                            <Input
-                                id="name"
-                                type="text"
-                                autofocus
-                                name="name"
-                                v-model="form.name"
-                                placeholder="Category name"
-                            />
-                            <InputError :message="errors.name" />
-                        </div>
-
-                        <div class="inputs-group">
-                            <Label for="description">Description</Label>
-                            <Textarea
-                                id="description"
-                                name="description"
-                                rows="4"
-                                v-model="form.description"
-                                placeholder="Describe your product category..."
-                            />
-                            <InputError :message="errors.description" />
-                        </div>
-
-                        <div class="inputs-group">
-                            <div class="flex items-center gap-2">
-                                <input 
-                                    type="checkbox" 
-                                    id="is_active" 
-                                    v-model="form.is_active"
-                                    :checked="props.product_category.is_active"
-                                    value="1"
-                                    class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                />
-                                <Label for="is_active" class="cursor-pointer">Active</Label>
-                            </div>
-                            <p class="text-xs text-gray-500 mt-1">Inactive categories won't be visible to customers</p>
-                        </div>
-                    </div>
+            <div class="inputs-group-wrapper">
+                <div class="inputs-group">
+                    <Label for="name" class="required">Category Name</Label>
+                    <Input
+                        id="name"
+                        type="text"
+                        autofocus
+                        autocomplete="name"
+                        name="name"
+                        placeholder="Category name"
+                        :default-value="product_category.name"
+                    />
+                    <InputError :message="errors.name" />
                 </div>
+            </div>
 
-                <div class="rounded-lg shadow-sm p-6">
-                    <h3 class="text-lg font-semibold mb-4">Category Image</h3>
-                    
-                    <div class="inputs-group">
-                        <div class="flex flex-col justify-center">
-                            <div class="relative w-48 h-48">
-                                <div class="w-48 h-48 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden bg-gray-50">
-                                    <img 
-                                        v-if="imagePreview" 
-                                        :src="imagePreview" 
-                                        class="w-full h-full object-cover" 
-                                    />
-                                    <div v-else class="text-center">
-                                        <ImagePlus class="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                                        <p class="text-sm text-gray-500">Click to upload</p>
-                                    </div>
-                                </div>
-                                
-                                <button
-                                    v-if="imagePreview && imagePreview !== props.product_category.thumbnail_url"
-                                    type="button"
-                                    @click="removeLogo"
-                                    class="absolute -top-2 -right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
-                                >
-                                    <X class="w-4 h-4" />
-                                </button>
-                                
-                                <label class="absolute inset-0 cursor-pointer">
-                                    <input 
-                                        type="file" 
-                                        name="image" 
-                                        accept="image/*" 
-                                        class="hidden" 
-                                        @change="handleImageChange" 
-                                    />
-                                </label>
+            <div class="inputs-group">
+                <Label for="description">Description</Label>
+                <Textarea
+                    id="description"
+                    name="description"
+                    rows="4"
+                    placeholder="Describe the product_category..."
+                    :default-value="product_category.description ?? ''"
+                />
+                <InputError :message="errors.description" />
+            </div>
+
+            <div class="inputs-group-wrapper">
+                <div class="inputs-group">
+                    <Label for="image">Category Image</Label>
+
+                    <div class="relative w-40 h-40">
+                        <div class="w-40 h-40 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden bg-gray-50">
+                            <img
+                                v-if="imagePreview"
+                                :src="imagePreview"
+                                class="w-full h-full object-contain"
+                                alt="Category image preview"
+                            />
+                            <div v-else class="text-center">
+                                <ImagePlus class="w-10 h-10 text-gray-400 mx-auto mb-2" />
+                                <p class="text-sm text-gray-500">Click to upload category image</p>
                             </div>
-                            <p class="text-xs text-gray-400 mt-2">
-                                Current: {{ props.product_category.image || 'No image uploaded' }}
-                            </p>
-                            <InputError :message="errors.image" />
                         </div>
+
+                        <input type="hidden" name="remove_image" :value="imagePreview === null ? '1' : '0'" />
+
+                        <button
+                            v-if="imagePreview"
+                            type="button"
+                            @click="removeImage"
+                            class="absolute -top-1 -right-1 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
+                            aria-label="Remove image"
+                        >
+                            <X class="w-3 h-3" />
+                        </button>
+
+                        <label class="absolute inset-0 cursor-pointer">
+                            <input
+                                type="file"
+                                name="image"
+                                accept="image/*"
+                                class="hidden"
+                                @change="handleImageChange"
+                            />
+                        </label>
                     </div>
+
+                    <p v-if="product_category.image" class="text-xs text-gray-500 mt-1">
+                        Current file: <span class="font-mono">{{ product_category.image }}</span>
+                    </p>
+
+                    <InputError :message="errors.image" />
                 </div>
+            </div>
 
-                <div class="flex flex-col sm:flex-row gap-3">
-                    <Button type="submit" :disabled="processing" class="w-full sm:w-auto">
-                        <Spinner v-if="processing" class="mr-2" />
-                        Update Category
-                    </Button>
+            <div class="submit-buttons">
+                <Button type="submit" :disabled="processing">
+                    <Spinner v-if="processing" />
+                    Update Category
+                </Button>
 
+                <div>
                     <Link :href="productCategoryRoutes.index().url">
-                        <Button type="button" variant="outline" class="w-full sm:w-auto">
-                            Cancel
-                        </Button>
+                        <Button type="button" variant="outline">Cancel</Button>
                     </Link>
                 </div>
             </div>

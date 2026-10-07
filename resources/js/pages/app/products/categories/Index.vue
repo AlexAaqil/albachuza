@@ -14,7 +14,7 @@ interface ProductCategory {
     uuid: string;
     name: string;
     slug: string;
-    thumbnail_url: string;
+    image_url: string;
     products_count: number;
 };
 
@@ -66,7 +66,9 @@ const handleSearch = (value: string) => {
             <TableBody>
                 <TableRow v-for="(category, index) in props.categories" :key="category.id">
                     <TableCell class="id">{{ index + 1 }}</TableCell>
-                    <TableCell class="w-20"><img :src="category.thumbnail_url" :alt="category.slug"></TableCell>
+                    <TableCell class="w-20">
+                        <img :src="category.image_url" :alt="category.slug">
+                    </TableCell>
                     <TableCell>{{ category.name }}</TableCell>
                     <TableCell>{{ category.products_count }}</TableCell>
                     <TableCell class="actions">

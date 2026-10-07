@@ -29,7 +29,9 @@ class ProductCategoryRequest extends FormRequest
                 'string',
                 'max:100',
                 Rule::unique('product_categories', 'name')->ignore($this->route('product_category')?->id),
-            ]
+            ],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,gif,svg,webp', 'max:2048'],
+            'is_active' => ['boolean'],
         ];
     }
 

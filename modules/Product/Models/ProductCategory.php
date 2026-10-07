@@ -79,6 +79,6 @@ class ProductCategory extends Model
             return asset('/assets/images/default-image.png');
         }
 
-        return asset("storage/brands/{$this->image}");
+        return asset("storage/product-categories/{$this->image}");
     }
 }
