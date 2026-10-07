@@ -46,7 +46,7 @@ import { getInitials } from '@/composables/useInitials';
 import { toUrl } from '@/lib/utils';
 import { dashboard } from '@/routes';
 // import orderRoutes from '@/routes/orders';
-// import productRoutes from '@/routes/products';
+import productRoutes from '@/routes/products';
 import userRoutes from '@/routes/users';
 import type { BreadcrumbItem, NavItem } from '@/types';
 
@@ -88,7 +88,7 @@ const mainNavItems = computed(() => {
             },
             {
                 title: 'Products',
-                href: userRoutes.index(), // TODO: correct this route
+                href: productRoutes.index(), // TODO: correct this route
                 icon: Barcode,
             },
         );
