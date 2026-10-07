@@ -61,8 +61,9 @@ class OrderController extends Controller
     public function create()
     {
         $products = Product::query()
-            ->orderBy('name')
+            ->sellable()
             ->where('is_active', true)
+            ->orderBy('name')
             ->get();
 
         $recent_orders = Order::query()

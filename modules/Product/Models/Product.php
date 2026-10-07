@@ -130,6 +130,14 @@ class Product extends Model
         return $this->hasMany(InventoryMovement::class, 'product_id');
     }
 
+    public function scopeSellable(Builder $query): Builder
+    {
+        return $query->where(function (Builder $q) {
+            $q->where('track_inventory', false)
+            ->orWhere('current_stock', '>', 0);
+        });
+    }
+
     public function scopeSearch(Builder $query, ?string $search): Builder
     {
         if (!$search) {
