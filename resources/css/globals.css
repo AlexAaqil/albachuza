@@ -5,3 +5,26 @@ a,
 button {
     @apply cursor-pointer;
 }
+
+.container-fluid {
+    @apply px-4 lg:px-16 py-4;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    line-height: 1.2;
+}
+
+p {
+    line-height: 1.5;
+}
+
+.image {
+    @apply overflow-hidden;
+    
+    img {
+        @apply h-full w-full object-cover;
+    }
+}

@@ -1,104 +1,75 @@
 <script setup lang="ts">
-import { usePage } from '@inertiajs/vue3';
-import { PhoneCall, Mail } from '@lucide/vue';
-import { computed } from 'vue';
+import { PhoneCall } from '@lucide/vue';
+import { useAppConfig } from '@/composables/useAppConfig';
 
-interface Category {
-    id: number;
-    slug: string;
-    name: string;
-}
-
-const currentYear = computed(() => new Date().getFullYear());
-
-const page = usePage();
-const categories = (page.props.footer_product_categories as Category[]) || [];
+const { brandName, brandDescription, location, socials } = useAppConfig();
 </script>
 
 <template>
-    <footer
-        class="text-accent-foreground pt-4"
-        style="
-            background: url('/assets/images/general/footer.webp') var(--accent)
-                left top;
-        "
-    >
-        <div
-            class="container-fluid grid gap-8 px-4 py-4 lg:grid-cols-4 lg:px-16"
-        >
+    <footer class="border-t border-border">
+        <div class="container-fluid grid gap-8 lg:grid-cols-4 py-4 px-4 lg:px-16">
             <div class="branding space-y-2">
-                <p class="font-bold">Renfa Concrete LTD</p>
-                <p>
-                    Plastic, ABS and steel moulds for pavers, balusters,
-                    ventilation blocks, cladding and cast-concrete garden pieces
-                    - plus the mixers, vibrators and oxide pigments to run a
-                    full production line. All held in stock in Nairobi, ready to
-                    move.
+                <p class="name text-heading-text font-bold">{{brandName}}</p>
+                <p class="description">{{brandDescription}}</p>
+                <p class="location grid">
+                    <span>{{location.city}}</span>
+                    <span>{{location.address}}</span>
+                    <span>{{location.shop}}</span>
                 </p>
-
-                <div class="address mt-4 space-y-2">
-                    <p>Maasai Road Highrise</p>
-                    <p>Maasai Road, off Mombasa Road</p>
-                </div>
             </div>
 
-            <div class="quick-navigation space-y-2">
-                <p class="font-bold">Quick Navigation</p>
-                <div class="links grid gap-2">
+            <div class="quick-links">
+                <div class="heading font-bold mb-2">
+                    <p>Quick Links</p>
+                </div>
+
+                <div class="links grid">
                     <a href="/">Home</a>
-                    <a href="/catalogue">Catalogue</a>
-                    <a href="/contact">Contact Us</a>
+                    <a href="/">Shop</a>
+                    <a href="/">About</a>
+                    <a href="/">Contact</a>
+                    <a href="/">Blog</a>
                 </div>
             </div>
 
-            <div class="categories space-y-2">
-                <p class="font-bold">Categories</p>
-                <div class="links grid gap-2" v-if="categories.length > 0">
-                    <a
-                        v-for="category in categories"
-                        :key="category.id"
-                        :href="`/categories/${category.slug}`"
-                        >{{ category.name }}</a
-                    >
+            <div class="quick-links">
+                <div class="heading font-bold mb-2">
+                    <p>Explore</p>
                 </div>
 
-                <div class="empty-links" v-else>
-                    <p>There's no available categories!</p>
+                <div class="links grid">
+                    <a href="/">Nike</a>
+                    <a href="/">Adidas</a>
+                    <a href="/">Vans</a>
+                    <a href="/">Converse</a>
+                    <a href="/">Air Jordan</a>
                 </div>
             </div>
 
-            <div class="contact space-y-2">
-                <p class="font-bold">Contact Us</p>
-                <p class="flex items-center gap-2">
-                    <PhoneCall class="h-4 w-4" />
-                    <span>+254 708 887 179</span>
-                </p>
-                <p class="flex items-center gap-2">
-                    <PhoneCall class="h-4 w-4" />
-                    <span>+254 115 706 106</span>
-                </p>
-                <p class="flex items-center gap-2">
-                    <PhoneCall class="h-4 w-4" />
-                    <span>+254 799 921 366</span>
-                </p>
-                <p class="flex items-center gap-2">
-                    <Mail class="h-4 w-4" />
-                    <span>info@renfaconcreteltd.com</span>
-                </p>
+            <div class="quick-links">
+                <div class="heading font-bold mb-2">
+                    <p>Connect with us</p>
+                </div>
+
+                <div class="contacts space-y-4">
+                    <p class="flex gap-1 items-center"><PhoneCall class="w-4 h-4" /><span>+254 769 696 309</span></p>
+                    <div class="socials flex gap-4">
+                        <a :href="socials.tiktok" target="_blank" rel="noopener noreferrer">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-6 h-6"><path d="M448.5 209.9c-44 .1-87-13.6-122.8-39.2l0 178.7c0 33.1-10.1 65.4-29 92.6s-45.6 48-76.6 59.6-64.8 13.5-96.9 5.3-60.9-25.9-82.7-50.8-35.3-56-39-88.9 2.9-66.1 18.6-95.2 40-52.7 69.6-67.7 62.9-20.5 95.7-16l0 89.9c-15-4.7-31.1-4.6-46 .4s-27.9 14.6-37 27.3-14 28.1-13.9 43.9 5.2 31 14.5 43.7 22.4 22.1 37.4 26.9 31.1 4.8 46-.1 28-14.4 37.2-27.1 14.2-28.1 14.2-43.8l0-349.4 88 0c-.1 7.4 .6 14.9 1.9 22.2 3.1 16.3 9.4 31.9 18.7 45.7s21.3 25.6 35.2 34.6c19.9 13.1 43.2 20.1 67 20.1l0 87.4z"/>
+                            </svg>
+                        </a>
+                        <a :href="socials.whatsapp" target="_blank" rel="noopener noreferrer">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-6 h-6"><path d="M380.9 97.1c-41.9-42-97.7-65.1-157-65.1-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480 117.7 449.1c32.4 17.7 68.9 27 106.1 27l.1 0c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3 18.6-68.1-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1s56.2 81.2 56.1 130.5c0 101.8-84.9 184.6-186.6 184.6zM325.1 300.5c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8s-14.3 18-17.6 21.8c-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7 .9-6.9-.5-9.7s-12.5-30.1-17.1-41.2c-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2s-9.7 1.4-14.8 6.9c-5.1 5.6-19.4 19-19.4 46.3s19.9 53.7 22.6 57.4c2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4s4.6-24.1 3.2-26.4c-1.3-2.5-5-3.9-10.5-6.6z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div
-            class="copyrights border-border grid gap-1 border-t px-4 py-4 pt-4 lg:flex lg:justify-between lg:px-16"
-        >
-            <p class="text">
-                &copy; {{ currentYear }}. Renfa. All rights reserved.
-            </p>
-
-            <div class="documents space-x-2">
-                <a href="#">Privacy Policy</a>
-                <a href="#">Terms of Service</a>
-            </div>
-        </div>
+        <p class="py-4 px-4 border-t border-border lg:px-16 lg:flex lg:justify-between lg:text-center">
+            <span>&copy; 2026. {{ brandName }}. All rights reserved.</span>
+            <span>Made by: <a href="https://alsuwa.com" target="_blank" rel="noopener noreferrer">alsuwa.com</a></span>
+        </p>
     </footer>
 </template>
