@@ -84,7 +84,7 @@ onUnmounted(() => {
          @mouseleave="startAutoSlide">
         
         <!-- Image Carousel -->
-        <div class="relative overflow-hidden bg-gray-100 aspect-square h-70 w-full">
+        <div class="relative overflow-hidden bg-gray-100 aspect-square h-90 w-full">
             <img 
                 :src="currentImage?.url || '/assets/images/default-image.png'" 
                 :alt="currentImage?.alt || product.slug"
@@ -148,7 +148,7 @@ onUnmounted(() => {
         </div>
 
         <!-- Product Info -->
-        <div class="p-4 space-y-4">
+        <div class="p-4 space-y-2">
             <div class="flex justify-between items-center">
                 <span class="text-xs text-gray-500 normal-case tracking-wider">{{ product.category_name }}</span>
 
