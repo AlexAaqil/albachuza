@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->string('sku')->nullable()->unique();
             $table->string('barcode')->nullable();
+
+            $table->string('size')->nullable();
             $table->text('description')->nullable();
 
             $table->string('type')->default('goods');
