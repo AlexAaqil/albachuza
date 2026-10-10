@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import ProductGrid from '@/pages/storefront/components/ProductGrid.vue';
+// import Brands from './Brands.vue';
 
 interface Brand {
 	id: number;
@@ -26,7 +27,7 @@ defineProps<Props>();
 			<div class="container-fluid grid lg:grid-cols-12 gap-8">
 				<div class="content lg:col-span-7 space-y-4">
 					<h1 class="title font-bold text-l-text lg:text-xl-text uppercase">Walk with confidence. <br> Step in Style.</h1>
-					<div class="actions bg-amber-400 font-semibold py-2 px-4 inline-block rounded-sm">
+					<div class="actions mt-8 bg-amber-400 font-bold py-4 px-8 inline-block rounded-sm">
 						<Link href="/shop">Start Shopping</Link>
 					</div>
 				</div>
@@ -37,6 +38,8 @@ defineProps<Props>();
 			</div>
 		</section>
 
+		<!-- <Brands :brands="brands.data"  /> -->
+
 		<section class="Brands mb-15" v-if="brands.data.length > 2">
 			<div class="container-fluid">
 				<div class="brands-wrapper flex flex-wrap gap-16 justify-center">
@@ -45,7 +48,6 @@ defineProps<Props>();
 							<img :src="brand.image_url" :alt="brand.name" width="60" height="60" class="grayscale">
 						</div>
 						<span class="font-medium text-body-label-text text-muted-foreground">{{ brand.name }}</span>
-						<!-- <p class="font-medium flex-1">{{ category.name }}</p> -->
 					</div>
 				</div>
 			</div>
