@@ -3,8 +3,8 @@
 Products
 
 ✅ Image processing should crop images to a fixed h and w (800 x 800).
-❌ Product SKU should be generated automatically.
-❌ Add an input for size in the create and edit pages for products.
+✅ Product SKU should be generated automatically.
+✅ Add an input for size in the create and edit pages for products.
 ❌ Product Images can be sorted by dragging and dropping the image.
 ✅ Products out of stock should not be visible on the create order page.
 ✅ Highlight products that are out of stock or low in stock in products page.
