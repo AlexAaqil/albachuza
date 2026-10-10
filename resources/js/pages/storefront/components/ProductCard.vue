@@ -3,7 +3,7 @@ import { Link } from '@inertiajs/vue3';
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { usePriceFormatter } from '@/composables/usePriceFormatter';
 import AddToCartButton from '@/pages/storefront/components/AddToCartButton.vue';
-import productDetailsRoute from '@/routes/products'; // TODO: correct this import
+import productDetailsRoute from '@/routes/product-details';
 import type { Product } from '@/types/product';
 
 const {formatPrice} = usePriceFormatter();

@@ -20,8 +20,7 @@ const user = computed(() => page.props.auth?.user);
             <div class="links flex items-center gap-8">
                 <Link href="/dashboard" v-if="user">Dashboard</Link>
                 <Link href="/shop">Shop</Link>
-                <Link href="/deals-page">Deals & Offers</Link>
-                <Link href="/business-community">Community</Link>
+                <Link href="/about">About</Link>
                 <Link href="/contact">Contact</Link>
             </div>
 
@@ -31,13 +30,15 @@ const user = computed(() => page.props.auth?.user);
                     <Moon v-else class="icon moon-icon w-5 h-5" />
                 </button>
 
+                <!-- 
                 <Link href="/cart" title="Cart" class="cart relative">
                     <ShoppingCart class="icon shopping-cart-icon" />
                     <span class="cart_count absolute -right-2 -top-2 w-5 h-5 flex items-center justify-center text-xs font-medium bg-green-600 text-white rounded-full p-1">
-                        <!-- {{ cartStore.itemCount > 99 ? '99+' : cartStore.itemCount }} -->
+                        {{ cartStore.itemCount > 99 ? '99+' : cartStore.itemCount }}
                           99
                     </span>
                 </Link>
+                -->
 
                 <div v-if="user" class="loggedin_user_menu"></div>
 

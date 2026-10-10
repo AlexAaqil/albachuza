@@ -16,6 +16,7 @@ export interface Product {
     stock: number;
     sku: string;
     barcode: string;
+    size: string;
     category: string;
     tags: string[];
     thumbnail_url: string;

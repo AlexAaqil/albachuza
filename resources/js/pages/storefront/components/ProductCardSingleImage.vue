@@ -3,7 +3,7 @@ import { Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import { usePriceFormatter } from '@/composables/usePriceFormatter';
 import AddToCartButton from '@/pages/storefront/components/AddToCartButton.vue';
-import productDetailsRoute from '@/routes/products'; // TODO: Correct this import
+import productDetailsRoute from '@/routes/product-details';
 
 const {formatPrice} = usePriceFormatter();
 
@@ -60,8 +60,8 @@ const isHovered = ref(false);
         </div>
 
         <!-- Product Info -->
-        <div class="p-4 space-y-4">
-            <div class="flex justify-between items-center">
+        <div class="p-4 content">
+            <div class="extras flex justify-between items-center mb-4">
                 <span class="text-xs text-gray-500 normal-case tracking-wider">{{ product.category_name }}</span>
 
                 <!-- TODO: add the actual stock count -->
@@ -76,18 +76,21 @@ const isHovered = ref(false);
                     </span>
                 </div>
             </div>
-            
-            <h3 class="text-base font-semibold text-gray-900 hover:text-indigo-600 transition-colors line-clamp-1">
-                <Link :href="productDetailsRoute.index(product.slug)">{{ product.name }}</Link>
-            </h3>
 
-            <!-- Price -->
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <span class="text-xl font-bold text-gray-900">{{ formatPrice(product.price) }}</span>
-                    <!-- TODO: add discounted price if available -->
+            <div class="info space-y-1 mb-4">
+                <p class="text-base font-semibold text-gray-900 hover:text-indigo-600 transition-colors line-clamp-1">
+                    <Link :href="productDetailsRoute.index(product.slug)">{{ product.name }}</Link>
+                </p>
+    
+                <!-- Price -->
+                <div class="flex items-center justify-between">
+                    <p class="flex items-center gap-2">
+                        <span class="text-base font-semibold text-gray-900">{{ formatPrice(product.price) }}</span>
+                        <!-- TODO: add discounted price if available -->
+                    </p>
                 </div>
             </div>
+            
 
             <!-- Add to Cart Button -->
             <AddToCartButton 
