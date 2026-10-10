@@ -35,6 +35,11 @@ class ProductRequest extends FormRequest
                 'max:100',
                 Rule::unique('products', 'sku')->ignore($this->route('product')?->id)
             ],
+            'size' => [
+                'nullable', 
+                'string', 
+                'max:100'
+            ],
             'barcode' => [
                 'nullable', 
                 'string', 

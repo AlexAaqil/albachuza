@@ -36,6 +36,7 @@ interface Product {
     cost_price: string | null;
     price: string;
     sku: string | null;
+    size: string | null;
     barcode: string | null;
     is_featured: boolean;
     is_active: boolean;
@@ -65,6 +66,7 @@ const form = useForm({
     cost_price: props.product.cost_price || '',
     price: props.product.price,
     sku: props.product.sku || '',
+    size: props.product.size || '',
     barcode: props.product.barcode || '',
     is_featured: props.product.is_featured,
     is_active: props.product.is_active,
@@ -184,6 +186,17 @@ const submitForm = () => {
                         />
                         <InputError :error="form.errors.name" />
                     </div>
+
+                    <div class="inputs-group">
+                        <Label for="size">Shoe Size</Label>
+                        <Input
+                            id="name"
+                            v-model="form.size"
+                            type="text"
+                            placeholder="e.g (42 U.K)"
+                        />
+                        <InputError :error="form.errors.size" />
+                    </div>
                 </div>
 
                 <div class="inputs-group-wrapper">
@@ -232,7 +245,7 @@ const submitForm = () => {
                     </div>
                 </div>
 
-                <div class="inputs-group-wrapper">
+                <!-- <div class="inputs-group-wrapper">
                     <div class="inputs-group">
                         <Label for="sku">SKU</Label>
                         <Input
@@ -254,7 +267,7 @@ const submitForm = () => {
                         />
                         <InputError :message="form.errors.barcode" />
                     </div>
-                </div>
+                </div> -->
 
                 <div class="inputs-group-wrapper">
                     <div class="inputs-group">

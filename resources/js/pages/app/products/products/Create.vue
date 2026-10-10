@@ -33,6 +33,7 @@ const form = useForm({
     cost_price: '',
     price: '',
     sku: '',
+    size: '',
     barcode: '',
     is_featured: false,
     is_active: true,
@@ -138,6 +139,17 @@ const submitForm = () => {
                         />
                         <InputError :message="form.errors.name" />
                     </div>
+
+                    <div class="inputs-group">
+                        <Label for="size">Shoe Size</Label>
+                        <Input
+                            id="size"
+                            v-model="form.size"
+                            type="text"
+                            placeholder="e.g (42 U.K)"
+                        />
+                        <InputError :message="form.errors.size" />
+                    </div>
                 </div>
 
                 <div class="inputs-group-wrapper">
@@ -186,7 +198,7 @@ const submitForm = () => {
                     </div>
                 </div>
 
-                <div class="inputs-group-wrapper">
+                <!-- <div class="inputs-group-wrapper">
                     <div class="inputs-group">
                         <Label for="sku">SKU</Label>
                         <Input
@@ -208,7 +220,7 @@ const submitForm = () => {
                         />
                         <InputError :message="form.errors.barcode" />
                     </div>
-                </div>
+                </div> -->
 
                 <div class="inputs-group-wrapper">
                     <div class="inputs-group">
