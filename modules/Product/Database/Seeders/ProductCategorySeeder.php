@@ -13,6 +13,10 @@ class ProductCategorySeeder extends Seeder
 {
     private array $categories = [
         [
+            'name' => "Sneakers",
+            'sort_order' => 1,
+        ],
+        [
             'name' => "Men's Shoes",
             'sort_order' => 1,
         ],
