@@ -27,12 +27,12 @@ const selectImage = (index: number) => {
 </script>
 
 <template>
-    <div class="product-details-page space-y-15 pb-15">
-        <div class="product-details-wrapper grid lg:grid-cols-2 gap-8">
-            <div class="container-fluid images-wrapper flex flex-col gap-1 items-center h-[80dvh] w-full">
+    <div class="product-details-page space-y-15 lg:pb-15">
+        <div class="container-fluid product-details-wrapper grid lg:grid-cols-2 gap-8">
+            <div class="images-wrapper flex flex-col gap-1 items-center w-full lg:h-[85dvh]">
                 <!-- Main Image Display -->
                 <!-- We check if product.data.images exists and has items, otherwise we fallback to a placeholder or product.data.image -->
-                <div class="main-image-container w-full lg:h-200 aspect-square flex items-center justify-center overflow-hidden">
+                <div class="main-image-container lg:w-full lg:h-full lg:flex lg:items-center lg:justify-center lg:overflow-hidden">
                     <img 
                         v-if="product.data.images && product.data.images.length > 0" 
                         :src="product.data.images[selectedImageIndex].url" 
@@ -59,7 +59,7 @@ const selectImage = (index: number) => {
                     <div 
                         v-for="(image, index) in product.data.images" 
                         :key="index"
-                        class="thumbnail-item w-20 h-20 p-0.5 border-2 overflow-hidden cursor-pointer"
+                        class="thumbnail-item w-15 h-15 lg:w-20 lg:h-20 p-0.5 border-2 overflow-hidden cursor-pointer"
                         :class="selectedImageIndex === index ? 'border-blue-800' : 'border-transparent'"
                         @click="selectImage(index)"
                     >
@@ -69,7 +69,7 @@ const selectImage = (index: number) => {
             </div>
 
             <div class="product-details">
-                <div class="container-fluid space-y-4">
+                <div class="space-y-4 lg:px-8">
                     <h1 class="font-semibold text-heading-text">{{ product.data.name }}</h1>
                     <p class="text-heading-text">Ksh. {{ formatPrice(product.data.price) }}</p>
                     <p v-if="product.data.size" class="flex text-body-label-text">
@@ -77,7 +77,7 @@ const selectImage = (index: number) => {
                         <span class="">: {{ product.data.size }}</span>
                     </p>
 
-                    <div class="actions grid grid-cols-2 gap-8">
+                    <div class="actions grid lg:grid-cols-2 gap-8">
                         <AddToCartButton 
                             :product-slug="product.data.slug"
                             :product-name="product.data.name"
@@ -88,13 +88,11 @@ const selectImage = (index: number) => {
 
                         <div></div>
                     </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="product-description" v-if="product.data.description">
-            <div class="container-fluid">
-                <div>{{ product.data.description }}</div>
+                    <div class="product-description mt-8 lg:mt-16" v-if="product.data.description">
+                        <div class="whitespace-pre-line">{{ product.data.description }}</div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -102,7 +100,7 @@ const selectImage = (index: number) => {
             <div class="container-fluid">
                 <h2 class="text-heading-text font-bold mb-8 uppercase">People Also Bought</h2>
 
-                <div v-for="product in related_products.data" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+                <div class="grid  lg:grid-cols-3 xl:grid-cols-4 gap-8">
                     <ProductCardSingleImage
                         v-for="product in related_products.data"
                         :key="product.id" 

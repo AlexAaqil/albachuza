@@ -94,36 +94,36 @@ const hasActiveFilters = computed(() => {
 </script>
 
 <template>
-    <div class="search lg:w-[30dvw] lg:mx-auto py-2">
-        <Input
-            v-model="search"
-            type="text"
-            placeholder="Search products by name..."
-            class="rounded-full px-6 py-6"
-        />
-    </div>
-
-    <div v-if="hasActiveFilters" class="container-fluid mb-4">
-        <div class="flex items-center gap-3 flex-wrap">
-            <span class="text-sm text-gray-600">Active filters:</span>
-            <span v-if="selectedCategory" class="inline-flex items-center gap-1 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
-                Category: {{ product_categories.find(c => c.slug === selectedCategory)?.name }}
-                <button @click="selectCategory(selectedCategory)" class="ml-1 hover:text-blue-600">×</button>
-            </span>
-            <button 
-                v-if="hasActiveFilters" 
-                @click="clearFilters" 
-                class="text-sm text-gray-500 hover:text-gray-700 underline"
-            >
-                Clear all filters
-            </button>
+    <div class="container-fluid">
+        <div class="search lg:w-[30dvw] lg:mx-auto py-2">
+            <Input
+                v-model="search"
+                type="text"
+                placeholder="Search products by name..."
+                class="rounded-full px-6 py-6"
+            />
         </div>
-    </div>
 
-    <Categories :categories="product_categories" :selected-category="selectedCategory" @select-category="selectCategory"  />
+        <div v-if="hasActiveFilters" class="container-fluid mb-4">
+            <div class="flex items-center gap-3 flex-wrap">
+                <span class="text-sm text-gray-600">Active filters:</span>
+                <span v-if="selectedCategory" class="inline-flex items-center gap-1 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
+                    Category: {{ product_categories.find(c => c.slug === selectedCategory)?.name }}
+                    <button @click="selectCategory(selectedCategory)" class="ml-1 hover:text-blue-600">×</button>
+                </span>
+                <button 
+                    v-if="hasActiveFilters" 
+                    @click="clearFilters" 
+                    class="text-sm text-gray-500 hover:text-gray-700 underline"
+                >
+                    Clear all filters
+                </button>
+            </div>
+        </div>
 
-    <div class="products-wrapper pb-16">
-        <div class="container-fluid">
+        <Categories :categories="product_categories" :selected-category="selectedCategory" @select-category="selectCategory"  />
+
+        <div class="products-wrapper pb-16">
             <!-- Results count -->
             <div v-if="products.data.length > 0" class="text-sm text-gray-500 mb-4">
                 Showing {{ getDisplayRange.start }} to {{ getDisplayRange.end }} 

@@ -17,7 +17,7 @@ const user = computed(() => page.props.auth?.user);
                 <Link href="/" class="font-bold">Albachuza</Link>
             </div>
 
-            <div class="links flex items-center gap-8">
+            <div class="links hidden lg:flex items-center gap-8">
                 <Link href="/dashboard" v-if="user">Dashboard</Link>
                 <Link href="/shop">Shop</Link>
                 <Link href="/about">About</Link>
