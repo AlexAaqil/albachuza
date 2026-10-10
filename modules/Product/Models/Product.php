@@ -12,13 +12,14 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Modules\Support\Concerns\HasUuid;
 use Modules\Support\Concerns\HasSlug;
+use Modules\Product\Concerns\HasSku;
 use Modules\Product\Enums\InventoryMovementTypes;
 use Modules\Product\Exceptions\InsufficientStockException;
 use Modules\Product\Exceptions\StockTrackingDisabledException;
 
 class Product extends Model
 {
-    use HasUuid, HasSlug;
+    use HasUuid, HasSlug, HasSku;
 
     protected $guarded = [];
 
