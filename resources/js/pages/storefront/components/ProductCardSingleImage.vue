@@ -85,7 +85,7 @@ const isHovered = ref(false);
                 <!-- Price -->
                 <div class="flex items-center justify-between">
                     <p class="flex items-center gap-2">
-                        <span class="text-base font-semibold text-gray-900">{{ formatPrice(product.price) }}</span>
+                        <span class="text-base font-semibold text-gray-900">Ksh. {{ formatPrice(product.price) }}</span>
                         <!-- TODO: add discounted price if available -->
                     </p>
                 </div>

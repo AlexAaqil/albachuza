@@ -172,7 +172,7 @@ onUnmounted(() => {
             <!-- Price -->
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
-                    <span class="text-gray-900">Ksh {{ formatPrice(product.price) }}</span>
+                    <span class="text-gray-900">Ksh. {{ formatPrice(product.price) }}</span>
                     <!-- TODO: add discounted price if available -->
                 </div>
             </div>
