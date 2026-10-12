@@ -24,7 +24,7 @@ const whatsappMessage = computed(() => {
     
     // Build the message
     let message = `Hi! I'm interested in this product:`;
-    message += `\n🔗 Product: https://albachuza.alsuwa.com/products/${props.productSlug}`;
+    message += `\n🔗 Product: https://albachuza.alsuwa.com/product-details/${props.productSlug}`;
     
     if (props.productName) {
         message += `\n📦 ${props.productName}`;
