@@ -11,14 +11,17 @@ interface AppConfig {
     };
     contacts: {
         phone: string;
+        whatsapp_phone: string;
     };
     socials: {
-        tiktok: string;
-        whatsapp: string;
+        tiktok_url: string;
+        whatsapp_url: string;
+        site_url: string;
     };
 }
 
-// Just hardcode everything here! ✅
+const WHATSAPP_PHONE = '254769696309';
+
 const config: AppConfig = {
     brand_name: 'Albachuza',
     brand_description: 'Best new & mitumba shoes',
@@ -29,10 +32,12 @@ const config: AppConfig = {
     },
     contacts: {
         phone: '+254 769 696 309',
+        whatsapp_phone: WHATSAPP_PHONE,
     },
     socials: {
-        tiktok: 'https://www.tiktok.com/@alba.chuza',
-        whatsapp: 'https://wa.me/254769696309',
+        tiktok_url: 'https://www.tiktok.com/@alba.chuza',
+        whatsapp_url: `https://wa.me/${WHATSAPP_PHONE}`,
+        site_url: 'https://albachuza.alsuwa.com',
     },
 };
 

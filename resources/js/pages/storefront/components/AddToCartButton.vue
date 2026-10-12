@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { usePage } from '@inertiajs/vue3';
+import { useAppConfig } from '@/composables/useAppConfig';
 
 const props = withDefaults(defineProps<{
     productSlug: string;
@@ -15,16 +15,12 @@ const props = withDefaults(defineProps<{
     size: 'md'
 });
 
-const page = usePage();
-
-const WHATSAPP_PHONE = computed(() => (props as any).phone ?? page.props.config?.whatsappPhone ?? '254769696309');
-const SITE_URL = computed(() => (page.props.config?.siteUrl ?? 'https://albachuza.alsuwa.com'));
+const { socials } = useAppConfig();
 
 // Build WhatsApp message
 const whatsappMessage = computed(() => {
-    const baseUrl = 'https://wa.me/';
-    const phone = WHATSAPP_PHONE.value.replace(/\D/g, '');
-    const productUrl = `${SITE_URL.value}/product-details/${props.productSlug}`;
+    const siteUrl = socials.value.site_url;
+    const productUrl = `${siteUrl}/product-details/${props.productSlug}`;
     
     // Build the message
     let message = `Hi! I'm interested in this shoe:\n\n`;
@@ -42,7 +38,7 @@ const whatsappMessage = computed(() => {
     
     // Encode for URL
     const encodedMessage = encodeURIComponent(message);
-    return `${baseUrl}${phone}?text=${encodedMessage}`;
+    return `${socials.value.whatsapp_url}?text=${encodedMessage}`;
 });
 
 const openWhatsApp = () => {
