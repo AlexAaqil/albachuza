@@ -1,11 +1,18 @@
 # Kanban
 
+General
+
+❌ About page
+❌ Contact page
+
 Products
 
+❌ Can be imported or exported as csv to make bulk editing easier.
+❌ Properly style brands on the home page to be a better slider.
+❌ Product Images can be sorted by dragging and dropping the image.
 ✅ Image processing should crop images to a fixed h and w (800 x 800).
 ✅ Product SKU should be generated automatically.
 ✅ Add an input for size in the create and edit pages for products.
-❌ Product Images can be sorted by dragging and dropping the image.
 ✅ Products out of stock should not be visible on the create order page.
 ✅ Highlight products that are out of stock or low in stock in products page.
 
