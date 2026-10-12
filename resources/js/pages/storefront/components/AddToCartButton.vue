@@ -24,14 +24,14 @@ const whatsappMessage = computed(() => {
     
     // Build the message
     let message = `Hi! I'm interested in this product:`;
-    message += `\n🔗 Product: https://albachuza.alsuwa.com/product-details/${props.productSlug}`;
+    message += `\nProduct: https://albachuza.alsuwa.com/product-details/${props.productSlug}`;
     
     if (props.productName) {
-        message += `\n📦 ${props.productName}`;
+        message += `\nShoe: ${props.productName}`;
     }
     
     if (props.productPrice) {
-        message += `\n💰 Price: ${props.productPrice}`;
+        message += `\nPrice: Ksh. ${props.productPrice}`;
     }
     
     message += `\n\nCan you please provide more information?`;
