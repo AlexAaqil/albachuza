@@ -25,7 +25,7 @@ const whatsappMessage = computed(() => {
     
     // Build the message
     let message = `Hi! I'm interested in this shoe:\n\n`;
-    message += `*Link*: ${productUrl}\n`;
+    message += `*Link*: ${productUrl}\n\n`;
     
     if (props.productName) {
         message += `*Shoe:* ${props.productName}\n`;
