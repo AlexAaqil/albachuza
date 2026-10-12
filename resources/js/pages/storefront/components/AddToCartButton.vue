@@ -21,20 +21,21 @@ const WHATSAPP_PHONE = '254769696309';
 const whatsappMessage = computed(() => {
     const baseUrl = 'https://wa.me/';
     const phone = WHATSAPP_PHONE;
+    const productUrl = `https://albachuza.alsuwa.com/product-details/${props.productSlug}`;
     
     // Build the message
-    let message = `Hi! I'm interested in this product:`;
-    message += `\nProduct: https://albachuza.alsuwa.com/product-details/${props.productSlug}`;
+    let message = `Hi! I'm interested in this shoe:\n\n`;
+    message += `*Link*: ${productUrl}\n`;
     
     if (props.productName) {
-        message += `\nShoe: ${props.productName}`;
+        message += `*Shoe:* ${props.productName}\n`;
     }
     
     if (props.productPrice) {
-        message += `\nPrice: Ksh. ${props.productPrice}`;
+        message += `*Price:* Ksh. ${props.productPrice}\n`;
     }
     
-    message += `\n\nCan you please provide more information?`;
+    message += `\nPlease provide more information?`;
     
     // Encode for URL
     const encodedMessage = encodeURIComponent(message);
