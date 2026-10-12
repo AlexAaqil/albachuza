@@ -66,9 +66,10 @@ const { brandName, brandDescription, location, socials } = useAppConfig();
             </div>
         </div>
 
-        <p class="py-4 px-4 border-t border-border lg:px-16 lg:flex lg:justify-between lg:text-center">
+        <div class="py-4 px-4 border-t border-border lg:px-16 grid gap-1 lg:gap-8 lg:grid-cols-4">
             <span>&copy; 2026. {{ brandName }}. All rights reserved.</span>
+            <span></span><span></span>
             <span>Made by: <a href="https://alsuwa.com" target="_blank" rel="noopener noreferrer">alsuwa.com</a></span>
-        </p>
+        </div>
     </footer>
 </template>
