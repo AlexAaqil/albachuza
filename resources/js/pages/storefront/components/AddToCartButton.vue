@@ -38,7 +38,7 @@ const whatsappMessage = computed(() => {
         message += `*Price:* Ksh. ${props.productPrice}\n`;
     }
     
-    message += `\nPlease provide more information?`;
+    message += `\nPlease provide more information!`;
     
     // Encode for URL
     const encodedMessage = encodeURIComponent(message);
