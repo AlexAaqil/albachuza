@@ -23,7 +23,7 @@ const SITE_URL = computed(() => (page.props.config?.siteUrl ?? 'https://albachuz
 // Build WhatsApp message
 const whatsappMessage = computed(() => {
     const baseUrl = 'https://wa.me/';
-    const phone = WHATSAPP_PHONE;
+    const phone = WHATSAPP_PHONE.value.replace(/\D/g, '');
     const productUrl = `${SITE_URL}/product-details/${props.productSlug}`;
     
     // Build the message
