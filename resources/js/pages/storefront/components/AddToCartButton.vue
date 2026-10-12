@@ -15,8 +15,7 @@ const props = withDefaults(defineProps<{
     size: 'md'
 });
 
-// WhatsApp phone number - replace with your actual number
-const WHATSAPP_PHONE = '254746055487'; // Kenya phone number format
+const WHATSAPP_PHONE = '254769696309';
 
 // Build WhatsApp message
 const whatsappMessage = computed(() => {
@@ -25,7 +24,7 @@ const whatsappMessage = computed(() => {
     
     // Build the message
     let message = `Hi! I'm interested in this product:`;
-    message += `\n🔗 Product: https://yourdomain.com/products/${props.productSlug}`;
+    message += `\n🔗 Product: https://albachuza.alsuwa.com/products/${props.productSlug}`;
     
     if (props.productName) {
         message += `\n📦 ${props.productName}`;
