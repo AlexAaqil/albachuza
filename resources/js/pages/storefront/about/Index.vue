@@ -1,0 +1,57 @@
+<script setup lang="ts">
+import ShopLocation from './ShopLocation.vue';
+</script>
+
+<template>
+    <div class="AboutPage">
+        <section class="Header py-16 mb-15">
+            <div class="container-fluid space-y-4 text-center">
+                <h1 class="uppercase text-body-label-text">About Albachuza Collections</h1>
+                <p class="text-heading-text font-bold">Walk With Confidence, Step in Style</p>
+                <p class="lg:w-[50%] lg:mx-auto">Albachuza collections is a mitumba and new shoes store focused on helping you dress well through carefully selected sneakers, official shoes, casual pairs, sandals, boots and everyday footwear.</p>
+            </div>
+        </section>
+
+        <ShopLocation />
+
+        <section class="WhyUs mb-15">
+            <div class="container-fluid">
+                <div class="content-wrapper grid gap-4 lg:grid-cols-2">
+                    <div class="content lg:space-y-4">
+                        <p class="uppercase text-body-label-text">Why Albachuza Collection</p>
+                        <p class="font-bold text-heading-text lg:w-[50%]">We deliver a better shopping experience</p>
+                        <p class="lg:w-[60%]">We ensure buying your shoes online is as easy as buying them from the shop.</p>
+                    </div>
+
+                    <div class="cards grid gap-4 lg:grid-cols-2">
+                        <div class="card bg-accent rounded-sm p-4">
+                            <p class="font-bold">Contry-wide Delivery</p>
+                            <p>Same day delivery across the whole country.</p>
+                        </div>
+
+                        <div class="card bg-accent rounded-sm p-4">
+                            <p class="font-bold">Personalized Support</p>
+                            <p>Need help? Just reach out to us on Whatsapp.</p>
+                        </div>
+
+                        <div class="card bg-accent rounded-sm p-4">
+                            <p class="font-bold">Curated Style</p>
+                            <p>Our collection focuses on timeless official shoes,modern casual and versatile everyday peieces.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="CTA mb-15">
+            <div class="container-fluid space-y-2 text-center">
+                <p class="uppercase text-body-label-text">Discover Albachuza Collection</p>
+                <p class="font-bold text-heading-text">Find a pair that matches your taste</p>
+                <p>Explore our new arrivals and most popular sneakers, boots, slides and official shoes available in our shop.</p>
+                <div class="action_btn mt-8">
+                    <a href="/shop" class="py-4 px-4 rounded-sm bg-amber-400">Shop Collection</a>
+                </div>
+            </div>
+        </section>
+    </div>
+</template>

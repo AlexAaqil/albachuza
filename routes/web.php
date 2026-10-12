@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Dashboard\Http\Controllers\DashboardController;
 
+Route::inertia('/about', 'storefront/about/Index')->name('about-page');
+Route::inertia('/contact', 'storefront/contact/Index')->name('contact-page');
+
 Route::inertia('/welcome', 'Welcome')->name('welcome');
 
 Route::middleware(['auth', 'verified'])->group(function () {
