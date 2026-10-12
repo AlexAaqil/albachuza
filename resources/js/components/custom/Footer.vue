@@ -25,10 +25,9 @@ const { brandName, brandDescription, location, socials } = useAppConfig();
 
                 <div class="links grid">
                     <a href="/">Home</a>
-                    <a href="/">Shop</a>
-                    <a href="/">About</a>
-                    <a href="/">Contact</a>
-                    <a href="/">Blog</a>
+                    <a href="/shop">Shop</a>
+                    <a href="/about">About</a>
+                    <a href="/contact">Contact</a>
                 </div>
             </div>
 
