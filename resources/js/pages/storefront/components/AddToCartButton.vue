@@ -24,7 +24,7 @@ const SITE_URL = computed(() => (page.props.config?.siteUrl ?? 'https://albachuz
 const whatsappMessage = computed(() => {
     const baseUrl = 'https://wa.me/';
     const phone = WHATSAPP_PHONE.value.replace(/\D/g, '');
-    const productUrl = `${SITE_URL}/product-details/${props.productSlug}`;
+    const productUrl = `${SITE_URL.value}/product-details/${props.productSlug}`;
     
     // Build the message
     let message = `Hi! I'm interested in this shoe:\n\n`;
