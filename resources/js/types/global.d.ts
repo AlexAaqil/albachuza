@@ -20,6 +20,10 @@ declare module '@inertiajs/core' {
             auth: Auth;
             sidebarOpen: boolean;
             [key: string]: unknown;
+            config: {
+                whatsappPhone: string;
+                siteUrl: string;
+            }
         };
     }
 }
