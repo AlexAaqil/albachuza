@@ -275,7 +275,7 @@ class ProductController extends Controller
             $filename = "{$slug}_{$productId}_{$index}_{$timestamp}_{$random}.webp";
 
             Image::fromUpload($image)
-                ->cover(800, 800)
+                ->contain(800, 800, 'ffffff')
                 ->toWebp()
                 ->storeAs('products', $filename, 'public');
             
