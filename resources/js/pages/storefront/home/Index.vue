@@ -40,7 +40,7 @@ defineProps<Props>();
 
 		<!-- <Brands :brands="brands.data"  /> -->
 
-		<section class="Brands mb-15" v-if="brands.data.length > 2">
+		<!-- <section class="Brands mb-15" v-if="brands.data.length > 2">
 			<div class="container-fluid">
 				<div class="brands-wrapper flex gap-16 justify-center overflow-x-auto">
 					<div class="brand flex flex-col lg:justify-center items-center gap-2" v-for="brand in brands.data" v-bind:key="brand.id">
@@ -51,7 +51,7 @@ defineProps<Props>();
 					</div>
 				</div>
 			</div>
-		</section>
+		</section> -->
 
 		<section class="NewArrivals mb-15">
 			<ProductGrid 
