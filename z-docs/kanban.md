@@ -1,7 +1,7 @@
 # Kanban
 
 General
-
+❌ Home page should just show new arrivals then all other shoes without having to necessarily to go the shop page.
 ❌ About page
 ❌ Contact page
 
