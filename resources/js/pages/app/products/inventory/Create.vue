@@ -10,6 +10,9 @@ import productInventoryRoutes from '@/routes/products-inventory';
 
 const props = defineProps<{
     product: { id: number; uuid: string; name: string; sku: string; current_stock: number };
+    is_initial: boolean,
+    default_quantity: number;
+    default_type: number;
     movement_types: {
         add: Record<number, string>;
         remove: Record<number, string>; 
@@ -18,9 +21,9 @@ const props = defineProps<{
 }>();
 
 const form = useForm({
-    quantity: 1,
-    type: null as number | null,
-    notes: ''
+    quantity: props.default_quantity,
+    type: props.default_type,
+    notes: props.is_initial ? 'Initial stock' : '',
 });
 
 // For Create page - only show add operations
@@ -68,7 +71,7 @@ const submit = () => {
                 </div>
             </div>
 
-            <div class="inputs-group">
+            <div class="inputs-group" v-if="!is_initial">
                 <Label for="type" class="required">Movement Type</Label>
                 <select
                     id="type"
@@ -79,6 +82,12 @@ const submit = () => {
                     <option v-for="movement in movementOptions" :key="movement.value" :value="movement.value">{{ movement.label }}</option>
                 </select>
                 <InputError :message="form.errors.type" />
+            </div>
+
+            <div v-else class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <p class="text-sm text-blue-800">
+                    This will record the <strong>initial stock</strong> for this product.
+                </p>
             </div>
 
             <div>

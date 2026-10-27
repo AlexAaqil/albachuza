@@ -84,11 +84,18 @@ class ProductInventoryController extends Controller
             return to_route('products-inventory.index');
         }
 
+        $isInitial = !$product->inventoryMovements()->exists();
+
         return inertia('app/products/inventory/Create', [
             'product' => $product,
             'current_stock' => $product->current_stock,
             'low_stock_threshold' => $product->low_stock_threshold,
             'track_inventory' => $product->track_inventory,
+            'is_initial' => $isInitial,
+            'default_quantity' => $isInitial ? 1 : 1, // 1 for initial, 1 for restock
+            'default_type' => $isInitial
+                ? InventoryMovementTypes::INITIAL->value
+                : InventoryMovementTypes::RESTOCK->value,
             'movement_types' => [
                 'add' => InventoryMovementTypes::addOperations(),
             ]

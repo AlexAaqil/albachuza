@@ -96,6 +96,9 @@ class ProductController extends Controller
     {
         $validated_data = $request->validated();
 
+        $validated_data['track_inventory'] ??= true;
+        $validated_data['low_stock_threshold'] ??= 0;
+
         $images = $validated_data['images'] ?? [];
         unset($validated_data['images']);
 
@@ -112,14 +115,10 @@ class ProductController extends Controller
         
             Inertia::flash('toast', [
                 'type' => "success",
-                'message' => $product->tracksInventory() ? "Product created. Add initial stock to start tracking." : "Product created successfully.",
+                'message' => "Product created. Add initial stock to start tracking.",
             ]);
 
-            if ($product->tracksInventory()) {
-                return to_route('products-inventory.create', $product);
-            }
-
-            return to_route('products.index');
+            return to_route('products-inventory.create', $product);
         } catch (Exception $e) {
             DB::rollback();
 

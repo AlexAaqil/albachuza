@@ -32,7 +32,7 @@ return new class extends Migration
 
             // Inventory Tracking
             $table->decimal('current_stock', 10, 2)->default(0.00); // For services, default is 0
-            $table->boolean('track_inventory')->default(false);
+            $table->boolean('track_inventory')->default(true);
             $table->decimal('low_stock_threshold', 10, 2)->default(0.00);
 
             $table->string('unit_of_measure')->default('pcs');

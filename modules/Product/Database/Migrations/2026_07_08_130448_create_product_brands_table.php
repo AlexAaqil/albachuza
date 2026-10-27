@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->integer('sort_order')->default(0);
             $table->boolean('is_active')->default(true);
-            $table->foreignId('parent_id')->nullable()->constrained('product_categories')->cascadeOnDelete();
+            $table->foreignId('parent_id')->nullable()->constrained('product_brands')->cascadeOnDelete();
             $table->timestamps();
 
             $table->index('slug');
