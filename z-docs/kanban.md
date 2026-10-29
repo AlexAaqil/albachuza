@@ -8,7 +8,6 @@ General
 Products
 
 ❌ Can be imported or exported as csv to make bulk editing easier.
-❌ Properly style brands on the home page to be a better slider.
 ❌ Product Images can be sorted by dragging and dropping the image.
 ✅ Image processing should crop images to a fixed h and w (800 x 800).
 ✅ Product SKU should be generated automatically.
