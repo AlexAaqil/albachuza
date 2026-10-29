@@ -32,7 +32,7 @@ defineProps<Props>();
 					</div>
 				</div>
 
-				<div class="image lg:col-span-5 h-[30dvh] lg:h-full">
+				<div class="image hidden lg:block lg:col-span-5 h-[30dvh] lg:h-full">
 					<img src="/assets/images/air-force-sneaker-hero-image.png" alt="Air Force shoe hero image" class="object-contain">
 				</div>
 			</div>

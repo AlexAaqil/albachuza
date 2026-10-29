@@ -6,7 +6,7 @@ import AddToCartButton from '@/pages/storefront/components/AddToCartButton.vue';
 import productDetailsRoute from '@/routes/product-details';
 import type { Product } from '@/types/product';
 
-const {formatPrice} = usePriceFormatter();
+const { formatPrice } = usePriceFormatter();
 
 const props = withDefaults(defineProps<{
     product: Product;
@@ -22,6 +22,9 @@ const props = withDefaults(defineProps<{
 const currentImageIndex = ref(0);
 const isHovered = ref(false);
 let autoSlideInterval: ReturnType<typeof setInterval> | null = null;
+
+// Detect whether this device supports hover (desktop mouse vs touch)
+const supportsHover = ref(false);
 
 const currentImage = computed(() => {
     return props.product.images[currentImageIndex.value] || props.product.images[0];
@@ -39,8 +42,8 @@ const nextImage = () => {
 
 const prevImage = () => {
     if (hasMultipleImages.value) {
-        currentImageIndex.value = currentImageIndex.value === 0 
-            ? props.product.images.length - 1 
+        currentImageIndex.value = currentImageIndex.value === 0
+            ? props.product.images.length - 1
             : currentImageIndex.value - 1;
     }
 };
@@ -50,9 +53,12 @@ const goToImage = (index: number) => {
 };
 
 const startAutoSlide = () => {
-    if (hasMultipleImages.value) {
-        autoSlideInterval = setInterval(nextImage, 3000);
-    }
+    // Only auto-slide on devices that actually support hover
+    if (!supportsHover.value) return;
+    if (!hasMultipleImages.value) return;
+    if (autoSlideInterval) return; // already running
+
+    autoSlideInterval = setInterval(nextImage, 3000);
 };
 
 const stopAutoSlide = () => {
@@ -62,15 +68,24 @@ const stopAutoSlide = () => {
     }
 };
 
-// const getStars = (rating: number) => {
-//     const fullStars = Math.floor(rating);
-//     const hasHalfStar = rating % 1 >= 0.5;
+// Only trigger the hover handlers if the device supports hover
+const handleMouseEnter = () => {
+    if (!supportsHover.value) return;
+    isHovered.value = true;
+    startAutoSlide();
+};
 
-//     return { fullStars, hasHalfStar };
-// };
+const handleMouseLeave = () => {
+    if (!supportsHover.value) return;
+    isHovered.value = false;
+    stopAutoSlide();
+    // Optionally reset to first image on leave:
+    currentImageIndex.value = 0;
+};
 
 onMounted(() => {
-    startAutoSlide();
+    // Feature-detect hover support
+    supportsHover.value = window.matchMedia('(hover: hover)').matches;
 });
 
 onUnmounted(() => {
@@ -80,18 +95,16 @@ onUnmounted(() => {
 
 <template>
     <div class="bg-white shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 group"
-         @mouseenter="stopAutoSlide"
-         @mouseleave="startAutoSlide">
-        
+         @mouseenter="handleMouseEnter"
+         @mouseleave="handleMouseLeave">
+
         <!-- Image Carousel -->
         <div class="relative overflow-hidden bg-gray-100 aspect-square h-90 w-full">
-            <img 
+            <img
                 :src="currentImage?.card_url || currentImage?.url || '/assets/images/default-image.png'"
                 :alt="currentImage?.alt || product.slug"
                 class="w-full h-full object-cover transition-transform duration-500"
                 :class="{ 'scale-105': isHovered }"
-                @mouseenter="isHovered = true"
-                @mouseleave="isHovered = false"
                 loading="lazy"
             />
             
