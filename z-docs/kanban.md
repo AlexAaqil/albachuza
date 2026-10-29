@@ -9,7 +9,7 @@ Products
 
 ❌ Can be imported or exported as csv to make bulk editing easier.
 ❌ Product Images can be sorted by dragging and dropping the image.
-✅ Image processing should crop images to a fixed h and w (800 x 800).
+❌ Image processing should crop images to a fixed h and w (800 x 800).
 ✅ Product SKU should be generated automatically.
 ✅ Add an input for size in the create and edit pages for products.
 ✅ Products out of stock should not be visible on the create order page.
