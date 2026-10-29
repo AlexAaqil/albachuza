@@ -54,7 +54,7 @@ class ProductInventoryController extends Controller
             }
         }
         
-        $products = $query->orderBy('name')->paginate(20);
+        $products = $query->with(['images', 'category', 'brand'])->orderBy('name')->paginate(20);
         
         // Get summary stats
         $stats = [

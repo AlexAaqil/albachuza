@@ -1,6 +1,18 @@
 export interface ProductImage {
+    /** Full size (product page). */
     url: string;
+    /** Medium size (storefront grid and carousel). */
+    card_url?: string;
+    /** Small size (thumbnails). */
+    thumb_url?: string;
     alt: string;
+}
+
+/** One photo in the admin image picker: either already saved (id) or newly chosen (file). */
+export interface ProductImageItem {
+    id?: number;
+    file?: File;
+    preview: string;
 }
 
 export interface Product {
@@ -20,6 +32,7 @@ export interface Product {
     category: string;
     tags: string[];
     thumbnail_url: string;
+    card_image_url?: string;
     images: ProductImage[];
     rating: number;
     reviews_count: number;

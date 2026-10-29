@@ -23,6 +23,9 @@ class ProductRequest extends FormRequest
      */
     public function rules(): array
     {
+        $maxImages = config('product_images.max_per_product');
+        $maxDimension = config('product_images.max_dimension');
+
         return [
             'name' => [
                 'required', 
@@ -52,25 +55,40 @@ class ProductRequest extends FormRequest
             'is_active' => ['boolean'],
             'is_new' => ['boolean'],
             'track_inventory' => ['boolean'],
-            'low_stock_threshold' => ['nullable', 'numeric', 'min:0'],
+            'low_stock_threshold' => ['nullable', 'numeric', 'min:0', Rule::requiredIf(fn()=>$this->boolean('track_inventory'))],
             'current_stock' => ['prohibited'],
             'product_category_id' => ['nullable', 'exists:product_categories,id'],
             'product_brand_id' => ['nullable', 'exists:product_brands,id'],
-            'images' => ['nullable', 'array', 'max:5'],
-            'images.*' => ['image', 'mimes:jpg,jpeg,png,gif,svg,webp', 'max:2048'],
+            'images' => ['nullable', 'array', 'max:' . $maxImages],
+            'images.*' => [
+                'image',
+                'mimes:jpg,jpeg,png,gif,webp',
+                'max:' . config('product_images.max_upload_kb'),
+                'dimensions:max_width=' . $maxDimension . ',max_height=' . $maxDimension,
+            ],
+            // Final order of the images, sent by the edit form: an existing image id ("12")
+            // or the position of a new upload ("new-0").
+            'image_order' => ['nullable', 'array', 'max:' . $maxImages],
+            'image_order.*' => ['string', 'regex:/^(\d+|new-\d+)$/'],
         ];
     }
 
     public function messages(): array
     {
+        $maxImages = config('product_images.max_per_product');
+        $maxMb = round(config('product_images.max_upload_kb') / 1024);
+        $maxDimension = config('product_images.max_dimension');
+
         return [
             'name.required' => 'A product must have a name',
             'price.required' => 'The product price is required',
             'sku.unique' => 'This SKU is already in use. Please use a different one.',
             'barcode.unique' => 'This barcode is already in use.',
-            'images.max' => 'You can upload a maximum of 5 images.',
-            'images.*.max' => 'Each image must be less than 2MB.',
-            'images.*.mimes' => 'Only JPG, JPEG, PNG, GIF, SVG and WEBP images are allowed.',
+            'images.max' => "You can upload a maximum of {$maxImages} images.",
+            'images.*.max' => "Each image must be less than {$maxMb}MB.",
+            'images.*.mimes' => 'Only JPG, PNG, GIF and WEBP images are allowed.',
+            'images.*.image' => 'Each file must be an image.',
+            'images.*.dimensions' => "Each image can be at most {$maxDimension}px wide or tall.",
         ];
     }
 }

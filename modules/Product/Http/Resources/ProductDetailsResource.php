@@ -31,7 +31,9 @@ class ProductDetailsResource extends JsonResource
             'images' => $this->whenLoaded('images', function() {
                 return $this->images->map(function($image) {
                     return [
-                        'url' => asset('storage/products/' . $image->name),
+                        'url' => $image->image_url,        // full size
+                        'card_url' => $image->card_url,    // medium
+                        'thumb_url' => $image->thumbnail_url, // small
                         'alt' => $this->slug,
                     ];
                 })->values()->toArray();

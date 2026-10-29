@@ -63,7 +63,7 @@ const selectImage = (index: number) => {
                         :class="selectedImageIndex === index ? 'border-blue-800' : 'border-transparent'"
                         @click="selectImage(index)"
                     >
-                        <img :src="image.url" :alt="image.alt || `${product.data.name} thumbnail ${index + 1}`" class="w-full h-full object-cover" />
+                        <img :src="image.thumb_url || image.url" :alt="image.alt || `${product.data.name} thumbnail ${index + 1}`" class="w-full h-full object-contain" />
                     </div>
                 </div>
             </div>

@@ -19,6 +19,7 @@ interface Product {
     is_new: boolean;
     is_active: boolean;
     thumbnail_url: string;
+    card_image_url?: string;
 }
 
 defineProps<{
@@ -34,7 +35,7 @@ const isHovered = ref(false);
         <!-- Image Carousel -->
         <div class="relative overflow-hidden bg-gray-100 aspect-square h-70 w-full">
             <img 
-                :src="product.thumbnail_url" 
+                :src="product.card_image_url || product.thumbnail_url"
                 :alt="product.slug"
                 class="w-full h-full object-cover transition-transform duration-500"
                 :class="{ 'scale-105': isHovered }"

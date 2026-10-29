@@ -28,6 +28,7 @@ class ProductIndexPageResource extends JsonResource
             'discount_display' => $this->discount_display,
             'discounted_price' => $this->discounted_price,
             'thumbnail_url' => $this->thumbnail_url,
+            'card_image_url' => $this->card_image_url,
             'category_name' => $this->category_name,
             'brand_name' => $this->brand_name,
             'description' => $this->description,

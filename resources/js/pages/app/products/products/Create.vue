@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { Link, Head, useForm } from '@inertiajs/vue3';
-import { ImagePlus, X } from '@lucide/vue';
 import { ref } from 'vue';
 import FormHeader from '@/components/custom/FormHeader.vue';
+import ProductImagePicker from '@/components/custom/ProductImagePicker.vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { Spinner } from '@/components/ui/spinner';
 import { Textarea } from '@/components/ui/textarea';
 import productRoutes from '@/routes/products';
+import type { ProductImageItem } from '@/types/product';
 
 interface Category {
     id: number;
@@ -45,72 +46,11 @@ const form = useForm({
     images: [] as File[],
 });
 
-const imagePreviews = ref<string[]>([]);
-
-const MAX_IMAGES = 5;
-const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
-const MAX_TOTAL_SIZE = 10 * 1024 * 1024; // 10MB
-
-const isMaxImagesReached = () => form.images.length >= MAX_IMAGES;
-
-const handleImageChange = (e: Event) => {
-    const target = e.target as HTMLInputElement;
-    const files = Array.from(target.files || []);
-
-    if (!files.length) {
-        return;
-    }
-
-    // Max count
-    if (form.images.length + files.length > MAX_IMAGES) {
-        alert(`Maximum ${MAX_IMAGES} images allowed.`);
-        target.value = '';
-
-        return;
-    }
-
-    // Per-file size
-    for (const file of files) {
-        if (file.size > MAX_FILE_SIZE) {
-            alert(`${file.name} exceeds 2MB`);
-            target.value = '';
-
-            return;
-        }
-    }
-
-    // Total size
-    const currentSize = form.images.reduce((sum, f) => sum + f.size, 0);
-    const newSize = files.reduce((sum, f) => sum + f.size, 0);
-
-    if (currentSize + newSize > MAX_TOTAL_SIZE) {
-        alert(`Total size cannot exceed 10MB`);
-        target.value = '';
-
-        return;
-    }
-
-    // Add files + previews
-    files.forEach(file => {
-        if (!file.type.startsWith('image/')) {
-            return;
-        }
-
-        form.images.push(file);
-        imagePreviews.value.push(URL.createObjectURL(file));
-    });
-
-    target.value = '';
-};
-
-const removeImage = (index: number) => {
-    URL.revokeObjectURL(imagePreviews.value[index]);
-
-    form.images.splice(index, 1);
-    imagePreviews.value.splice(index, 1);
-};
+const imageItems = ref<ProductImageItem[]>([]);
 
 const submitForm = () => {
+    form.images = imageItems.value.filter((item) => item.file).map((item) => item.file as File);
+
     form.post(productRoutes.store.url(), {
         preserveScroll: true,
     });
@@ -338,49 +278,9 @@ const submitForm = () => {
 
             <div class="form-section">
                 <h3 class="section-title">Product Images</h3>
-                
+
                 <div class="inputs-group">
-                    <div class="grid grid-cols-3 md:grid-cols-5 gap-3">
-                        
-                        <!-- Existing Images -->
-                        <div 
-                            v-for="(preview, idx) in imagePreviews" 
-                            :key="idx" 
-                            class="relative w-full aspect-square rounded-xl overflow-hidden border"
-                        >
-                            <img :src="preview" class="w-full h-full object-cover" />
-
-                            <button 
-                                type="button" 
-                                @click="removeImage(idx)"
-                                class="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full"
-                            >
-                                <X class="w-3 h-3" />
-                            </button>
-                        </div>
-
-                        <!-- Upload Button (acts like a tile) -->
-                        <label
-                            v-if="!isMaxImagesReached()"
-                            class="flex flex-col items-center justify-center border-2 border-dashed rounded-xl aspect-square cursor-pointer hover:bg-gray-50"
-                        >
-                            <ImagePlus class="w-8 h-8 text-gray-400 mb-1" />
-                            <span class="text-xs text-gray-500">Upload</span>
-
-                            <input
-                                type="file"
-                                multiple
-                                accept="image/*"
-                                class="hidden"
-                                @change="handleImageChange"
-                            />
-                        </label>
-
-                    </div>
-
-                    <p class="text-xs text-gray-400 mt-2">
-                        Upload up to 5 images. First image will be primary.
-                    </p>
+                    <ProductImagePicker v-model="imageItems" />
 
                     <InputError :message="form.errors.images" />
                 </div>

@@ -61,6 +61,7 @@ class OrderController extends Controller
     public function create()
     {
         $products = Product::query()
+            ->with('images')
             ->sellable()
             ->where('is_active', true)
             ->orderBy('name')

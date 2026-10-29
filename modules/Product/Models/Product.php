@@ -38,61 +38,28 @@ class Product extends Model
         'brand_name',
         'category_name',
         'thumbnail_url',
+        'card_image_url',
     ];
 
     protected static function booted()
     {
         static::updating(function ($product) {
             if ($product->isDirty('name')) {
-                $old_name = $product->getOriginal('name');
-                $new_name = $product->name;
-                
-                // Update slug
-                $product->slug = Str::slug($new_name);
-                
-                // Get images directly from database
-                $images = $product->images()->get();
-                
-                $new_slug = Str::slug($new_name);
-                
-                // Rename all images
-                foreach ($images as $image) {
-                    $old_filename = $image->name;
-                    
-                    // Extract the current slug from the filename (first part before first underscore)
-                    $parts = explode('_', $old_filename);
-                    $old_slug = $parts[0];
-                    
-                    // Replace old slug with new slug
-                    $new_filename = str_replace($old_slug, $new_slug, $old_filename);
-                    
-                    if ($old_filename !== $new_filename) {
-                        $old_path = 'products/' . $old_filename;
-                        $new_path = 'products/' . $new_filename;
-                        
-                        // Rename the actual file
-                        if (Storage::disk('public')->exists($old_path)) {
-                            Storage::disk('public')->move($old_path, $new_path);
-                        }
-                        
-                        // Update database record
-                        $image->name = $new_filename;
-                        $image->save();
-                    }
-                }
+                $product->slug = Str::slug($product->name);
             }
         });
 
         static::deleting(function ($product) {
-            $images = $product->images()->get();
-            
-            foreach ($images as $image) {
-                $path = "products/{$image->name}";
-                if (Storage::disk('public')->exists($path)) {
-                    Storage::disk('public')->delete($path);
-                }
+            // Delete each image through its model so its files are removed too.
+            foreach ($product->images()->get() as $image) {
                 $image->delete();
             }
+
+            // New photos live in "<directory>/<product id>/"; clear that folder.
+            DB::afterCommit(function () use ($product) {
+                Storage::disk(ProductImage::diskName())
+                    ->deleteDirectory(ProductImage::pathFor((string) $product->id));
+            });
         });
     }
 
@@ -121,9 +88,20 @@ class Product extends Model
         return $this->hasMany(ProductImage::class, 'product_id')->orderBy('sort_order');
     }
 
+    /**
+     * Small (300px) picture of the first image: admin tables, POS, thumbnails.
+     */
     public function getThumbnailUrlAttribute(): string
     {
-        return $this->images->first()?->image_url ?? asset('assets/images/general/default-image.webp');
+        return $this->images->first()?->thumbnail_url ?? asset('assets/images/general/default-image.webp');
+    }
+
+    /**
+     * Medium (600px) picture of the first image: storefront product cards.
+     */
+    public function getCardImageUrlAttribute(): string
+    {
+        return $this->images->first()?->card_url ?? asset('assets/images/general/default-image.webp');
     }
 
     public function inventoryMovements(): HasMany

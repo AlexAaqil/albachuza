@@ -300,7 +300,7 @@ onUnmounted(() => {
                     class="bg-background text-foreground p-3 rounded-lg shadow-sm border hover:shadow-md transition"
                 >
                     <div class="w-full h-32 overflow-hidden rounded mb-2 bg-gray-100">
-                        <img :src="product.thumbnail_url" :alt="product.name" class="w-full h-full object-cover" />
+                        <img :src="product.thumbnail_url" :alt="product.name" class="w-full h-full object-contain" />
                     </div>
 
                     <div class="space-y-1">
