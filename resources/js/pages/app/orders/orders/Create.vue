@@ -260,8 +260,8 @@ onUnmounted(() => {
 <template>
     <Head title="POS - New Order" />
 
-    <div class="pos-wrapper grid lg:grid-cols-2 gap-8 h-[84dvh] p-4 bg-background text-foreground overflow-hidden">
-        <div class="products-wrapper overflow-y-auto pr-4">
+    <div class="pos-wrapper grid lg:grid-cols-2 gap-8 p-4 bg-background text-foreground overflow-hidden">
+        <div class="products-wrapper overflow-y-auto pr-4 h-[75dvh] rounded-lg">
             <div class="flex items-center justify-between mb-4 gap-3">
                 <h2 class="text-xl font-bold">Select Products</h2>
                 <span class="text-xs text-gray-500">
@@ -363,46 +363,48 @@ onUnmounted(() => {
             
             <!-- Cart Items List -->
             <div class="cart-items space-y-2 min-h-25 max-h-50 overflow-y-auto mb-4 flex-1" v-if="cart.length > 0">
-                <div v-for="item in cart" :key="item.id" class="flex justify-between items-center text-sm bg-background text-foreground p-2 rounded border">
-                    <div class="flex-1 min-w-0">
+                <div v-for="item in cart" :key="item.id" class="grid gap-2 lg:grid-cols-2 text-sm bg-background text-foreground p-2 rounded border">
+                    <div class="">
                         <span class="font-medium truncate block">{{ item.name }}</span>
                         <span class="text-gray-500 text-xs">{{ formatPrice(item.price) }} each</span>
                     </div>
 
-                    <!-- Quantity Controls -->
-                    <div class="flex items-center gap-2">
-                        <Button 
-                            type="button" 
-                            variant="outline" 
-                            size="icon" 
-                            class="h-6 w-6 rounded-full text-xs"
-                            @click="decreaseQuantity(item.id)"
-                        >
-                            −
-                        </Button>
-                        <span class="w-6 text-center font-semibold">{{ item.quantity }}</span>
-                        <Button 
-                            type="button" 
-                            variant="outline" 
-                            size="icon" 
-                            class="h-6 w-6 rounded-full text-xs"
-                            @click="increaseQuantity(item.id)"
-                        >
-                            +
-                        </Button>
-                    </div>
+                    <div class="quality_price flex gap-2 justify-between">
+                        <!-- Quantity Controls -->
+                        <div class="flex items-center gap-2">
+                            <Button 
+                                type="button" 
+                                variant="outline" 
+                                size="icon" 
+                                class="h-6 w-6 rounded-full text-xs"
+                                @click="decreaseQuantity(item.id)"
+                            >
+                                −
+                            </Button>
+                            <span class="w-6 text-center font-semibold">{{ item.quantity }}</span>
+                            <Button 
+                                type="button" 
+                                variant="outline" 
+                                size="icon" 
+                                class="h-6 w-6 rounded-full text-xs"
+                                @click="increaseQuantity(item.id)"
+                            >
+                                +
+                            </Button>
+                        </div>
 
-                    <div class="flex items-center gap-3 ml-3">
-                        <span class="font-bold w-20 text-right">{{ formatPrice(item.price * item.quantity) }}</span>
-                        <Button 
-                            type="button" 
-                            variant="destructive" 
-                            size="icon" 
-                            class="h-6 w-6 rounded-full text-xs"
-                            @click="removeFromCart(item.id)"
-                        >
-                            ✕
-                        </Button>
+                        <div class="flex items-center gap-3 ml-3">
+                            <span class="font-bold w-20 text-right">{{ formatPrice(item.price * item.quantity) }}</span>
+                            <Button 
+                                type="button" 
+                                variant="destructive" 
+                                size="icon" 
+                                class="h-6 w-6 rounded-full text-xs"
+                                @click="removeFromCart(item.id)"
+                            >
+                                ✕
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </div>
