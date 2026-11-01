@@ -9,6 +9,7 @@ import {
     Users,
     Barcode,
     Clipboard,
+    BanknoteArrowDown
 } from '@lucide/vue';
 import { computed } from 'vue';
 import AppLogo from '@/components/AppLogo.vue';
@@ -45,6 +46,7 @@ import { useCurrentUrl } from '@/composables/useCurrentUrl';
 import { getInitials } from '@/composables/useInitials';
 import { toUrl } from '@/lib/utils';
 import { dashboard } from '@/routes';
+import expenseRoutes from '@/routes/expenses';
 import orderRoutes from '@/routes/orders';
 import productRoutes from '@/routes/products';
 import userRoutes from '@/routes/users';
@@ -96,6 +98,11 @@ const mainNavItems = computed(() => {
 
     if (isSuperAdmin.value || isAdmin.value) {
         items.push(
+            {
+                title: 'Expenses',
+                href: expenseRoutes.index(),
+                icon: BanknoteArrowDown,
+            },
             {
                 title: 'Users',
                 href: userRoutes.index(),
