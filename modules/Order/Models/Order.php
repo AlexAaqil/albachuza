@@ -397,33 +397,36 @@ class Order extends Model
     public function scopeNeedsAttention($query)
     {
         return $query->where(function ($q) {
-            // CASE 1: Active orders that are NOT safely with courier
+            // 1. Active orders not yet with a courier (NULL-safe)
             $q->where(function ($sub) {
                 $sub->whereNotIn('order_status', [
-                    OrderStatusEnum::COMPLETED->value,
-                    OrderStatusEnum::CANCELLED->value,
-                    OrderStatusEnum::REFUNDED->value,
-                ])
-                ->whereNotIn('delivery_status', [
-                    DeliveryStatusEnum::PICKED_UP->value,
-                    DeliveryStatusEnum::IN_TRANSIT->value,
-                    DeliveryStatusEnum::OUT_FOR_DELIVERY->value,
-                ]);
-            });
-            
-            // CASE 2: Payment issues (partial or unpaid)
-            $q->orWhere(function ($sub) {
-                $sub->whereColumn('amount_paid', '<', 'total_selling_price');
-            });
-            
-            // CASE 3: Delivery failures (stolen, lost, etc.)
-            $q->orWhere('delivery_status', DeliveryStatusEnum::DELIVERY_FAILED->value);
-            
-            // CASE 4: Returns (need processing)
-            $q->orWhere('order_status', OrderStatusEnum::RETURNED->value);
-            
-            // CASE 5: Cancelled but not refunded
-            $q->orWhere(function ($sub) {
+                        OrderStatusEnum::COMPLETED->value,
+                        OrderStatusEnum::CANCELLED->value,
+                        OrderStatusEnum::REFUNDED->value,
+                    ])
+                    ->where(function ($d) {
+                        $d->whereNull('delivery_status')
+                        ->orWhereNotIn('delivery_status', [
+                            DeliveryStatusEnum::PICKED_UP->value,
+                            DeliveryStatusEnum::IN_TRANSIT->value,
+                            DeliveryStatusEnum::OUT_FOR_DELIVERY->value,
+                        ]);
+                    });
+            })
+            // 2. Payment issues, live orders only
+            ->orWhere(function ($sub) {
+                $sub->whereNotIn('order_status', [
+                        OrderStatusEnum::CANCELLED->value,
+                        OrderStatusEnum::REFUNDED->value,
+                    ])
+                    ->whereColumn('amount_paid', '<', 'total_selling_price');
+            })
+            // 3. Delivery failures
+            ->orWhere('delivery_status', DeliveryStatusEnum::DELIVERY_FAILED->value)
+            // 4. Returns
+            ->orWhere('order_status', OrderStatusEnum::RETURNED->value)
+            // 5. Cancelled but money still held
+            ->orWhere(function ($sub) {
                 $sub->where('order_status', OrderStatusEnum::CANCELLED->value)
                     ->where('amount_paid', '>', 0);
             });
