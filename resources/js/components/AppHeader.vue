@@ -291,15 +291,6 @@ const rightNavItems: NavItem[] = [
                             <Moon v-else class="icon moon-icon w-5 h-5" />
                         </button>
 
-                        <button
-                            @click="updateAppearance(appearance === 'light' ? 'dark' : 'light')"
-                            class="toggle-theme p-2 rounded-md hover:bg-accent"
-                            title="Toggle theme"
-                        >
-                            <Sun v-if="appearance === 'light'" class="icon sun-icon w-5 h-5" />
-                            <Moon v-else class="icon moon-icon w-5 h-5" />
-                        </button>
-
                         <div class="hidden space-x-1 lg:flex">
                             <template
                                 v-for="item in rightNavItems"
