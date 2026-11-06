@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Link, Head, useForm } from '@inertiajs/vue3';
 import FormHeader from '@/components/custom/FormHeader.vue';
+import { Input } from '@/components/ui/input';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -50,6 +51,9 @@ interface Order {
     subtotal: number;
     total_selling_price: number;
     amount_paid: number;
+    balance: number;
+    is_fully_paid: boolean;
+    balance_label: string;
 }
 
 const props = defineProps<{
@@ -70,6 +74,37 @@ const form = useForm({
 const submitForm = () => {
     form.put(orderRoutes.update.url(props.order.data.uuid), {
         preserveScroll: true
+    });
+};
+
+const paymentForm = useForm({
+    amount: '',
+    payment_method: 'cash',
+    reference: '',
+    notes: '',
+});
+
+const submitPayment = () => {
+    paymentForm.post(`/orders/${props.order.data.uuid}/payments`, {
+        preserveScroll: true,
+        onSuccess: () => paymentForm.reset('amount', 'reference', 'notes'),
+    });
+};
+
+// Convenience: pre-fill the amount with the outstanding balance
+const fillBalance = () => {
+    paymentForm.amount = String(props.order.data.balance);
+};
+
+const discountForm = useForm({
+    discount: '',
+    reason: '',
+});
+
+const submitDiscount = () => {
+    discountForm.post(`/orders/${props.order.data.uuid}/discount`, {
+        preserveScroll: true,
+        onSuccess: () => discountForm.reset(),
     });
 };
 </script>
@@ -148,7 +183,11 @@ const submitForm = () => {
                     <span>: {{ formatPrice(order.data.subtotal) }}</span>
                 </p>
                 <p class="flex">
-                    <span class="text-muted-foreground w-30">Delivery Cost</span>
+                    <span class="text-muted-foreground w-30">Discount</span>
+                    <span>: {{ formatPrice(order.data.discount) }}</span>
+                </p>
+                <p class="flex">
+                    <span class="text-muted-foreground w-30">Shipping</span>
                     <span>: {{ formatPrice(order.data.delivery_cost) }}</span>
                 </p>
                 <p class="flex">
@@ -163,6 +202,12 @@ const submitForm = () => {
                     <span class="text-muted-foreground w-32">Amount Paid</span>
                     <span>: {{ formatPrice(order.data.amount_paid) }}</span>
                 </p>
+
+                <p v-if="!order.data.is_fully_paid" class="flex">
+                    <span class="text-muted-foreground w-32">Balance Due</span>
+                    <span class="text-red-600 font-medium">: {{ formatPrice(order.data.balance) }}</span>
+                </p>
+
                 <p class="flex">
                     <span class="text-muted-foreground w-32">Payment Status</span>
                     <span>: {{ order.data.payment_status }}</span>
@@ -175,6 +220,72 @@ const submitForm = () => {
                 </p>
             </div>
         </div>
+    </div>
+
+    <div v-if="!order.data.is_fully_paid" class="discount-form mt-6 p-4 border rounded">
+        <p class="font-bold text-subheading-text mb-2">Apply Discount</p>
+        <div class="flex gap-2 items-end">
+            <div class="flex-1">
+                <Label for="discount">Discount amount</Label>
+                <Input v-model="discountForm.discount" type="number" step="0.01" min="0" />
+                <InputError :message="discountForm.errors.discount" />
+            </div>
+            <div class="flex-1">
+                <Label for="reason">Reason (optional)</Label>
+                <Input v-model="discountForm.reason" />
+            </div>
+            <Button type="button" :disabled="discountForm.processing" @click="submitDiscount">
+                Apply
+            </Button>
+        </div>
+        <p class="text-xs text-muted-foreground mt-2">
+            Paid so far: {{ formatPrice(order.data.amount_paid) }}.
+            New total will be recalculated.
+        </p>
+    </div>
+
+    <div v-if="!order.data.is_fully_paid" class="payment-form mt-6 p-4 border rounded">
+        <p class="font-bold text-subheading-text mb-2">
+            Record Payment
+            <span class="text-sm font-normal text-muted-foreground">
+                ({{ formatPrice(order.data.balance) }} outstanding)
+            </span>
+        </p>
+
+        <div class="flex gap-2 items-end">
+            <div class="flex-1">
+                <Label for="amount">Amount</Label>
+                <Input v-model="paymentForm.amount" type="number" step="0.01" min="0.01" class="w-full rounded-sm border border-gray-400 px-2 py-1" />
+                <InputError :message="paymentForm.errors.amount" />
+            </div>
+
+            <div class="flex-1">
+                <Label for="method">Method</Label>
+                <Select v-model="paymentForm.payment_method" class="w-full rounded-sm border border-gray-400 px-2 py-1">
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="cash">Cash</SelectItem>
+                        <SelectItem value="mpesa">M-Pesa</SelectItem>
+                        <SelectItem value="card">Card</SelectItem>
+                        <SelectItem value="bank">Bank</SelectItem>
+                    </SelectContent>
+                </Select>
+                <InputError :message="paymentForm.errors.payment_method" />
+            </div>
+
+            <Button type="button" variant="outline" @click="fillBalance">
+                Pay full balance
+            </Button>
+
+            <Button type="button" :disabled="paymentForm.processing" @click="submitPayment">
+                <Spinner v-if="paymentForm.processing" />
+                Record
+            </Button>
+        </div>
+    </div>
+
+    <div v-else class="mt-6 p-3 bg-green-50 border border-green-200 rounded text-green-800 text-sm">
+        ✓ This order is fully paid.
     </div>
 
     <div class="form min-w-full px-0.5">

@@ -27,6 +27,8 @@ Route::middleware('role:admin,super_admin,cashier')->group(function ()
         Route::post('/', 'store')->name('store');
         Route::get('/{order:uuid}/edit', 'edit')->name('edit');
         Route::put('/{order:uuid}', 'update')->name('update');
+        Route::post('/{order:uuid}/payments', [OrderController::class,'recordPayment'])->name('payments.store');
+        Route::post('/{order:uuid}/discount', [OrderController::class, 'applyDiscount'])->name('discount.store');
     });
 });
 

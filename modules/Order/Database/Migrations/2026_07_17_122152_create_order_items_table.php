@@ -21,8 +21,8 @@ return new class extends Migration
             $table->string('product_type')->default('goods'); // [goods, service]
 
             // Used decimals in case of time-based items (e.g. 2.5 hours)
-            $table->decimal('quantity', 10, 2)->default(1.00);
-            $table->decimal('returned_quantity', 10, 2)->default(0.00); // in case a product gets returned
+            $table->integer('quantity');
+            $table->integer('returned_quantity')->default(0); // in case a product gets returned
 
             $table->decimal('cost_price', 10, 2)->default(0);
             $table->decimal('selling_price', 10, 2)->default(0);

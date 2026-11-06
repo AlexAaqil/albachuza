@@ -1,5 +1,5 @@
 .form {
-    @apply border-border mt-4 rounded-xl border p-6 lg:mx-auto lg:w-[80vw];
+    @apply border-border mt-4 rounded-xl border p-6;
 
     .form_header {
         @apply border-border mb-4 flex items-center gap-2 border-b py-4;

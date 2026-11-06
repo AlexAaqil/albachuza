@@ -23,6 +23,7 @@ return new class extends Migration
             $table->decimal('subtotal', 10, 2)->default(0);
             $table->decimal('shipping_cost', 10, 2)->default(0);
             $table->decimal('discount', 10, 2)->default(0);
+            $table->string('discount_notes')->nullable();
             $table->decimal('tax', 10, 2)->default(0);
             $table->decimal('total_cost_price', 10, 2)->default(0);
             $table->decimal('total_selling_price', 10, 2)->default(0); // subtotal + delivery

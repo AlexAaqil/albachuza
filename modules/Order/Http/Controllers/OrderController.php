@@ -127,25 +127,27 @@ class OrderController extends Controller
             'metadata' => 'nullable|array',
         ]);
 
+        if ($validated['order_status'] === 'completed' && ! $order->isFullyPaid()) {
+            return back()->withErrors([
+                'order_status' => 'Cannot complete an order that is not fully paid.',
+            ]);
+        }
+
         DB::beginTransaction();
 
         try {
-            // Update order status if provided
-            if (isset($validated['order_status']) && $validated['order_status'] !== $order->order_status->value) {
-                $status = OrderStatusEnum::from($validated['order_status']);
+            if ($validated['order_status'] !== $order->order_status->value) {
                 $order->updateOrderStatus(
-                    $status,
+                    OrderStatusEnum::from($validated['order_status']),
                     $validated['notes'] ?? null,
                     $validated['metadata'] ?? null,
                     Auth::id()
                 );
             }
 
-            // Update delivery status if provided
-            if (isset($validated['delivery_status']) && $validated['delivery_status'] !== $order->delivery_status->value) {
-                $status = DeliveryStatusEnum::from($validated['delivery_status']);
+            if (isset($validated['delivery_status']) && $validated['delivery_status'] !== $order->delivery_status?->value) {
                 $order->updateDeliveryStatus(
-                    $status,
+                    DeliveryStatusEnum::from($validated['delivery_status']),
                     $validated['notes'] ?? null,
                     $validated['metadata'] ?? null,
                     Auth::id()
@@ -192,5 +194,85 @@ class OrderController extends Controller
 
             return back()->withInput();
         }
+    }
+
+    public function recordPayment(Request $request, Order $order)
+    {
+        $validated = $request->validate([
+            'amount'         => ['required', 'numeric', 'min:0.01'],
+            'payment_method' => ['required', 'string', 'max:50'],
+            'transaction_reference'      => ['nullable', 'string', 'max:100'],
+            'notes'          => ['nullable', 'string', 'max:500'],
+        ]);
+
+        // Uses the live value from payments, not the cached amount_paid column
+        if ($order->isFullyPaid()) {
+            return back()->withErrors(['amount' => 'This order is already fully paid.']);
+        }
+
+        $balance = $order->balance;              // total_selling_price - total_paid
+        $amount  = min((float) $validated['amount'], $balance);
+
+        DB::transaction(function () use ($order, $amount, $validated) {
+            $order->payments()->create([
+                'payment_method' => $validated['payment_method'],
+                'payment_status' => 'completed',
+                'amount' => $amount,
+                'transaction_reference' => $validated['reference'] ?? null,
+                'notes' => $validated['notes'] ?? null,
+                'paid_at' => $validated['paid_at'] ?? now(),
+                // 'payment_metadata'      => array_filter([
+                //     'notes' => $validated['notes'] ?? null,
+                // ]),
+            ]);
+
+            // Refresh the denormalized cache from the source of truth
+            $order->updateAmountPaid();
+        });
+
+        Inertia::flash('toast', [
+            'type'    => 'success',
+            'message' => 'Payment recorded.',
+        ]);
+
+        return back();
+    }
+
+    public function applyDiscount(Request $request, Order $order)
+    {
+        $validated = $request->validate([
+            'discount' => ['required', 'numeric', 'min:0'],
+            'reason'   => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $totalPaid = $order->total_paid; // live from payments
+        $items     = (float) $order->subtotal;
+        $ship      = (float) $order->shipping_cost;
+        $balance   = max(0, (float) $order->total_selling_price - $totalPaid);
+
+        $discount = min((float) $validated['discount'], $items + $ship);
+
+        // Can't discount more than what's still owed — that would mean
+        // the customer has already paid more than the (new) total.
+        if ($discount > $balance) {
+            return back()->withErrors([
+                'discount' => "Discount cannot exceed the outstanding balance of " . number_format($balance, 2) . ". Refund first.",
+            ]);
+        }
+
+        $newTotal = $items + $ship - $discount;
+
+        $order->update([
+            'discount'                  => $discount,
+            'total_selling_price'       => $newTotal,
+            'discount_notes' => $validated['reason'] ?? null,
+        ]);
+
+        Inertia::flash('toast', [
+            'type'    => 'success',
+            'message' => 'Discount applied.',
+        ]);
+
+        return back();
     }
 }

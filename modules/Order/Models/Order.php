@@ -66,6 +66,13 @@ class Order extends Model
             throw new InvalidArgumentException("Invalid order status transition from {$this->order_status->value} to {$status->value}");
         }
 
+        // Invariant: a completed order must be fully paid
+        if ($status === OrderStatusEnum::COMPLETED && ! $this->isFullyPaid()) {
+            throw new InvalidArgumentException(
+                'Cannot complete an order that is not fully paid.'
+            );
+        }
+
         $statusRecord = $this->orderStatuses()->create([
             'type' => 'order',
             'status' => $status->value,

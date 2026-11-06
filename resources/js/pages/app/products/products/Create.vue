@@ -164,7 +164,7 @@ const submitForm = () => {
 
                 <div class="inputs-group-wrapper">
                     <div class="inputs-group">
-                        <Label for="cost_price">Cost Price</Label>
+                        <Label for="cost_price" class="required">Cost Price</Label>
                         <Input
                             id="cost_price"
                             v-model="form.cost_price"

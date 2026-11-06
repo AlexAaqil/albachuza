@@ -9,7 +9,10 @@ import {
     Users,
     Barcode,
     Clipboard,
-    BanknoteArrowDown
+    BanknoteArrowDown,
+    PhoneCall,
+    Sun, 
+    Moon
 } from '@lucide/vue';
 import { computed } from 'vue';
 import AppLogo from '@/components/AppLogo.vue';
@@ -42,10 +45,12 @@ import {
     TooltipTrigger,
 } from '@/components/ui/tooltip';
 import UserMenuContent from '@/components/UserMenuContent.vue';
+import { useAppearance } from '@/composables/useAppearance';
 import { useCurrentUrl } from '@/composables/useCurrentUrl';
 import { getInitials } from '@/composables/useInitials';
 import { toUrl } from '@/lib/utils';
 import { dashboard } from '@/routes';
+import contactMessageRoutes from '@/routes/contact-messages';
 import expenseRoutes from '@/routes/expenses';
 import orderRoutes from '@/routes/orders';
 import productRoutes from '@/routes/products';
@@ -62,6 +67,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 const activeItemStyles =
     'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100';
+
+const { appearance, updateAppearance } = useAppearance();
 
 const page = usePage();
 const auth = computed(() => page.props.auth);
@@ -107,6 +114,11 @@ const mainNavItems = computed(() => {
                 title: 'Users',
                 href: userRoutes.index(),
                 icon: Users,
+            },
+            {
+                title: 'Callbacks',
+                href: contactMessageRoutes.index(),
+                icon: PhoneCall,
             },
             // {
             //     title: 'Branches',
@@ -260,7 +272,7 @@ const rightNavItems: NavItem[] = [
 
                 <div class="ml-auto flex items-center space-x-2">
                     <div class="relative flex items-center space-x-1">
-                        <Button
+                        <!-- <Button
                             variant="ghost"
                             size="icon"
                             class="group h-9 w-9 cursor-pointer"
@@ -268,7 +280,16 @@ const rightNavItems: NavItem[] = [
                             <Search
                                 class="size-5 opacity-80 group-hover:opacity-100"
                             />
-                        </Button>
+                        </Button> -->
+
+                        <button
+                            @click="updateAppearance(appearance === 'light' ? 'dark' : 'light')"
+                            class="toggle-theme p-2 rounded-md hover:bg-accent"
+                            title="Toggle theme"
+                        >
+                            <Sun v-if="appearance === 'light'" class="icon sun-icon w-5 h-5" />
+                            <Moon v-else class="icon moon-icon w-5 h-5" />
+                        </button>
 
                         <div class="hidden space-x-1 lg:flex">
                             <template
