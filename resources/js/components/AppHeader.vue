@@ -158,7 +158,7 @@ const rightNavItems: NavItem[] = [
 </script>
 
 <template>
-    <div>
+    <div class="sticky top-0 bg-background/95 backdrop-blur-sm">
         <div class="border-sidebar-border/80 border-b">
             <div class="mx-auto flex h-16 items-center px-4 lg:px-16">
                 <!-- Mobile Menu -->
@@ -281,6 +281,15 @@ const rightNavItems: NavItem[] = [
                                 class="size-5 opacity-80 group-hover:opacity-100"
                             />
                         </Button> -->
+
+                        <button
+                            @click="updateAppearance(appearance === 'light' ? 'dark' : 'light')"
+                            class="toggle-theme p-2 rounded-md hover:bg-accent"
+                            title="Toggle theme"
+                        >
+                            <Sun v-if="appearance === 'light'" class="icon sun-icon w-5 h-5" />
+                            <Moon v-else class="icon moon-icon w-5 h-5" />
+                        </button>
 
                         <button
                             @click="updateAppearance(appearance === 'light' ? 'dark' : 'light')"
