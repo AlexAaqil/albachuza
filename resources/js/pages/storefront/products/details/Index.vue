@@ -32,7 +32,7 @@ const selectImage = (index: number) => {
             <div class="images-wrapper flex flex-col gap-1 items-center w-full lg:h-[85dvh]">
                 <!-- Main Image Display -->
                 <!-- We check if product.data.images exists and has items, otherwise we fallback to a placeholder or product.data.image -->
-                <div class="main-image-container lg:w-full lg:h-full lg:flex lg:items-center lg:justify-center lg:overflow-hidden">
+                <div class="main-image-container lg:w-full lg:h-full lg:flex lg:items-center lg:justify-center lg:overflow-hidden bg-amber-400 rounded-lg">
                     <img 
                         v-if="product.data.images && product.data.images.length > 0" 
                         :src="product.data.images[selectedImageIndex].url" 
@@ -45,7 +45,7 @@ const selectImage = (index: number) => {
                         :alt="product.data.name"
                         class="main-image w-full h-full object-contain"
                     />
-                    <div v-else class="no-image-placeholder">
+                    <div v-else class="no-image-placeholder text-black">
                         No Image Available
                     </div>
                 </div>
@@ -81,7 +81,7 @@ const selectImage = (index: number) => {
                         <AddToCartButton 
                             :product-slug="product.data.slug"
                             :product-name="product.data.name"
-                            :product-price="formatPrice(product.data.price)"
+                            :product-price="product.data.price"
                             variant="whatsapp"
                             button-text="Chat on WhatsApp"
                         />
