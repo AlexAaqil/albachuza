@@ -72,6 +72,10 @@ const getDisplayRange = computed(() => {
 const hasActiveFilters = computed(() => 
     !!(search.value || stockStatusFilter.value)
 );
+
+const isOutOfStock = (product: Product): boolean => {
+    return product.track_inventory && Number(product.current_stock) <= 0;
+};
 </script>
 
 <template>
@@ -153,6 +157,7 @@ const hasActiveFilters = computed(() =>
                 v-for="(product, index) in products.data"
                 :key="product.id"
                 class="border border-border rounded-lg p-4 bg-card shadow-sm"
+                :class="{ 'bg-red-50 border-red-400': isOutOfStock(product) }"
             >
                 <div class="flex items-start justify-between mb-3">
                     <div>
@@ -248,7 +253,12 @@ const hasActiveFilters = computed(() =>
                 </TableHeader>
 
                 <TableBody>
-                    <TableRow v-for="product in products.data" :key="product.id">
+                    <TableRow 
+                        v-for="product in products.data" :key="product.id"
+                        :class="{
+                            'bg-red-50 border-l-4 border-red-500 hover:bg-red-100' : isOutOfStock(product),
+                        }"
+                    >
                         <TableCell class="font-medium max-w-75 truncate">{{ product.name }}</TableCell>
                         <TableCell class="text-sm text-gray-500">{{ product.sku || 'N/A' }}</TableCell>
                         <TableCell>
