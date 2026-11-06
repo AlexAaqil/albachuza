@@ -1,12 +1,7 @@
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
 import { ref, computed, onMounted, onUnmounted } from 'vue';
-import { usePriceFormatter } from '@/composables/usePriceFormatter';
-import AddToCartButton from '@/pages/storefront/components/AddToCartButton.vue';
-import productDetailsRoute from '@/routes/product-details';
 import type { Product } from '@/types/product';
-
-const { formatPrice } = usePriceFormatter();
+import ProductDetails from './ProductDetails.vue';
 
 const props = withDefaults(defineProps<{
     product: Product;
@@ -54,9 +49,17 @@ const goToImage = (index: number) => {
 
 const startAutoSlide = () => {
     // Only auto-slide on devices that actually support hover
-    if (!supportsHover.value) return;
-    if (!hasMultipleImages.value) return;
-    if (autoSlideInterval) return; // already running
+    if (!supportsHover.value) {
+        return;
+    }
+
+    if (!hasMultipleImages.value) {
+        return;
+    }
+
+    if (autoSlideInterval) {
+        return; // already running
+    }
 
     autoSlideInterval = setInterval(nextImage, 3000);
 };
@@ -70,13 +73,19 @@ const stopAutoSlide = () => {
 
 // Only trigger the hover handlers if the device supports hover
 const handleMouseEnter = () => {
-    if (!supportsHover.value) return;
+    if (!supportsHover.value) {
+        return;
+    }
+
     isHovered.value = true;
     startAutoSlide();
 };
 
 const handleMouseLeave = () => {
-    if (!supportsHover.value) return;
+    if (!supportsHover.value) {
+        return;
+    }
+
     isHovered.value = false;
     stopAutoSlide();
     // Optionally reset to first image on leave:
@@ -94,17 +103,16 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="bg-white shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 group"
+    <div class="bg-gray-50 rounded-xl shadow-sm hover:shadow-lg overflow-hidden transition-shadow duration-300 flex flex-col h-full"
          @mouseenter="handleMouseEnter"
          @mouseleave="handleMouseLeave">
 
         <!-- Image Carousel -->
-        <div class="relative overflow-hidden bg-gray-100 aspect-square h-90 w-full">
+        <div class="product__image relative overflow-hidden bg-gray-100 aspect-square w-full">
             <img
                 :src="currentImage?.card_url || currentImage?.url || '/assets/images/default-image.png'"
                 :alt="currentImage?.alt || product.slug"
-                class="w-full h-full object-cover transition-transform duration-500"
-                :class="{ 'scale-105': isHovered }"
+                class="w-full h-full object-cover"
                 loading="lazy"
             />
             
@@ -138,8 +146,7 @@ onUnmounted(() => {
                 </button>
             </div>
 
-            <!-- Badges -->
-            <div class="absolute top-2 left-2 flex flex-col gap-1">
+            <div class="product__badge absolute top-2 left-2 flex flex-col gap-1">
                 <span v-if="product.is_new" 
                       class="bg-green-500 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-lg">
                     New Arrival
@@ -160,69 +167,6 @@ onUnmounted(() => {
             </span>
         </div>
 
-        <!-- Product Info -->
-        <div class="p-4 space-y-2">
-            <div class="flex justify-between items-center">
-                <span class="text-xs text-gray-500 normal-case tracking-wider">{{ product.category_name }}</span>
-
-                <!-- TODO: add the actual stock count -->
-                <div class="flex items-center gap-1">
-                    <span :class="[
-                        'inline-block w-2 h-2 rounded-full',
-                        product.current_stock > 10 ? 'bg-green-500' :
-                        product.current_stock > 0 ? 'bg-yellow-500' : 'bg-red-500'
-                    ]"></span>
-                    <span class="text-xs text-gray-500">
-                        {{ product.current_stock > 0 ? 'In stock' : 'Out of stock' }}
-                    </span>
-                </div>
-            </div>
-            
-            <h3 class="text-base font-semibold text-gray-900 hover:text-indigo-600 transition-colors line-clamp-1">
-                <Link :href="productDetailsRoute.index(product.slug)">{{ product.name }}</Link>
-            </h3>
-
-            <!-- Price -->
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <span class="text-gray-900">Ksh. {{ formatPrice(product.price) }}</span>
-                    <!-- TODO: add discounted price if available -->
-                </div>
-            </div>
-
-            <!-- Add to Cart Button -->
-            <AddToCartButton 
-                :product-slug="product.slug"
-                :product-name="product.name"
-                :product-price="formatPrice(product.price)"
-                variant="whatsapp"
-                button-text="Chat on WhatsApp"
-            />
-        </div>
+        <ProductDetails :product="product" />
     </div>
 </template>
-
-<style scoped>
-.line-clamp-1 {
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.aspect-square {
-    aspect-ratio: 1 / 1;
-}
-
-/* Smooth transitions */
-.group {
-    transition: all 0.3s ease;
-}
-</style>

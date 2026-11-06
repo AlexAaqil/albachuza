@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { TruckElectric, PhoneCall, ShoppingBag } from '@lucide/vue';
 import ShopLocation from './ShopLocation.vue';
 </script>
 
@@ -24,17 +25,20 @@ import ShopLocation from './ShopLocation.vue';
                     </div>
 
                     <div class="cards grid gap-4 lg:grid-cols-2">
-                        <div class="card bg-accent rounded-sm p-4">
+                        <div class="card bg-accent rounded-sm p-4 space-y-2">
+                            <TruckElectric class="w-8 h-8" />
                             <p class="font-bold">Contry-wide Delivery</p>
                             <p>Same day delivery across the whole country.</p>
                         </div>
 
-                        <div class="card bg-accent rounded-sm p-4">
+                        <div class="card bg-accent rounded-sm p-4 space-y-2">
+                            <PhoneCall class="w-8 h-8" />
                             <p class="font-bold">Personalized Support</p>
                             <p>Need help? Just reach out to us on Whatsapp.</p>
                         </div>
 
-                        <div class="card bg-accent rounded-sm p-4">
+                        <div class="card bg-accent rounded-sm p-4 space-y-2">
+                            <ShoppingBag class="w-8 h-8" />
                             <p class="font-bold">Curated Style</p>
                             <p>Our collection focuses on timeless official shoes,modern casual and versatile everyday peieces.</p>
                         </div>
@@ -43,13 +47,13 @@ import ShopLocation from './ShopLocation.vue';
             </div>
         </section>
 
-        <section class="CTA mb-15">
-            <div class="container-fluid space-y-2 text-center">
+        <section class="CTA container-fluid mb-15">
+            <div class="container-fluid py-12! space-y-2 text-center bg-amber-400 text-black rounded-lg">
                 <p class="uppercase text-body-label-text">Discover Albachuza Collection</p>
                 <p class="font-bold text-heading-text">Find a pair that matches your taste</p>
                 <p>Explore our new arrivals and most popular sneakers, boots, slides and official shoes available in our shop.</p>
                 <div class="action_btn mt-8">
-                    <a href="/shop" class="py-4 px-4 rounded-sm bg-amber-400">Shop Collection</a>
+                    <a href="/shop" class="py-4 px-4 rounded-sm bg-black text-white">Discover our Collection</a>
                 </div>
             </div>
         </section>

@@ -16,9 +16,7 @@ class HomePageController extends Controller
         // $brands = ProductBrand::orderBy('name')->where('is_active', true)->get();
 
         $new_arrivals = Product::query()
-            ->sellable()
-            ->where('is_new', true)
-            ->where('is_active', true)
+            ->newArrivals()
             ->with('images')
             ->limit(8)
             ->get();
@@ -36,9 +34,7 @@ class HomePageController extends Controller
     {
         // Get up to 4 featured products
         $featured = Product::query()
-            ->sellable()
-            ->where('is_featured', true)
-            ->where('is_active', true)
+            ->featured()
             ->with('images')
             ->limit(12)
             ->get();

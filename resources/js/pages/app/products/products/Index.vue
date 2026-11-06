@@ -199,7 +199,6 @@ const isOutOfStock = (product: Product): boolean => {
                     <p class="text-xs text-muted-foreground">
                         #{{ (products.meta.current_page - 1) * products.meta.per_page + index + 1 }}
                     </p>
-                    <p class="font-semibold text-base">{{ product.name }}</p>
                 </div>
                 <div class="flex items-center gap-2">
                     <Link :href="productRoutes.edit(product.uuid).url" class="action edit p-2">
@@ -220,39 +219,46 @@ const isOutOfStock = (product: Product): boolean => {
                 </div>
             </div>
 
-            <div class="space-y-1.5 text-sm mb-3">
-                <div class="flex justify-between">
-                    <span class="text-muted-foreground">Category:</span>
-                    <span class="font-medium text-right">{{ product.category_name }}</span>
+            <div class="product__card grid grid-cols-2 gap-4">
+                <div class="image aspect-square w-full bg-amber-100 rounded-lg outline outline-amber-400">
+                    <img :src="product.thumbnail_url" :alt="product.slug">
                 </div>
-                <div class="flex justify-between">
-                    <span class="text-muted-foreground">Stock Count:</span>
-                    <span class="font-medium text-right">
-                        {{ product.current_stock }}
-                        <span
-                            v-if="isOutOfStock(product)"
-                            class="ml-1 inline-flex items-center rounded-full bg-red-100 px-1.5 py-0.5 text-[10px] font-semibold text-red-700"
-                        >
-                            Out of Stock
+
+                <div class="product__details space-y-4 py-2">
+                    <div class="product__info space-y-2">
+                        <p class="font-semibold text-base">{{ product.name }}</p>
+                        <div class="">
+                            Ksh. {{ formatPrice(product.price) }}
+                            <span class="text-sm text-muted-foreground">
+                                ({{ formatPrice(product.cost_price) }})
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="meta__row flex justify-between items-center gap-2">
+                        <span class="product_sku text-xs text-gray-500 normal-case tracking-wider">
+                            {{ product.sku }}
                         </span>
-                    </span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-muted-foreground">Price:</span>
-                    <span class="font-medium text-right">{{ formatPrice(product.price) }}</span>
+
+                        <span class="category__name text-xs text-gray-500 normal-case tracking-wider truncate">
+                            {{ product.category_name }}
+                        </span>
+
+                        <div class="stock__count flex items-center gap-1">
+                            <span :class="[
+                                'inline-block w-2 h-2 rounded-full',
+                                product.current_stock > product.low_stock_threshold ? 'bg-green-500' :
+                                product.current_stock > 0 ? 'bg-yellow-500' : 'bg-red-500'
+                            ]"></span>
+                            <span class="text-xs text-gray-500">
+                                {{ product.current_stock }}
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="flex flex-wrap gap-2 pt-3 border-t border-border">
-                <button
-                    @click="toggleAttribute(product, 'is_featured')"
-                    :disabled="isLoading(product, 'is_featured')"
-                    :class="getTagClasses('is_featured', product.is_featured)"
-                >
-                    <Loader2 v-if="isLoading(product, 'is_featured')" class="w-3 h-3 animate-spin" />
-                    <span v-else>Featured</span>
-                </button>
-
+            <div class="flex flex-wrap gap-2 pt-3 mt-4 border-t border-border">
                 <button
                     @click="toggleAttribute(product, 'is_new')"
                     :disabled="isLoading(product, 'is_new')"
@@ -260,6 +266,15 @@ const isOutOfStock = (product: Product): boolean => {
                 >
                     <Loader2 v-if="isLoading(product, 'is_new')" class="w-3 h-3 animate-spin" />
                     <span v-else>New</span>
+                </button>
+
+                <button
+                    @click="toggleAttribute(product, 'is_featured')"
+                    :disabled="isLoading(product, 'is_featured')"
+                    :class="getTagClasses('is_featured', product.is_featured)"
+                >
+                    <Loader2 v-if="isLoading(product, 'is_featured')" class="w-3 h-3 animate-spin" />
+                    <span v-else>Featured</span>
                 </button>
 
                 <button
@@ -338,7 +353,10 @@ const isOutOfStock = (product: Product): boolean => {
                         </span>
                     </TableCell>
                     <TableCell>{{ product.sku ?? '-' }}</TableCell>
-                    <TableCell>{{ formatPrice(product.price) }}</TableCell>
+                    <TableCell>
+                        <span>{{ formatPrice(product.price) }}</span>
+                        <span class="text-sm text-muted-foreground"> ({{ formatPrice(product.cost_price) }})</span>
+                    </TableCell>
                     <TableCell :class="{'font-bold text-red-600' : isOutOfStock(product)}">{{ product.current_stock }}</TableCell>
                     <TableCell>{{ product.category_name }}</TableCell>
                     <TableCell class="tags min-w-50 w-45">

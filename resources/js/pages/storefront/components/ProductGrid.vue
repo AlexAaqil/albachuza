@@ -1,13 +1,8 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import ProductCard from './ProductCard.vue';
-import ProductCardSkeleton from './ProductCardSkeleton.vue';
 import type { Product } from '@/types/product';
-
-interface ProductImage {
-    url: string;
-    alt: string;
-}
+import ProductCardMultipleImages from './ProductCardMultipleImages.vue';
+import ProductCardSkeleton from './ProductCardSkeleton.vue';
 
 const props = defineProps<{
     title?: string;
@@ -51,7 +46,7 @@ const emit = defineEmits<{
                 <ProductCardSkeleton v-if="loading" v-for="n in (skeletonCount || 8)" :key="'skeleton-' + n" />
                 
                 <!-- Products -->
-                <ProductCard 
+                <ProductCardMultipleImages
                     v-else
                     v-for="product in products" 
                     :key="product.id"

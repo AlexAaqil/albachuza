@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use Modules\Product\Models\Product;
 use Modules\Product\Models\ProductCategory;
 use Modules\Product\Http\Resources\ProductDetailsResource;
-use Modules\Product\Http\Resources\ProductIndexPageResource;
+use Modules\Product\Http\Resources\ProductShopPageResource;
 
 class GuestProductController extends Controller
 {
@@ -64,7 +64,7 @@ class GuestProductController extends Controller
 
         return inertia('storefront/products/details/Index', [
             'product' => new ProductDetailsResource($product),
-            'related_products' => ProductIndexPageResource::collection($related_products)
+            'related_products' => ProductShopPageResource::collection($related_products)
         ]);
     }
 
@@ -92,7 +92,7 @@ class GuestProductController extends Controller
             ->get();
 
         return inertia('storefront/products/shop/Index', [
-            'products' => ProductIndexPageResource::collection($products),
+            'products' => ProductShopPageResource::collection($products),
             'product_categories' => $product_categories,
             'filters' => [
                 'search' => $request->search,
