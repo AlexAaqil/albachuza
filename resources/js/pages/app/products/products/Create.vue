@@ -34,7 +34,7 @@ const form = useForm({
     cost_price: '',
     price: '',
     sku: '',
-    size: '',
+    measurement: '',
     barcode: '',
     is_featured: false,
     is_active: true,
@@ -81,14 +81,14 @@ const submitForm = () => {
                     </div>
 
                     <div class="inputs-group">
-                        <Label for="size">Shoe Size</Label>
+                        <Label for="measurement">Measurement</Label>
                         <Input
-                            id="size"
-                            v-model="form.size"
+                            id="measurement"
+                            v-model="form.measurement"
                             type="text"
-                            placeholder="e.g (42 U.K)"
+                            placeholder="Size or measurement of this product"
                         />
-                        <InputError :message="form.errors.size" />
+                        <InputError :message="form.errors.measurement" />
                     </div>
                 </div>
 

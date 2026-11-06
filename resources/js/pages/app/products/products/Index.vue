@@ -7,9 +7,9 @@ import DeleteConfirmationDialog from '@/components/custom/DeleteConfirmation.vue
 import Pagination from '@/components/custom/Pagination.vue';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { usePriceFormatter } from '@/composables/usePriceFormatter';
-import ProductsNav from '../components/ProductsNav.vue';
 import productRoutes from '@/routes/products';
 import type { Product } from '@/types/product';
+import ProductsNav from '../components/ProductsNav.vue';
 
 const { formatPrice } = usePriceFormatter();
 
@@ -144,17 +144,17 @@ const isLoading = (product: Product, attribute: string) => {
     return toggling.value?.id === product.id && toggling.value?.attribute === attribute;
 };
 
-const truncateDescription = (text: string, maxLength: number = 60): string => {
-    if (!text) {
-        return '-';
-    }
+// const truncateDescription = (text: string, maxLength: number = 60): string => {
+//     if (!text) {
+//         return '-';
+//     }
 
-    if (text.length <= maxLength) {
-        return text;
-    }
+//     if (text.length <= maxLength) {
+//         return text;
+//     }
 
-    return text.substring(0, maxLength) + '...';
-};
+//     return text.substring(0, maxLength) + '...';
+// };
 
 // A product is out of stock only if it tracks inventory AND has none left.
 // Untracked products are always "in stock".
@@ -298,7 +298,6 @@ const isOutOfStock = (product: Product): boolean => {
                     <TableHead>Image</TableHead>
                     <TableHead>Product</TableHead>
                     <TableHead>SKU</TableHead>
-                    <TableHead>Barcode</TableHead>
                     <TableHead>Price (Ksh)</TableHead>
                     <TableHead>Inventory</TableHead>
                     <TableHead>Category</TableHead>
@@ -339,7 +338,6 @@ const isOutOfStock = (product: Product): boolean => {
                         </span>
                     </TableCell>
                     <TableCell>{{ product.sku ?? '-' }}</TableCell>
-                    <TableCell>{{ product.barcode ?? '-' }}</TableCell>
                     <TableCell>{{ formatPrice(product.price) }}</TableCell>
                     <TableCell :class="{'font-bold text-red-600' : isOutOfStock(product)}">{{ product.current_stock }}</TableCell>
                     <TableCell>{{ product.category_name }}</TableCell>

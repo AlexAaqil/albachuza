@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { ref, onUnmounted } from 'vue';
 import { Form, Head, Link } from '@inertiajs/vue3';
 import { ImagePlus, X } from '@lucide/vue';
+import { ref, onUnmounted } from 'vue';
+import FormHeader from '@/components/custom/FormHeader.vue';
 import InputError from '@/components/InputError.vue';
-import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
-import FormHeader from '@/components/custom/FormHeader.vue';
+import { Textarea } from '@/components/ui/textarea';
 import productCategoryRoutes from '@/routes/product-categories';
 
 interface Category {
@@ -16,6 +17,7 @@ interface Category {
     name: string;
     slug: string;
     description: string | null;
+    is_active: boolean;
     image: string | null;
     image_url: string | null;   // if your model/resource exposes it
 }
@@ -28,7 +30,10 @@ const imagePreview = ref<string | null>(props.product_category.image_url ?? null
 const handleImageChange = (e: Event) => {
     const target = e.target as HTMLInputElement;
     const file = target.files?.[0];
-    if (!file) return;
+
+    if (!file) {
+return;
+}
 
     // Revoke any previous object URL
     if (imagePreview.value?.startsWith('blob:')) {
@@ -42,6 +47,7 @@ const removeImage = () => {
     if (imagePreview.value?.startsWith('blob:')) {
         URL.revokeObjectURL(imagePreview.value);
     }
+
     // Setting to null hides the preview; the file input itself must be cleared separately
     imagePreview.value = null;
 };
@@ -93,6 +99,16 @@ onUnmounted(() => {
                     :default-value="product_category.description ?? ''"
                 />
                 <InputError :message="errors.description" />
+            </div>
+
+            <div class="inputs-group">
+                <div class="flex items-center justify-between">
+                    <Label for="is_active" class="flex items-center space-x-3">
+                        <Checkbox id="is_active" name="is_active" :default-value="product_category.is_active" :tabindex="3" />
+                        <span>Active</span>
+                    </Label>
+                </div>
+                <p class="text-xs text-gray-500 mt-1">Inactive brands won't be visible to customers</p>
             </div>
 
             <div class="inputs-group-wrapper">

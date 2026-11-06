@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
-import { useDebounceFn } from '@vueuse/core';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { Pencil, Trash2 } from '@lucide/vue';
+import { ref } from 'vue';
 import AppPageHeader from '@/components/custom/AppPageHeader.vue';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import DeleteConfirmationDialog from '@/components/custom/DeleteConfirmation.vue';
-import ProductsNav from '../components/ProductsNav.vue';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import productCategoryRoutes from '@/routes/product-categories';
+import ProductsNav from '../components/ProductsNav.vue';
 
 interface ProductCategory {
     id: number;
     uuid: string;
     name: string;
     slug: string;
+    is_active: boolean;
     image_url: string;
     products_count: number;
 };
@@ -58,6 +58,7 @@ const handleSearch = (value: string) => {
                     <TableHead class="id">#</TableHead>
                     <TableHead>Image</TableHead>
                     <TableHead>Name</TableHead>
+                    <TableHead>Status</TableHead>
                     <TableHead>Products</TableHead>
                     <TableHead class="actions">Actions</TableHead>
                 </TableRow>
@@ -70,6 +71,10 @@ const handleSearch = (value: string) => {
                         <img :src="category.image_url" :alt="category.slug">
                     </TableCell>
                     <TableCell>{{ category.name }}</TableCell>
+                    <TableCell>
+                        <span v-if="category.is_active" class="bg-green-200 text-green-900 py-1 px-2 rounded-full text-sm font-bold">Active</span>
+                        <span v-else class="bg-red-200 text-red-900 py-1 px-2 rounded-full text-sm font-bold">Inactive</span>
+                    </TableCell>
                     <TableCell>{{ category.products_count }}</TableCell>
                     <TableCell class="actions">
                         <div class="actions-wrapper">

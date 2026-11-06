@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
 import { Head, useForm, router, Link } from '@inertiajs/vue3';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+import { ref, computed } from 'vue';
 import InputError from '@/components/InputError.vue';
 import Button from '@/components/ui/button/Button.vue';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import Textarea from '@/components/ui/textarea/Textarea.vue';
 import productInventoryRoutes from '@/routes/products-inventory';
 
@@ -32,7 +32,10 @@ const movementOptions = computed(() => {
 });
 
 const newStockPreview = computed(() => {
-    if (!form.quantity) return props.product.current_stock;
+    if (!form.quantity) {
+return props.product.current_stock;
+}
+
     return Math.max(0, props.product.current_stock - form.quantity);
 });
 

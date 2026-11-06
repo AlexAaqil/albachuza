@@ -58,6 +58,7 @@ const handleSearch = (value: string) => {
                     <TableHead class="id">#</TableHead>
                     <TableHead>Image</TableHead>
                     <TableHead>Name</TableHead>
+                    <TableHead>Status</TableHead>
                     <TableHead>Products</TableHead>
                     <TableHead class="actions">Actions</TableHead>
                 </TableRow>
@@ -67,7 +68,11 @@ const handleSearch = (value: string) => {
                 <TableRow v-for="(brand, index) in props.brands" :key="brand.id">
                     <TableCell class="id">{{ index + 1 }}</TableCell>
                     <TableCell class="w-20"><img :src="brand.image_url" :alt="brand.slug"></TableCell>
-                    <TableCell :class="!brand.is_active ? 'text-red-600 font-bold' : ''">{{ brand.name }}</TableCell>
+                    <TableCell>{{ brand.name }}</TableCell>
+                    <TableCell>
+                        <span v-if="brand.is_active" class="bg-green-200 text-green-900 py-1 px-2 rounded-full text-sm font-bold">Active</span>
+                        <span v-else class="bg-red-200 text-red-900 py-1 px-2 rounded-full text-sm font-bold">Inactive</span>
+                    </TableCell>
                     <TableCell>{{ brand.products_count }}</TableCell>
                     <TableCell class="actions">
                         <div class="actions-wrapper">

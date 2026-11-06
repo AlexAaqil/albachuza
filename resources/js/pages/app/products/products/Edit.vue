@@ -38,7 +38,7 @@ interface Product {
     cost_price: string | null;
     price: string;
     sku: string | null;
-    size: string | null;
+    measurement: string | null;
     barcode: string | null;
     is_featured: boolean;
     is_active: boolean;
@@ -62,7 +62,7 @@ const form = useForm({
     cost_price: props.product.cost_price || '',
     price: props.product.price,
     sku: props.product.sku || '',
-    size: props.product.size || '',
+    measurement: props.product.measurement || '',
     barcode: props.product.barcode || '',
     is_featured: props.product.is_featured,
     is_active: props.product.is_active,
@@ -138,14 +138,14 @@ const submitForm = () => {
                     </div>
 
                     <div class="inputs-group">
-                        <Label for="size">Shoe Size</Label>
+                        <Label for="measurement">Measurement</Label>
                         <Input
                             id="name"
-                            v-model="form.size"
+                            v-model="form.measurement"
                             type="text"
-                            placeholder="e.g (42 U.K)"
+                            placeholder="Size or measurement of this product"
                         />
-                        <InputError :error="form.errors.size" />
+                        <InputError :error="form.errors.measurement" />
                     </div>
                 </div>
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import Pagination from '@/components/custom/Pagination.vue';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import productInventoryRoutes from '@/routes/products-inventory';
 
 interface Movement {
@@ -37,6 +37,7 @@ const getTypeColor = (typeLabel: string) => {
         damage: 'bg-red-100 text-red-800',
         adjustment: 'bg-orange-100 text-orange-800'
     };
+
     return colors[typeLabel as keyof typeof colors] || 'bg-gray-100 text-gray-800';
 };
 </script>

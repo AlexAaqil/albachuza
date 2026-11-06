@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
-import { useDebounceFn } from '@vueuse/core';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { Package, AlertTriangle, CheckCircle, XCircle, TrendingUp, DollarSign } from '@lucide/vue';
+import { useDebounceFn } from '@vueuse/core';
+import { ref, watch, computed } from 'vue';
+import Pagination from '@/components/custom/Pagination.vue';
 import Input from '@/components/ui/input/Input.vue';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import Pagination from '@/components/custom/Pagination.vue';
-import type { Product } from '@/types/product';
 import productInventoryRoutes from '@/routes/products-inventory';
+import type { Product } from '@/types/product';
 import ProductsNav from '../components/ProductsNav.vue';
 
 const props = defineProps<{
@@ -46,9 +46,18 @@ const formatCurrency = (amount: number) => {
 };
 
 const getStockIcon = (product: Product) => {
-    if (!product.track_inventory) return TrendingUp;
-    if (product.current_stock <= 0) return XCircle;
-    if (product.current_stock <= product.low_stock_threshold) return AlertTriangle;
+    if (!product.track_inventory) {
+return TrendingUp;
+}
+
+    if (product.current_stock <= 0) {
+return XCircle;
+}
+
+    if (product.current_stock <= product.low_stock_threshold) {
+return AlertTriangle;
+}
+
     return CheckCircle;
 };
 
@@ -56,6 +65,7 @@ const getDisplayRange = computed(() => {
     const { current_page, per_page, total } = props.products.meta;
     const start = (current_page - 1) * per_page + 1;
     const end = Math.min(current_page * per_page, total);
+
     return { start, end, total };
 });
 
@@ -239,7 +249,7 @@ const hasActiveFilters = computed(() =>
 
                 <TableBody>
                     <TableRow v-for="product in products.data" :key="product.id">
-                        <TableCell class="font-medium">{{ product.name }}</TableCell>
+                        <TableCell class="font-medium max-w-75 truncate">{{ product.name }}</TableCell>
                         <TableCell class="text-sm text-gray-500">{{ product.sku || 'N/A' }}</TableCell>
                         <TableCell>
                             <div :class="product.stock_badge_class" 
