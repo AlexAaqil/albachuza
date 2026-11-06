@@ -54,6 +54,8 @@ interface Order {
     balance: number;
     is_fully_paid: boolean;
     balance_label: string;
+    discount: number;
+    discount_reason: string;
 }
 
 const props = defineProps<{
@@ -184,7 +186,7 @@ const submitDiscount = () => {
                 </p>
                 <p class="flex">
                     <span class="text-muted-foreground w-30">Discount</span>
-                    <span>: {{ formatPrice(order.data.discount) }}</span>
+                    <span>: {{ formatPrice(order.data.discount) }} ({{ order.data.discount_reason }})</span>
                 </p>
                 <p class="flex">
                     <span class="text-muted-foreground w-30">Shipping</span>
