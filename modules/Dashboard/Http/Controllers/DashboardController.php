@@ -3,14 +3,17 @@
 namespace Modules\Dashboard\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Modules\Dashboard\Support\PeriodStats;
-use Modules\Dashboard\Support\SalesBucketer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\CarbonImmutable;
 use Composer\InstalledVersions;
 use Dotenv\Dotenv;
+use Modules\ContactMessage\Models\ContactMessage;
+use Modules\Dashboard\Support\PeriodStats;
+use Modules\Dashboard\Support\SalesBucketer;
+// use Modules\Delivery\Models\DeliveryArea;
+// use Modules\Delivery\Models\DeliveryLocation;
 use Modules\Order\Enums\OrderStatusEnum;
 use Modules\Order\Models\Order;
 use Modules\Payment\Models\Payment;
@@ -158,6 +161,10 @@ class DashboardController extends Controller
             'total_product_categories'=> ProductCategory::count(),
             'total_orders'            => Order::count(),
             'orders_need_attention'   => Order::needsAttention()->count(),
+            'delivery_locations' => 0, // TODO: Add delivery locations count
+            'delivery_areas' => 0, // TODO: Add delivery areas count
+            'callback_requests' => ContactMessage::count(),
+            'unread_callback_requests' => ContactMessage::where('is_read', false)->count(),
         ];
 
         return [

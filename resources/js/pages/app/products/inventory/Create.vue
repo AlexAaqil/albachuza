@@ -37,7 +37,7 @@ const movementOptions = computed(() => {
 const newStockPreview = computed(() => {
     const qty = Number(form.quantity) || 0;
 
-    return (Number(props.product.current_stock) + qty).toFixed(2);
+    return Number(props.product.current_stock) + qty;
 });
 
 const submit = () => {
@@ -97,7 +97,7 @@ const submit = () => {
                     v-model.number="form.quantity" 
                     type="number" 
                     min="1"
-                    step="0.01"
+                    step="1"
                 />
                 <p class="text-xs text-gray-500 mt-1">
                     New stock will be: 

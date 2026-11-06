@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 import { Head, router, usePage } from '@inertiajs/vue3';
-import DashboardStat from './components/DashboardStat.vue';
-import {
-    Chart as ChartJS, Title, Tooltip, Legend, LineElement, CategoryScale,
-    LinearScale, ArcElement, PointElement, DoughnutController, LineController,
-} from 'chart.js';
+import { Chart as ChartJS, Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, ArcElement, PointElement, DoughnutController, LineController } from 'chart.js';
+import { computed } from 'vue';
 import { Line, Doughnut } from 'vue-chartjs';
+import DashboardStat from './components/DashboardStat.vue';
 
 ChartJS.register(
     Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale,
@@ -70,6 +67,10 @@ interface Stats {
         total_product_categories: number;
         total_orders: number;
         orders_need_attention: number;
+        delivery_locations: number;
+        delivery_areas: number;
+        callback_requests: number;
+        unread_callback_requests: number;
     };
 
     system?: SystemStats;
@@ -109,7 +110,10 @@ const periodLabel: Record<Period, string> = {
 };
 
 function setPeriod(period: Period) {
-    if (period === props.stats.period) return;
+    if (period === props.stats.period) {
+        return;
+    }
+
     router.get(
         window.location.pathname,
         { period },
@@ -170,6 +174,7 @@ const paymentOptions = {
                 label: (ctx: any) => {
                     const total = ctx.dataset.data.reduce((a: number, b: number) => a + b, 0);
                     const pct = total === 0 ? 0 : ((ctx.parsed / total) * 100).toFixed(1);
+
                     return `Ksh ${ctx.parsed.toLocaleString()} (${pct}%)`;
                 },
             },
@@ -196,7 +201,7 @@ const fmtPct = (n: number | null) =>
             </div>
         </section>
 
-        <section class="glance">
+        <section class="TodayStats glance">
             <h2 class="mb-4 font-medium">Today at a glance</h2>
             <div class="stats grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                 <DashboardStat
@@ -255,7 +260,7 @@ const fmtPct = (n: number | null) =>
             </div>
         </section>
 
-        <section class="flex flex-col lg:flex-row gap-4 lg:items-center lg:justify-between">
+        <section class="Performance flex flex-col lg:flex-row gap-4 lg:items-center lg:justify-between">
             <h2 class="font-medium">Performance</h2>
             <div class="flex gap-1 p-1 bg-muted rounded-md">
                 <button
@@ -273,7 +278,7 @@ const fmtPct = (n: number | null) =>
             </div>
         </section>
 
-        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <section class="SalesTrend grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 bg-background p-4 rounded-lg border border-border h-80">
                 <h3 class="text-sm font-medium mb-2">
                     Sales trend - {{ periodLabel[stats.period] }}
@@ -299,7 +304,7 @@ const fmtPct = (n: number | null) =>
             </div>
         </section>
 
-        <section class="stats-wrapper">
+        <section class="FiscalSnapshot stats-wrapper">
             <h2 class="mb-4 font-medium">
                 Fiscal snapshot - {{ periodLabel[stats.period] }}
             </h2>
@@ -339,7 +344,7 @@ const fmtPct = (n: number | null) =>
             </div>
         </section>
 
-        <section class="grid lg:grid-cols-2 gap-8">
+        <section class="Products_Expenses grid lg:grid-cols-2 gap-8">
             <div class="bg-background p-4 rounded-lg border border-border">
                 <h3 class="text-sm font-medium mb-3">
                     Top products - {{ periodLabel[stats.period] }}
@@ -385,10 +390,10 @@ const fmtPct = (n: number | null) =>
             </div>
         </section>
 
-        <section class="stats-wrapper">
+        <section class="PlatformStatistics stats-wrapper">
             <h2 class="mb-4 font-medium">Platform Statistics</h2>
             
-            <div class="stats grid gap-8 lg:grid-cols-6">
+            <div class="stats grid gap-8 lg:grid-cols-5">
                 <DashboardStat :stat="stats.counts.total_users" label="Users">
                     <template #extras>
                         <span class="text-sm text-muted-foreground">
@@ -412,10 +417,26 @@ const fmtPct = (n: number | null) =>
                         </span>
                     </template>
                 </DashboardStat>
+
+                <DashboardStat :stat="stats.counts.delivery_locations" label="Locations">
+                    <template #extras>
+                        <span class="text-sm text-muted-foreground">
+                            {{ stats.counts.delivery_areas }} Areas
+                        </span>
+                    </template>
+                </DashboardStat>
+
+                <DashboardStat :stat="stats.counts.callback_requests" label="Callback Requests">
+                    <template #extras>
+                        <span class="text-sm text-muted-foreground">
+                            {{ stats.counts.unread_callback_requests }} Unread
+                        </span>
+                    </template>
+                </DashboardStat>
             </div>
         </section>
 
-        <section v-if="stats.system" class="space-y-4">
+        <section v-if="stats.system" class="SystemStats space-y-4">
             <h2 class="font-medium">System</h2>
 
             <div v-if="stats.system.warnings.length" class="rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900 space-y-1">
