@@ -12,7 +12,6 @@ class ProductHomePageResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-
     public function toArray(Request $request): array
     {
         return [
@@ -21,9 +20,10 @@ class ProductHomePageResource extends JsonResource
             'slug' => $this->slug,
             'sku' => $this->sku,
 
-            'price' => $this->price,
+            'price' => (float) $this->price,
 
-            'current_stock' => (float) $this->current_stock,
+            'current_stock' => $this->current_stock,
+            'low_stock_threshold' => $this->low_stock_threshold,
 
             'category_name' => $this->category_name,
             'brand_name' => $this->brand_name,
@@ -31,9 +31,9 @@ class ProductHomePageResource extends JsonResource
             'is_new' => (bool) $this->is_new,
             'is_featured' => (bool) $this->is_featured,
             'is_active' => (bool) $this->is_active,
-            
-            'images' => $this->whenLoaded('images', function() {
-                return $this->images->map(function($image) {
+
+            'images' => $this->whenLoaded('images', function () {
+                return $this->images->map(function ($image) {
                     return [
                         'url' => $image->image_url,        // full size
                         'card_url' => $image->card_url,    // medium

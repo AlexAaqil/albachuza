@@ -2,10 +2,10 @@
 
 namespace Modules\Product\Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Modules\Product\Models\ProductBrand;
-use Illuminate\Support\Facades\Log;
 use Exception;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Log;
+use Modules\Product\Models\ProductBrand;
 
 class ProductBrandSeeder extends Seeder
 {
@@ -30,7 +30,7 @@ class ProductBrandSeeder extends Seeder
     public function run(): void
     {
         $this->command->info('Starting brands import...');
-        
+
         $created = 0;
         $updated = 0;
         $skipped = 0;
@@ -39,7 +39,7 @@ class ProductBrandSeeder extends Seeder
             try {
                 // Check if brand exists
                 $existing = ProductBrand::where('name', $brandData['name'])->first();
-                
+
                 if ($existing) {
                     // Update if needed
                     $existing->update([
@@ -58,19 +58,19 @@ class ProductBrandSeeder extends Seeder
                     $created++;
                     $this->command->line("✅ Created: {$brandData['name']}");
                 }
-                
+
             } catch (Exception $e) {
                 $skipped++;
-                $this->command->error("❌ Error: {$brandData['name']} - " . $e->getMessage());
+                $this->command->error("❌ Error: {$brandData['name']} - ".$e->getMessage());
 
-                Log::error("Brand seeder error: " . $e->getMessage(), [
+                Log::error('Brand seeder error: '.$e->getMessage(), [
                     'brand' => $brandData['name'],
                 ]);
             }
         }
 
         $this->command->newLine();
-        $this->command->info("Results:");
+        $this->command->info('Results:');
         $this->command->info("✅ Created: $created");
         $this->command->info("⚒️ Updated: $updated");
         $this->command->info("⚠️ Skipped/Errors: $skipped");
@@ -83,6 +83,6 @@ class ProductBrandSeeder extends Seeder
      */
     public static function getbrandNames(): array
     {
-        return array_column((new self())->brands, 'name');
+        return array_column((new self)->brands, 'name');
     }
 }

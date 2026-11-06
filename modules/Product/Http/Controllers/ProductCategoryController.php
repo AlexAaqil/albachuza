@@ -3,15 +3,16 @@
 namespace Modules\Product\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Image;
 use Inertia\Inertia;
-use Exception;
-use Modules\Product\Models\ProductCategory;
 use Modules\Product\Http\Requests\ProductCategoryRequest;
+use Modules\Product\Models\ProductCategory;
 
 class ProductCategoryController extends Controller
 {
@@ -30,8 +31,8 @@ class ProductCategoryController extends Controller
         return inertia('app/products/categories/Index', [
             'categories' => $categories,
             'filters' => [
-                'search' => $request->search
-            ]
+                'search' => $request->search,
+            ],
         ]);
     }
 
@@ -52,7 +53,7 @@ class ProductCategoryController extends Controller
 
             $category = ProductCategory::create($validated_data);
 
-            if ($image && $image instanceof \Illuminate\Http\UploadedFile) {
+            if ($image && $image instanceof UploadedFile) {
                 $filename = $this->uploadImage($image, $category);
                 $category->update(['image' => $filename]);
             }
@@ -60,8 +61,8 @@ class ProductCategoryController extends Controller
             DB::commit();
 
             Inertia::flash('toast', [
-                'type' => "success",
-                'message' => "Product Category created successfully"
+                'type' => 'success',
+                'message' => 'Product Category created successfully',
             ]);
 
             return to_route('product-categories.index');
@@ -69,8 +70,8 @@ class ProductCategoryController extends Controller
             DB::rollback();
 
             Inertia::flash('toast', [
-                'type' => "error",
-                'message' => "Failed to save category: {$e->getMessage()}"
+                'type' => 'error',
+                'message' => "Failed to save category: {$e->getMessage()}",
             ]);
 
             return back()->withInput();
@@ -80,7 +81,7 @@ class ProductCategoryController extends Controller
     public function edit(ProductCategory $product_category)
     {
         return inertia('app/products/categories/Edit', [
-            'product_category' => $product_category
+            'product_category' => $product_category,
         ]);
     }
 
@@ -119,8 +120,8 @@ class ProductCategoryController extends Controller
             DB::commit();
 
             Inertia::flash('toast', [
-                'type' => "success",
-                'message' => "Category: {$request->name} updated successfully"
+                'type' => 'success',
+                'message' => "Category: {$request->name} updated successfully",
             ]);
 
             return to_route('product-categories.index');
@@ -128,8 +129,8 @@ class ProductCategoryController extends Controller
             DB::rollBack();
 
             Inertia::flash('toast', [
-                'type' => "error",
-                'message' => "Failed to update category: {$e->getMessage()}"
+                'type' => 'error',
+                'message' => "Failed to update category: {$e->getMessage()}",
             ]);
 
             return back()->withInput();
@@ -142,15 +143,15 @@ class ProductCategoryController extends Controller
             $product_category->delete();
 
             Inertia::flash('toast', [
-                'type' => "success",
-                'message' => "Category deleted successfully"
+                'type' => 'success',
+                'message' => 'Category deleted successfully',
             ]);
 
             return to_route('product-categories.index');
         } catch (Exception $e) {
             Inertia::flash('toast', [
-                'type' => "error",
-                'message' => "Failed to delete category: {$e->getMessage()}"
+                'type' => 'error',
+                'message' => "Failed to delete category: {$e->getMessage()}",
             ]);
 
             return back()->withInput();

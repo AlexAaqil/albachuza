@@ -45,4 +45,11 @@ class ProductBrandRequest extends FormRequest
             'image.max' => 'The image size must not exceed 2MB.',
         ];
     }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'is_active' => $this->boolean('is_active'),
+        ]);
+    }
 }

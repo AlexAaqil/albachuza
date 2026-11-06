@@ -3,15 +3,16 @@
 namespace Modules\Product\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Inertia\Inertia;
 use Exception;
-use Modules\Product\Models\ProductBrand;
-use Modules\Product\Http\Requests\ProductBrandRequest;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Image;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Inertia\Inertia;
+use Modules\Product\Http\Requests\ProductBrandRequest;
+use Modules\Product\Models\ProductBrand;
 
 class ProductBrandController extends Controller
 {
@@ -30,8 +31,8 @@ class ProductBrandController extends Controller
         return inertia('app/products/brands/Index', [
             'brands' => $brands,
             'filters' => [
-                'search' => $request->search
-            ]
+                'search' => $request->search,
+            ],
         ]);
     }
 
@@ -52,7 +53,7 @@ class ProductBrandController extends Controller
 
             $brand = ProductBrand::create($validated_data);
 
-            if ($image && $image instanceof \Illuminate\Http\UploadedFile) {
+            if ($image && $image instanceof UploadedFile) {
                 $filename = $this->uploadImage($image, $brand);
                 $brand->update(['image' => $filename]);
             }
@@ -60,8 +61,8 @@ class ProductBrandController extends Controller
             DB::commit();
 
             Inertia::flash('toast', [
-                'type' => "success",
-                'message' => "Brand created successfully"
+                'type' => 'success',
+                'message' => 'Brand created successfully',
             ]);
 
             return to_route('product-brands.index');
@@ -69,8 +70,8 @@ class ProductBrandController extends Controller
             DB::rollback();
 
             Inertia::flash('toast', [
-                'type' => "error",
-                'message' => "Failed to save brand: {$e->getMessage()}"
+                'type' => 'error',
+                'message' => "Failed to save brand: {$e->getMessage()}",
             ]);
 
             return back()->withInput();
@@ -80,7 +81,7 @@ class ProductBrandController extends Controller
     public function edit(ProductBrand $product_brand)
     {
         return inertia('app/products/brands/Edit', [
-            'product_brand' => $product_brand
+            'product_brand' => $product_brand,
         ]);
     }
 
@@ -119,8 +120,8 @@ class ProductBrandController extends Controller
             DB::commit();
 
             Inertia::flash('toast', [
-                'type' => "success",
-                'message' => "Brand updated successfully"
+                'type' => 'success',
+                'message' => 'Brand updated successfully',
             ]);
 
             return to_route('product-brands.index');
@@ -128,8 +129,8 @@ class ProductBrandController extends Controller
             DB::rollBack();
 
             Inertia::flash('toast', [
-                'type' => "error",
-                'message' => "Failed to update brand: {$e->getMessage()}"
+                'type' => 'error',
+                'message' => "Failed to update brand: {$e->getMessage()}",
             ]);
 
             return back()->withInput();
@@ -142,15 +143,15 @@ class ProductBrandController extends Controller
             $product_brand->delete();
 
             Inertia::flash('toast', [
-                'type' => "success",
-                'message' => "Brand deleted successfully"
+                'type' => 'success',
+                'message' => 'Brand deleted successfully',
             ]);
 
             return to_route('product-brands.index');
         } catch (Exception $e) {
             Inertia::flash('toast', [
-                'type' => "error",
-                'message' => "Failed to delete brand: {$e->getMessage()}"
+                'type' => 'error',
+                'message' => "Failed to delete brand: {$e->getMessage()}",
             ]);
 
             return back()->withInput();

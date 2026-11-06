@@ -5,7 +5,7 @@ namespace Modules\Product\Enums;
 enum InventoryMovementTypes: int
 {
     // 0 = initial, 1 = restock, 2 = sale, 3 = return, 4 = damage, 5= adjustment
-    
+
     // Add Operations (Positive Quantity)
     case INITIAL = 0;
     case RESTOCK = 1;
@@ -18,7 +18,7 @@ enum InventoryMovementTypes: int
 
     public function label(): string
     {
-        return match($this) {
+        return match ($this) {
             self::INITIAL => 'Initial',
             self::RESTOCK => 'Restock',
             self::RETURN => 'Customer Return',
@@ -30,7 +30,7 @@ enum InventoryMovementTypes: int
 
     public function operation(): string
     {
-        return match($this) {
+        return match ($this) {
             self::INITIAL, self::RESTOCK, self::RETURN => 'add',
             self::SALE, self::DAMAGE, self::ADJUSTMENT => 'remove',
         };
@@ -54,11 +54,11 @@ enum InventoryMovementTypes: int
         ];
     }
 
-    public static function labels():array
+    public static function labels(): array
     {
         $labels = [];
 
-        foreach(self::cases() as $movement_type) {
+        foreach (self::cases() as $movement_type) {
             $labels[$movement_type->value] = [
                 'label' => $movement_type->label(),
                 'operation' => $movement_type->operation(),
@@ -73,7 +73,7 @@ enum InventoryMovementTypes: int
     {
         $labels = [];
 
-        foreach(self::cases() as $movement_type) {
+        foreach (self::cases() as $movement_type) {
             $labels[$movement_type->value] = $movement_type->label();
         }
 

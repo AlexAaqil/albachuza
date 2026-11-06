@@ -4,11 +4,11 @@ namespace Modules\Product\Services;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Modules\Product\Models\Product;
-use Modules\Product\Models\InventoryMovement;
 use Modules\Product\Enums\InventoryMovementTypes;
 use Modules\Product\Exceptions\InsufficientStockException;
 use Modules\Product\Exceptions\StockTrackingDisabledException;
+use Modules\Product\Models\InventoryMovement;
+use Modules\Product\Models\Product;
 
 class InventoryService
 {
@@ -17,37 +17,37 @@ class InventoryService
      */
     public function getCurrentStock(Product $product): int
     {
-        if (!$product->track_inventory) {
+        if (! $product->track_inventory) {
             return PHP_INT_MAX; // Effectively unlimited
         }
-        
-        return (float) $product->current_stock;
+
+        return $product->current_stock;
     }
-    
+
     /**
      * Check if product has sufficient stock.
      */
-    public function hasSufficientStock(Product $product, float $quantity): bool
+    public function hasSufficientStock(Product $product, int $quantity): bool
     {
-        if (!$product->track_inventory) {
+        if (! $product->track_inventory) {
             return true;
         }
-        
-        return (float) $product->current_stock >= $quantity;
+
+        return $product->current_stock >= $quantity;
     }
-    
+
     /**
      * Add stock to a product.
      */
     public function addStock(
         Product $product,
-        float $quantity,
+        int $quantity,
         InventoryMovementTypes $type,
         string $source,
         ?string $notes = null,
         ?array $metadata = null,
     ): InventoryMovement {
-        if (!$product->tracksInventory()) {
+        if (! $product->tracksInventory()) {
             throw StockTrackingDisabledException::forProduct($product);
         }
 
@@ -59,39 +59,39 @@ class InventoryService
             metadata: $metadata,
         );
 
-        Log::info("Stock added to product", [
+        Log::info('Stock added to product', [
             'product_id' => $product->id,
             'product_name' => $product->name,
             'quantity' => $quantity,
             'type' => $type->label(),
             'new_stock' => $product->current_stock,
-            'source' => $source
+            'source' => $source,
         ]);
 
         return $movement;
     }
-    
+
     /**
      * Remove stock from a product.
      */
     public function removeStock(
         Product $product,
-        float $quantity,
+        int $quantity,
         InventoryMovementTypes $type, // Changed from string to enum
         string $source,
         ?string $notes = null,
         ?array $metadata = null
     ): InventoryMovement {
-        if (!$product->tracksInventory()) {
+        if (! $product->tracksInventory()) {
             throw StockTrackingDisabledException::forProduct($product);
         }
 
-        if (!$this->hasSufficientStock($product, $quantity)) {
+        if (! $this->hasSufficientStock($product, $quantity)) {
             throw new InsufficientStockException(
                 "Only {$product->current_stock} units available for '{$product->name}'"
             );
         }
-        
+
         $movement = $product->removeStock(
             quantity: $quantity,
             type: $type,
@@ -100,7 +100,7 @@ class InventoryService
             source: $source
         );
 
-        Log::info("Stock removed from product", [
+        Log::info('Stock removed from product', [
             'product_id' => $product->id,
             'product_name' => $product->name,
             'quantity' => $quantity,
@@ -110,7 +110,7 @@ class InventoryService
 
         return $movement;
     }
-    
+
     /**
      * Deduct stock for an order (at payment confirmation).
      */
@@ -125,7 +125,7 @@ class InventoryService
             metadata: ['order_id' => $orderId]
         );
     }
-    
+
     /**
      * Add stock for a customer return.
      */
@@ -140,7 +140,7 @@ class InventoryService
             metadata: ['order_id' => $orderId]
         );
     }
-    
+
     /**
      * Get inventory movement history for a product.
      */
@@ -151,7 +151,7 @@ class InventoryService
             ->orderBy('created_at', 'desc')
             ->paginate($perPage);
     }
-    
+
     /**
      * Get low stock products for a shop.
      */
@@ -164,7 +164,7 @@ class InventoryService
             ->orderBy('current_stock', 'asc')
             ->get();
     }
-    
+
     /**
      * Get out of stock products for a shop.
      */
@@ -176,7 +176,7 @@ class InventoryService
             ->orderBy('name', 'asc')
             ->get();
     }
-    
+
     /**
      * Bulk update stock for multiple products.
      */
@@ -184,22 +184,23 @@ class InventoryService
     {
         $results = [
             'success' => [],
-            'failed' => []
+            'failed' => [],
         ];
-        
+
         foreach ($updates as $update) {
             try {
                 $product = Product::findOrFail($update['product_id']);
 
-                if (!$product->tracksInventory()) {
+                if (! $product->tracksInventory()) {
                     $results['failed'][] = [
                         'product_id' => $product->id,
                         'name' => $product->name,
                         'error' => 'Stock tracking is disabled for this product.',
                     ];
+
                     continue;
                 }
-                
+
                 if ($update['type'] === 'add') {
                     $this->addStock(
                         product: $product,
@@ -217,21 +218,21 @@ class InventoryService
                         notes: $update['notes'] ?? null
                     );
                 }
-                
+
                 $results['success'][] = [
                     'product_id' => $product->id,
                     'name' => $product->name,
-                    'new_stock' => $product->current_stock
+                    'new_stock' => $product->current_stock,
                 ];
-                
+
             } catch (\Exception $e) {
                 $results['failed'][] = [
                     'product_id' => $update['product_id'],
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ];
             }
         }
-        
+
         return $results;
     }
 }

@@ -2,24 +2,24 @@
 
 namespace Modules\Product\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Modules\Support\Concerns\HasUuid;
-use Modules\Support\Concerns\HasSlug;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Modules\Product\Concerns\HasSku;
 use Modules\Product\Enums\InventoryMovementTypes;
 use Modules\Product\Exceptions\InsufficientStockException;
 use Modules\Product\Exceptions\StockTrackingDisabledException;
+use Modules\Support\Concerns\HasSlug;
+use Modules\Support\Concerns\HasUuid;
 
 class Product extends Model
 {
-    use HasUuid, HasSlug, HasSku;
+    use HasSku, HasSlug, HasUuid;
 
     protected $guarded = [];
 
@@ -28,8 +28,8 @@ class Product extends Model
         'is_featured' => 'boolean',
         'is_new' => 'boolean',
         'track_inventory' => 'boolean',
-        'current_stock' => 'decimal:2',
-        'low_stock_threshold' => 'decimal:2',
+        'current_stock' => 'integer',
+        'low_stock_threshold' => 'integer',
         'cost_price' => 'decimal:2',
         'price' => 'decimal:2',
     ];
@@ -113,22 +113,32 @@ class Product extends Model
     {
         return $query->where(function (Builder $q) {
             $q->where('track_inventory', false)
-            ->orWhere('current_stock', '>', 0);
+                ->orWhere('current_stock', '>', 0);
         });
+    }
+
+    public function scopeNewArrivals(Builder $query): Builder
+    {
+        return $query->sellable()->where('is_new', true)->where('is_active', true);
+    }
+
+    public function scopeFeatured(Builder $query): Builder
+    {
+        return $query->sellable()->where('is_featured', true)->where('is_active', true);
     }
 
     public function scopeSearch(Builder $query, ?string $search): Builder
     {
-        if (!$search) {
+        if (! $search) {
             return $query;
         }
 
         $searchTerm = strtolower($search);
-        
+
         return $query->where(function (Builder $q) use ($searchTerm) {
             $q->whereRaw('LOWER(name) LIKE ?', ["%{$searchTerm}%"])
                 ->orWhereRaw('LOWER(sku) LIKE ?', ["%{$searchTerm}%"])
-                ->orWhereRaw('LOWER(size) LIKE ?', ["%{$searchTerm}%"])
+                ->orWhereRaw('LOWER(measurement) LIKE ?', ["%{$searchTerm}%"])
                 ->orWhereRaw('LOWER(description) LIKE ?', ["%{$searchTerm}%"]);
         });
     }
@@ -138,37 +148,36 @@ class Product extends Model
         return (bool) $this->track_inventory;
     }
 
-    public function hasStockFor(int|float $quantity): bool
+    public function hasStockFor(int $quantity): bool
     {
-        if (!$this->tracksInventory()) {
+        if (! $this->tracksInventory()) {
             return true;
         }
 
-        return (float) $this->current_stock >= (float) $quantity;
+        return $this->current_stock >= $quantity;
     }
 
     private function ensureInventoryIsTracked(): void
     {
-        if (!$this->tracksInventory()) {
+        if (! $this->tracksInventory()) {
             throw StockTrackingDisabledException::forProduct($this);
         }
     }
 
     public function addStock(
-        float $quantity, 
-        InventoryMovementTypes $type, 
+        int $quantity,
+        InventoryMovementTypes $type,
         string $source,
-        ?string $notes = null, 
+        ?string $notes = null,
         ?array $metadata = null
-    ): InventoryMovement
-    {
+    ): InventoryMovement {
         $this->ensureInventoryIsTracked();
 
         return DB::transaction(function () use ($quantity, $type, $source, $notes, $metadata) {
             $locked = static::query()->lockForUpdate()->find($this->id);
 
-            $before = (float) $locked->current_stock;
-            $after  = $before + $quantity;
+            $before = $locked->current_stock;
+            $after = $before + $quantity;
 
             $locked->update(['current_stock' => $after]);
             $this->current_stock = $after;
@@ -186,15 +195,15 @@ class Product extends Model
         });
     }
 
-    public function updateStock(float $new_quantity, InventoryMovementTypes $type, string $source, ?string $notes = null, ?array $metadata = null): InventoryMovement
+    public function updateStock(int $new_quantity, InventoryMovementTypes $type, string $source, ?string $notes = null, ?array $metadata = null): InventoryMovement
     {
         $this->ensureInventoryIsTracked();
-        
+
         return DB::transaction(function () use ($new_quantity, $type, $source, $notes, $metadata) {
             // Re-fetch with a row lock so no one else can change stock in parallel
             $locked = static::query()->lockForUpdate()->find($this->id);
 
-            $before = (float) $locked->current_stock;
+            $before = $locked->current_stock;
             $quantity_change = $new_quantity - $before;
 
             $locked->update(['current_stock' => $new_quantity]);
@@ -214,20 +223,20 @@ class Product extends Model
     }
 
     public function removeStock(
-        float $quantity,
+        int $quantity,
         InventoryMovementTypes $type,
         string $source,
         ?string $notes = null,
         ?array $metadata = null,
     ): InventoryMovement {
         $this->ensureInventoryIsTracked();
-        
+
         return DB::transaction(function () use ($quantity, $type, $source, $notes, $metadata) {
             // Re-fetch with a row lock so no one else can change stock in parallel
             $locked = static::query()->lockForUpdate()->find($this->id);
 
-            $before = (float) $locked->current_stock;
-            $after  = $before - $quantity;
+            $before = $locked->current_stock;
+            $after = $before - $quantity;
 
             if ($after < 0) {
                 throw new InsufficientStockException(

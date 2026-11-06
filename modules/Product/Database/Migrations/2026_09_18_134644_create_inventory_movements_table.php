@@ -19,15 +19,15 @@ return new class extends Migration
             // Enum: 0 = initial, 1 = restock, 2 = sale, 3 = return, 4 = damage, 5= adjustment
             $table->unsignedTinyInteger('type');
 
-            $table->decimal('quantity', 15, 2); // positive = addition, negative = subtraction
-            $table->decimal('quantity_before', 15, 2); // Stock level before this movment
-            $table->decimal('quantity_after', 15, 2);
+            $table->integer('quantity'); // positive = addition, negative = subtraction
+            $table->unsignedInteger('quantity_before'); // Stock level before this movment
+            $table->unsignedInteger('quantity_after');
             $table->string('source')->default('manual'); // manual | order | system
 
             // Reference to other tables
             $table->string('reference_type')->nullable();
             $table->unsignedBigInteger('reference_id')->nullable();
-            
+
             // Additional info
             $table->text('notes')->nullable();
             $table->json('metadata')->nullable();

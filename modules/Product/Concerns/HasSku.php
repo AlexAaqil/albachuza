@@ -25,13 +25,13 @@ trait HasSku
     public function generateSku(): string
     {
         $letters = $this->skuLetters();
-        $digits  = $this->skuDigits();
+        $digits = $this->skuDigits();
 
         // Try up to 50 times to find a unique SKU
         for ($i = 0; $i < 50; $i++) {
             $candidate = Str::upper(
-                $letters[array_rand($letters)] .
-                $letters[array_rand($letters)] .
+                $letters[array_rand($letters)].
+                $letters[array_rand($letters)].
                 $digits[array_rand($digits)]
             );
 
@@ -79,12 +79,12 @@ trait HasSku
     {
         $letters = $this->skuLetters();
         $base = Str::upper(
-            $letters[array_rand($letters)] .
+            $letters[array_rand($letters)].
             $letters[array_rand($letters)]
         );
 
         for ($n = 0; $n < 1000; $n++) {
-            $candidate = $base . $n;
+            $candidate = $base.$n;
             if (! $this->skuExists($candidate)) {
                 return $candidate;
             }

@@ -42,4 +42,11 @@ class ProductCategoryRequest extends FormRequest
             'name.unique' => 'A product category with this name already exists.',
         ];
     }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'is_active' => $this->boolean('is_active'),
+        ]);
+    }
 }

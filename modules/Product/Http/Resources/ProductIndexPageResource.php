@@ -12,7 +12,6 @@ class ProductIndexPageResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-
     public function toArray(Request $request): array
     {
         return [
@@ -22,8 +21,8 @@ class ProductIndexPageResource extends JsonResource
             'slug' => $this->slug,
             'sku' => $this->sku,
             'barcode' => $this->barcode,
-            'price' => $this->price,
-            'cost_price' => $this->cost_price,
+            'price' => (float) $this->price,
+            'cost_price' => (float) $this->cost_price,
             'has_discount' => $this->has_discount,
             'discount_display' => $this->discount_display,
             'discounted_price' => $this->discounted_price,

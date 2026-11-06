@@ -4,23 +4,23 @@ namespace Modules\Product\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Modules\Support\Concerns\HasUuid;
 use Modules\Product\Enums\InventoryMovementTypes;
 use Modules\Support\Concerns\HasCreatorAuditTrail;
+use Modules\Support\Concerns\HasUuid;
 use Modules\User\Models\User;
 
 class InventoryMovement extends Model
 {
-    use HasUuid, HasCreatorAuditTrail;
+    use HasCreatorAuditTrail, HasUuid;
 
     protected $guarded = [];
 
     protected $casts = [
         'type' => InventoryMovementTypes::class,
-        'quantity' => 'decimal:2',
-        'quantity_before' => 'decimal:2',
-        'quantity_after' => 'decimal:2',
-        'metadata' => 'array'
+        'quantity' => 'integer',
+        'quantity_before' => 'integer',
+        'quantity_after' => 'integer',
+        'metadata' => 'array',
     ];
 
     public function product(): BelongsTo

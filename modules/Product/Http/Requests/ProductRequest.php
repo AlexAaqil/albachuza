@@ -27,27 +27,15 @@ class ProductRequest extends FormRequest
         $maxDimension = config('product_images.max_dimension');
 
         return [
-            'name' => [
-                'required', 
-                'string', 
-                'max:200',
-            ],
+            'name' => ['required', 'string', 'max:200'],
             'sku' => [
-                'nullable', 
-                'string', 
+                'nullable',
+                'string',
                 'max:100',
-                Rule::unique('products', 'sku')->ignore($this->route('product')?->id)
+                Rule::unique('products', 'sku')->ignore($this->route('product')?->id),
             ],
-            'size' => [
-                'nullable', 
-                'string', 
-                'max:100'
-            ],
-            'barcode' => [
-                'nullable', 
-                'string', 
-                'max:100',
-            ],
+            'measurement' => ['nullable', 'string', 'max:100'],
+            'barcode' => ['nullable', 'string', 'max:100'],
             'description' => ['nullable', 'string'],
             'cost_price' => ['nullable', 'numeric', 'min:0'],
             'price' => ['required', 'numeric', 'min:0'],
@@ -55,20 +43,20 @@ class ProductRequest extends FormRequest
             'is_active' => ['boolean'],
             'is_new' => ['boolean'],
             'track_inventory' => ['boolean'],
-            'low_stock_threshold' => ['nullable', 'numeric', 'min:0', Rule::requiredIf(fn()=>$this->boolean('track_inventory'))],
+            'low_stock_threshold' => ['nullable', 'integer', 'min:0', Rule::requiredIf(fn () => $this->boolean('track_inventory'))],
             'current_stock' => ['prohibited'],
             'product_category_id' => ['nullable', 'exists:product_categories,id'],
             'product_brand_id' => ['nullable', 'exists:product_brands,id'],
-            'images' => ['nullable', 'array', 'max:' . $maxImages],
+            'images' => ['nullable', 'array', 'max:'.$maxImages],
             'images.*' => [
                 'image',
                 'mimes:jpg,jpeg,png,gif,webp',
-                'max:' . config('product_images.max_upload_kb'),
-                'dimensions:max_width=' . $maxDimension . ',max_height=' . $maxDimension,
+                'max:'.config('product_images.max_upload_kb'),
+                'dimensions:max_width='.$maxDimension.',max_height='.$maxDimension,
             ],
             // Final order of the images, sent by the edit form: an existing image id ("12")
             // or the position of a new upload ("new-0").
-            'image_order' => ['nullable', 'array', 'max:' . $maxImages],
+            'image_order' => ['nullable', 'array', 'max:'.$maxImages],
             'image_order.*' => ['string', 'regex:/^(\d+|new-\d+)$/'],
         ];
     }

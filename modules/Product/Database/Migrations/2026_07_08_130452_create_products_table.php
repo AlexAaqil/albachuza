@@ -19,8 +19,9 @@ return new class extends Migration
             $table->string('sku')->nullable()->unique();
             $table->string('barcode')->nullable();
 
-            $table->string('size')->nullable();
             $table->text('description')->nullable();
+            $table->string('measurement')->nullable();
+            $table->string('unit_of_measure')->default('pcs');
 
             $table->string('type')->default('goods'); // goods, services
 
@@ -31,11 +32,9 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
 
             // Inventory Tracking
-            $table->decimal('current_stock', 10, 2)->default(0.00); // For services, default is 0
+            $table->unsignedInteger('current_stock')->default(0); // For services, default is 0
             $table->boolean('track_inventory')->default(true);
-            $table->decimal('low_stock_threshold', 10, 2)->default(0.00);
-
-            $table->string('unit_of_measure')->default('pcs');
+            $table->unsignedTinyInteger('low_stock_threshold')->default(0);
 
             $table->foreignId('product_category_id')->nullable()->constrained('product_categories')->nullOnDelete();
             $table->foreignId('product_brand_id')->nullable()->constrained('product_brands')->nullOnDelete();

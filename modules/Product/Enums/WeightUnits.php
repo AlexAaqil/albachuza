@@ -9,10 +9,10 @@ enum WeightUnits: string
     case LBS = 'lbs';
     case PCS = 'pcs';
     case OZ = 'oz';
-    
+
     public function label(): string
     {
-        return match($this) {
+        return match ($this) {
             self::KG => 'Kilograms',
             self::G => 'Grams',
             self::LBS => 'Pounds',

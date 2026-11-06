@@ -15,15 +15,15 @@ class InsufficientStockException extends Exception
             return response()->json([
                 'message' => $this->getMessage(),
                 'error' => 'insufficient_stock',
-                'code' => 422
+                'code' => 422,
             ], 422);
         }
-        
+
         // For Inertia.js requests
         if ($request->inertia()) {
             return back()->with('error', $this->getMessage());
         }
-        
+
         return redirect()->back()
             ->with('error', $this->getMessage())
             ->withInput();

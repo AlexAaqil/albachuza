@@ -25,8 +25,8 @@ class InventoryMovementRequest extends FormRequest
     {
         return [
             'quantity' => 'required|integer|min:1',
-            'type' => ['required', 'integer', 'in:' . implode(',', array_column(InventoryMovementTypes::cases(), 'value'))],
-            'notes' => 'nullable|string|max:500'
+            'type' => ['required', 'integer', 'in:'.implode(',', array_column(InventoryMovementTypes::cases(), 'value'))],
+            'notes' => 'nullable|string|max:500',
         ];
     }
 }
