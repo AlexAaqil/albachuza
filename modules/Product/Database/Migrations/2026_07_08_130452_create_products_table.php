@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('size')->nullable();
             $table->text('description')->nullable();
 
-            $table->string('type')->default('goods');
+            $table->string('type')->default('goods'); // goods, services
 
             $table->decimal('cost_price', 10, 2)->nullable();
             $table->decimal('price', 10, 2);
