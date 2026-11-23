@@ -5,6 +5,8 @@ General
 ❌ About page
 ❌ Contact page
 
+X Ensure the orders table columns for delivery details snapshots are renamed from shipping to delivery
+
 Products
 
 ❌ Can be imported or exported as csv to make bulk editing easier.
