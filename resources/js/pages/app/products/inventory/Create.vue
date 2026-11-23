@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { Head, useForm, router, Link } from '@inertiajs/vue3';
-import { ref, computed } from 'vue';
+import { Head, useForm, Link } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import InputError from '@/components/InputError.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Input from '@/components/ui/input/Input.vue';
-import Select from '@/components/ui/select/Select.vue';
 import Textarea from '@/components/ui/textarea/Textarea.vue';
 import productInventoryRoutes from '@/routes/products-inventory';
 
