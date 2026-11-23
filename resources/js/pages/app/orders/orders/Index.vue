@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Head, Link, router } from '@inertiajs/vue3';
 import { Pencil, Trash2 } from '@lucide/vue';
-import { watch, computed, reactive, ref } from 'vue';
+import { watch, computed, reactive } from 'vue';
 import AppPageHeader from '@/components/custom/AppPageHeader.vue';
 import DeleteConfirmationDialog from '@/components/custom/DeleteConfirmation.vue';
 import Pagination from '@/components/custom/Pagination.vue';
@@ -61,8 +61,6 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-
-const isSearching = ref(false);
 
 let searchTimeout: ReturnType<typeof setTimeout> | undefined;
 
@@ -326,7 +324,7 @@ const getPaymentStatusColor = (status: string) => {
                     <TableHead>Payment</TableHead>
                     <TableHead>Order</TableHead>
                     <TableHead>Delivery</TableHead>
-                    <TableHead>Cashier</TableHead>
+                    <TableHead>Placed By</TableHead>
                     <TableHead class="actions">Actions</TableHead>
                 </TableRow>
             </TableHeader>
