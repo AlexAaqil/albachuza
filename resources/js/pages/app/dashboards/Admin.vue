@@ -291,9 +291,8 @@ const fmtPct = (n: number | null) =>
                         <span class="text-sm text-muted-foreground">{{ stats.fiscal.orders }} completed orders</span>
                     </template>
                 </DashboardStat>
+
                 <DashboardStat :stat="stats.fiscal.cogs" format="currency" label="COGS" variant="danger" />
-                <DashboardStat :stat="stats.fiscal.gross_profit" format="currency" label="Gross Profit" variant="success" />
-                <DashboardStat :stat="stats.fiscal.margin" format="percent" label="Gross Margin" />
 
                 <DashboardStat :stat="stats.fiscal.expenses" format="currency" label="Operating Expenses" variant="danger">
                     <template #extras>
@@ -303,6 +302,11 @@ const fmtPct = (n: number | null) =>
                         </span>
                     </template>
                 </DashboardStat>
+
+                <DashboardStat :stat="stats.fiscal.aov" format="currency" label="AOV / ATV" />
+
+                <DashboardStat :stat="stats.fiscal.gross_profit" format="currency" label="Gross Profit" variant="success" />
+
                 <DashboardStat
                     :stat="stats.fiscal.net_profit"
                     format="currency"
@@ -315,8 +319,10 @@ const fmtPct = (n: number | null) =>
                         </span>
                     </template>
                 </DashboardStat>
+
+                <DashboardStat :stat="stats.fiscal.margin" format="percent" label="Gross Margin" />
+
                 <DashboardStat :stat="stats.fiscal.net_margin" format="percent" label="Net Margin" />
-                <DashboardStat :stat="stats.fiscal.aov" format="currency" label="AOV / ATV" />
             </div>
         </section>
 
