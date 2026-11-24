@@ -289,7 +289,7 @@ const submitForm = () => {
             <div class="submit-buttons">
                 <Button type="submit" :disabled="form.processing">
                     <Spinner v-if="form.processing" />
-                    Create Product
+                    {{ form.processing ? 'Creating Product' : 'Create Product' }}
                 </Button>
 
                 <div>
