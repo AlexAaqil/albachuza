@@ -146,6 +146,79 @@ class Product extends Model
         });
     }
 
+    /**
+     * IDs of products that share an identity key with at least one other product.
+     *
+     * A product is considered a duplicate when it matches another on SKU/barcode
+     * (hard match), or on name + measurement + price + cost_price + brand + category
+     * (soft match). Different sizes/prices of the same shoe are NOT duplicates.
+     *
+     * @return array<int, int>
+     */
+    public static function duplicateIds(): array
+    {
+        $groups = [];
+
+        static::query()
+            ->select([
+                'id', 'name', 'measurement', 'price', 'cost_price',
+                'product_brand_id', 'product_category_id', 'sku', 'barcode',
+            ])
+            ->each(function (self $product) use (&$groups) {
+                $key = $product->duplicateKey();
+                if ($key !== null) {
+                    $groups[$key][] = $product->id;
+                }
+            });
+
+        return collect($groups)
+            ->filter(fn (array $ids) => count($ids) > 1)
+            ->flatten()
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    /**
+     * A normalized identity key for this product, or null when the product
+     * has nothing meaningful to group on.
+     */
+    public function duplicateKey(): ?string
+    {
+        // Hard duplicate: same SKU or barcode, when set.
+        if (! empty($this->sku)) {
+            return 'sku:'.strtolower(trim($this->sku));
+        }
+        if (! empty($this->barcode)) {
+            return 'barcode:'.trim($this->barcode);
+        }
+
+        // Soft duplicate: same identity fields.
+        $name = $this->normalizeForComparison($this->name);
+        if ($name === '') {
+            return null;
+        }
+
+        return 'soft:'.md5(implode('|', [
+            $name,
+            $this->normalizeForComparison($this->measurement),
+            $this->normalizePriceForComparison($this->price),
+            $this->normalizePriceForComparison($this->cost_price),
+            $this->product_brand_id ?? '',
+            $this->product_category_id ?? '',
+        ]));
+    }
+
+    protected function normalizeForComparison(?string $value): string
+    {
+        return trim(preg_replace('/\s+/', ' ', strtolower((string) $value)));
+    }
+
+    protected function normalizePriceForComparison($value): string
+    {
+        return $value === null ? '' : number_format((float) $value, 2, '.', '');
+    }
+
     public function tracksInventory(): bool
     {
         return (bool) $this->track_inventory;

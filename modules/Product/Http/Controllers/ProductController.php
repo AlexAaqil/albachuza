@@ -31,7 +31,7 @@ class ProductController extends Controller
 
         $products = $query->orderBy('name')->paginate(50);
 
-        $duplicateIds = $this->getDuplicateProductIds();
+        $duplicateIds = Product::duplicateIds();
 
         return inertia('app/products/products/Index', [
             'products' => ProductIndexPageResource::collection($products),
@@ -40,57 +40,6 @@ class ProductController extends Controller
                 'status' => $request->status,
             ],
             'duplicate_product_ids' => $duplicateIds,
-        ]);
-    }
-
-    protected function getDuplicateProductIds(): array
-    {
-        // Get all products with the fields we want to check for duplicates
-        $products = Product::select('id', 'name', 'description', 'price')->get();
-
-        // Group products by normalized name, description, and price
-        $groups = [];
-        $duplicateIds = [];
-
-        foreach ($products as $product) {
-            // Create a unique key based on normalized fields
-            $key = $this->getDuplicateKey($product);
-
-            if (! isset($groups[$key])) {
-                $groups[$key] = [];
-            }
-
-            $groups[$key][] = $product->id;
-        }
-
-        // Find groups with more than one product (duplicates)
-        foreach ($groups as $group) {
-            if (count($group) > 1) {
-                $duplicateIds = array_merge($duplicateIds, $group);
-            }
-        }
-
-        return $duplicateIds;
-    }
-
-    protected function getDuplicateKey($product): string
-    {
-        // Normalize the fields for comparison
-        $normalizedName = trim(strtolower($product->name));
-        $normalizedDescription = trim(strtolower($product->description ?? ''));
-        $normalizedPrice = number_format((float) $product->price, 2, '.', '');
-
-        return md5($normalizedName.'|'.$normalizedDescription.'|'.$normalizedPrice);
-    }
-
-    public function create()
-    {
-        $product_categories = ProductCategory::select('id', 'name')->orderBy('name')->get();
-        $product_brands = ProductBrand::select('id', 'name')->orderBy('name')->get();
-
-        return inertia('app/products/products/Create', [
-            'product_categories' => $product_categories,
-            'product_brands' => $product_brands,
         ]);
     }
 

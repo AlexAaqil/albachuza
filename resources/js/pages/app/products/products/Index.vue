@@ -192,7 +192,7 @@ const isOutOfStock = (product: Product): boolean => {
             v-for="(product, index) in products.data"
             :key="product.id"
             class="border border-border rounded-lg p-4 bg-card shadow-sm"
-            :class="{ 'bg-red-50 border-red-400': isOutOfStock(product) }"
+            :class="{ 'bg-red-50 text-red-900 border-red-400': isOutOfStock(product) }"
         >
             <div class="flex items-start justify-between mb-3">
                 <div>
@@ -326,8 +326,8 @@ const isOutOfStock = (product: Product): boolean => {
                     v-for="(product, index) in products.data" 
                     :key="product.id"
                     :class="{
-                        'duplicate-product-row bg-red-50 hover:bg-red-100': isDuplicate(product.id),
-                        'bg-red-50 border-l-4 border-red-500 hover:bg-red-100' : !isDuplicate(product.id) && isOutOfStock(product),
+                        'duplicate-product-row bg-red-50 text-red-900 hover:bg-red-100': isDuplicate(product.id),
+                        'bg-red-50 text-red-900 border-l-4 border-red-500 hover:bg-red-100' : !isDuplicate(product.id) && isOutOfStock(product),
                     }"
                 >
                     <TableCell class="id">
