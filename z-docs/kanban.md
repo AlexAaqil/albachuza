@@ -1,11 +1,18 @@
 # Kanban
 
 General
-❌ Home page should just show new arrivals then all other shoes without having to necessarily to go the shop page.
-❌ About page
-❌ Contact page
+✅ Home page should just show new arrivals then all other shoes without having to necessarily to go the shop page.
+✅ About page
+✅ Contact page
 
-X Ensure the orders table columns for delivery details snapshots are renamed from shipping to delivery
+❌ Enable swiping through images on product cards with multiple images.
+❌ Ensure cashier side works properly.
+❌ Ensure the orders table columns for delivery details snapshots are renamed from shipping to delivery
+❌ Add a filter for price and shoe size in shop page.
+❌ Add filters on the products page for: all products, sellable, out of stock, date added
+❌ Add functionality to sort by latest added first.
+❌ Queue image optimization to avoid waiting for a whole minute for images to get optimized.
+❌ Business journal to record import details or dates about the business.
 
 Products
 
