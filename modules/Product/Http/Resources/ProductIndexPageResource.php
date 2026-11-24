@@ -21,6 +21,7 @@ class ProductIndexPageResource extends JsonResource
             'slug' => $this->slug,
             'sku' => $this->sku,
             'barcode' => $this->barcode,
+            'measurement' => $this->measurement,
             'price' => (float) $this->price,
             'cost_price' => (float) $this->cost_price,
             'has_discount' => $this->has_discount,

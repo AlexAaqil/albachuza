@@ -235,9 +235,13 @@ const isOutOfStock = (product: Product): boolean => {
                         </div>
                     </div>
 
-                    <div class="meta__row flex justify-between items-center gap-2">
+                    <div class="meta__row grid grid-cols-2 items-center gap-2">
                         <span class="product_sku text-xs text-gray-500 normal-case tracking-wider">
-                            {{ product.sku }}
+                            Sku: {{ product.sku }}
+                        </span>
+
+                        <span :class="product.measurement === null ? 'text-red-600' : 'text-gray-500'" class="product_sku text-xs normal-case tracking-wider">
+                            Size: {{ product.measurement }}
                         </span>
 
                         <span class="category__name text-xs text-gray-500 normal-case tracking-wider truncate">
@@ -315,6 +319,7 @@ const isOutOfStock = (product: Product): boolean => {
                     <TableHead>SKU</TableHead>
                     <TableHead>Price (Ksh)</TableHead>
                     <TableHead>Inventory</TableHead>
+                    <TableHead>Size</TableHead>
                     <TableHead>Category</TableHead>
                     <TableHead class="tags">Tags</TableHead>
                     <TableHead class="actions">Actions</TableHead>
@@ -358,6 +363,7 @@ const isOutOfStock = (product: Product): boolean => {
                         <span class="text-sm text-muted-foreground"> ({{ formatPrice(product.cost_price) }})</span>
                     </TableCell>
                     <TableCell :class="{'font-bold text-red-600' : isOutOfStock(product)}">{{ product.current_stock }}</TableCell>
+                    <TableCell :class="product.measurement === null ? 'text-red-600' : ''">{{ product.measurement ?? '-' }}</TableCell>
                     <TableCell>{{ product.category_name }}</TableCell>
                     <TableCell class="tags min-w-50 w-45">
                         <div class="tags-wrapper flex flex-wrap gap-4">
