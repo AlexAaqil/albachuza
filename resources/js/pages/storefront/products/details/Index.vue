@@ -72,9 +72,21 @@ const selectImage = (index: number) => {
                 <div class="space-y-4 lg:px-8">
                     <h1 class="font-semibold text-heading-text">{{ product.data.name }}</h1>
                     <p class="text-heading-text">Ksh. {{ formatPrice(product.data.price) }}</p>
-                    <p v-if="product.data.size" class="flex text-body-label-text">
+                    <p class="flex text-body-label-text">
+                        <span class="text-muted-foreground w-20">SKU</span>
+                        <span class="">: {{ product.data.sku }}</span>
+                    </p>
+                    <p class="flex text-body-label-text">
+                        <span class="text-muted-foreground w-20">Brand</span>
+                        <span class="">: {{ product.data.brand_name }}</span>
+                    </p>
+                    <p class="flex text-body-label-text">
+                        <span class="text-muted-foreground w-20">Category</span>
+                        <span class="">: {{ product.data.category_name }}</span>
+                    </p>
+                    <p v-if="product.data.measurement" class="flex text-body-label-text">
                         <span class="text-muted-foreground w-20">Size</span>
-                        <span class="">: {{ product.data.size }}</span>
+                        <span class="">: {{ product.data.measurement }}</span>
                     </p>
 
                     <div class="actions grid lg:grid-cols-2 gap-8">

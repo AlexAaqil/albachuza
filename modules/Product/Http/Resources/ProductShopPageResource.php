@@ -20,6 +20,8 @@ class ProductShopPageResource extends JsonResource
             'slug' => $this->slug,
             'sku' => $this->sku,
 
+            'measurement' => $this->measurement,
+
             'price' => (float) $this->price,
 
             'current_stock' => $this->current_stock,

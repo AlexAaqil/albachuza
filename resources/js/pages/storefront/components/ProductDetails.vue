@@ -24,8 +24,11 @@ const onAddToCart = () => {
                 {{ product.sku }}
             </span>
 
-            <span class="category__name text-xs text-gray-500 normal-case tracking-wider truncate">
-                {{ product.category_name }}
+            <span
+                v-if="product.measurement"
+                class="measurement text-xs text-gray-500 normal-case tracking-wider truncate"
+            >
+                Size {{ product.measurement }}
             </span>
 
             <div class="stock__count flex items-center gap-1">

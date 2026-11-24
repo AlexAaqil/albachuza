@@ -21,6 +21,7 @@ export interface Product {
     name: string;
     slug: string;
     category_name: string;
+    brand_name: string;
     description: string;
     cost_price: number;
     price: number;
@@ -28,7 +29,7 @@ export interface Product {
     stock: number;
     sku: string;
     barcode: string;
-    size: string;
+    measurement: string;
     category: string;
     tags: string[];
     thumbnail_url: string;

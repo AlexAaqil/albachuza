@@ -23,7 +23,7 @@ class ProductDetailsResource extends JsonResource
             'measurement' => $this->measurement,
             'color' => $this->color,
             'category_name' => $this->category_name,
-            'brand_nane' => $this->brand_name,
+            'brand_name' => $this->brand_name,
             'is_new' => (bool) $this->is_new,
             'is_featured' => (bool) $this->is_featured,
             'is_active' => (bool) $this->is_active,
