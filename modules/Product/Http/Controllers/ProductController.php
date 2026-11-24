@@ -29,7 +29,7 @@ class ProductController extends Controller
             $query->where('is_active', $request->status === 'active');
         }
 
-        $products = $query->orderBy('name')->paginate(50);
+        $products = $query->orderBySellable()->paginate(50);
 
         $duplicateIds = Product::duplicateIds();
 

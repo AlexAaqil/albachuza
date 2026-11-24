@@ -117,6 +117,13 @@ class Product extends Model
         });
     }
 
+    public function scopeOrderBySellable(Builder $query): Builder
+    {
+        return $query
+            ->orderByRaw('(track_inventory = true AND current_stock <= 0) ASC')
+            ->orderBy('name');
+    }
+
     public function scopeNewArrivals(Builder $query): Builder
     {
         return $query->sellable()->where('is_new', true)->where('is_active', true);
