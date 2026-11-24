@@ -12,7 +12,7 @@ use Modules\Product\Http\Resources\ProductHomePageResource;
 class HomePageController extends Controller
 {
     private const NEW_ARRIVALS_LIMIT = 8;
-    private const MOST_POPULAR_LIMIT = 20;
+    private const MOST_POPULAR_LIMIT = 24;
 
     public function index()
     {

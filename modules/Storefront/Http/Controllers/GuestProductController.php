@@ -83,7 +83,7 @@ class GuestProductController extends Controller
             ->where('current_stock', '>', 0)
             ->with('images')
             ->orderBy('name')
-            ->paginate(30);
+            ->paginate(50);
         
         $product_categories = ProductCategory::query()
             ->where('is_active', true)
