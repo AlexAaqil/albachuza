@@ -11,6 +11,9 @@ use Modules\Product\Http\Resources\ProductHomePageResource;
 
 class HomePageController extends Controller
 {
+    private const NEW_ARRIVALS_LIMIT = 8;
+    private const MOST_POPULAR_LIMIT = 20;
+
     public function index()
     {
         // $brands = ProductBrand::orderBy('name')->where('is_active', true)->get();
@@ -18,10 +21,10 @@ class HomePageController extends Controller
         $new_arrivals = Product::query()
             ->newArrivals()
             ->with('images')
-            ->limit(8)
+            ->limit(self::NEW_ARRIVALS_LIMIT)
             ->get();
         
-        $most_popular = $this->getMostPopularProducts();
+        $most_popular = $this->getMostPopularProducts(self::MOST_POPULAR_LIMIT);
 
         return inertia('storefront/home/Index', [
             // 'brands' => BrandResource::collection($brands),
@@ -30,28 +33,25 @@ class HomePageController extends Controller
         ]);
     }
 
-    private function getMostPopularProducts()
+    private function getMostPopularProducts(int $limit)
     {
-        // Get up to 4 featured products
         $featured = Product::query()
             ->featured()
             ->with('images')
-            ->limit(12)
+            ->limit($limit)
             ->get();
 
-        // If we have 16 featured products, return them
-        if ($featured->count() >= 12) {
+        if ($featured->count() >= $limit) {
             return $featured;
         }
 
-        // If we have less than 4 featured, get the remaining from random products
-        $needed = 12 - $featured->count();
+        $needed = $limit - $featured->count();
         
         $random = Product::query()
             ->sellable()
             ->where('is_active', true)
-            ->where('is_featured', false) // Exclude featured products
-            ->whereNotIn('id', $featured->pluck('id')) // Exclude already selected
+            ->where('is_featured', false)
+            ->whereNotIn('id', $featured->pluck('id'))
             ->with('images')
             ->inRandomOrder()
             ->limit($needed)
