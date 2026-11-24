@@ -133,13 +133,16 @@ class Product extends Model
             return $query;
         }
 
-        $searchTerm = strtolower($search);
+        $search_term = strtolower(trim($search));
+        $like = "%{$search_term}%";
 
-        return $query->where(function (Builder $q) use ($searchTerm) {
-            $q->whereRaw('LOWER(name) LIKE ?', ["%{$searchTerm}%"])
-                ->orWhereRaw('LOWER(sku) LIKE ?', ["%{$searchTerm}%"])
-                ->orWhereRaw('LOWER(measurement) LIKE ?', ["%{$searchTerm}%"])
-                ->orWhereRaw('LOWER(description) LIKE ?', ["%{$searchTerm}%"]);
+        return $query->where(function (Builder $q) use ($search_term, $like) {
+            $q->whereRaw('LOWER(name) LIKE ?', [$like])
+                ->orWhereRaw('LOWER(sku) LIKE ?', [$like])
+                ->orWhereRaw('LOWER(measurement) LIKE ?', [$like])
+                ->orWhereRaw('LOWER(description) LIKE ?', [$like])
+                ->orWhereRaw('CAST(price AS TEXT) LIKE ?', [$like])
+                ->orWhereRaw('CAST(cost_price AS TEXT) LIKE ?', [$like]);
         });
     }
 
